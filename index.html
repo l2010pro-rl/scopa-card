@@ -438,19 +438,6 @@ border-left: 5px solid transparent; text-align: left;
 </div>
 <p style="text-align:center; margin-top:10px; opacity:0.7; font-size:0.8rem;">Converti gemme in monete.</p>
 </div>
-
-<!-- ADMIN ZONE (HIDDEN GENERATOR) -->
-<div class="shop-section" style="border-color: var(--danger);">
-    <h2><span style="font-size:1.5rem;">🔐</span> Zona Admin</h2>
-    <p style="font-size:0.8rem; opacity:0.7;">Genera codici regalo usa-e-getta (Offline)</p>
-    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
-        <button class="btn-action" onclick="generateCode('coins', 500)">Crea QR 500 Monete</button>
-        <button class="btn-action" onclick="generateCode('deck', 0, 'ancient', 300)">Crea QR Mazzo Antico</button>
-        <button class="btn-action" onclick="generateCode('chest', 1)">Crea QR 1 Busta</button>
-    </div>
-    <textarea id="admin-output" readonly style="width:100%; height:60px; background:rgba(0,0,0,0.5); color:white; border:1px solid #555; border-radius:5px; padding:5px; font-size:0.8rem;" placeholder="Il codice apparirà qui..."></textarea>
-</div>
-
 </div>
 <!-- PANEL: TROPHIES -->
 <div id="panel-trophies" class="panel">
@@ -1412,25 +1399,6 @@ return el;
 // --- GIFT SYSTEM (OFFLINE CRYPTO) ---
 // Chiave segreta per criptare i codici. Non cambiarla o i vecchi codici smetteranno di funzionare.
 const SECRET_KEY = "SuperScopaSecretKey2026"; 
-
-function generateCode(type, amount, deckId = null, altAmount = 0) {
-    const payload = {
-        type: type, // 'coins', 'deck', 'chest'
-        amount: amount,
-        deckId: deckId,
-        alt: altAmount, // Quantità alternativa se il mazzo è già posseduto
-        exp: 32503680000 // Data di scadenza lontana (anno 3000)
-    };
-    
-    // Cripta in Base64 semplice (non sicuro per banking, ma ottimo per giochi offline)
-    const jsonStr = JSON.stringify(payload);
-    const encoded = btoa(jsonStr);
-    
-    const fullLink = window.location.href.split('?')[0] + "?code=" + encoded;
-    
-    document.getElementById('admin-output').value = fullLink;
-    alert("Codice Generato! Copia il link nella casella nera in basso.");
-}
 
 function closeGiftModal() {
     document.getElementById('gift-modal').classList.remove('show');
