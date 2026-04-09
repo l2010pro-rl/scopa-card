@@ -742,6 +742,12 @@ let gameActive = false;
 let gameMode = 'scopa';
 let briscolaSuit = null;
 
+// DUO MODE VARIABLES
+let duoHands = [[], [], [], []]; // Player, Enemy1, Ally, Enemy2
+let duoPiles = [[], [], [], []];
+let duoScopas = [0, 0, 0, 0];
+let currentPlayerIndex = 0; // 0: Player, 1: Enemy1, 2: Ally, 3: Enemy2
+
 function init() {
 loadState();
 renderDecks();
@@ -1092,16 +1098,32 @@ turn = 'player';
 selectedIdx = -1;
 gameActive = true;
 briscolaSuit = null;
-if (gameMode === 'briscola') {
-const bCard = deck[Math.floor(Math.random() * deck.length)];
-briscolaSuit = bCard.s;
-alert(`La Briscola è: ${briscolaSuit}`);
-} else {
-for(let i=0; i<4; i++) table.push(deck.pop());
+
+// INIT DUO MODE
+if(gameMode === 'scopa_duo') {
+    duoHands = [[], [], [], []];
+    duoPiles = [[], [], [], []];
+    duoScopas = [0, 0, 0, 0];
+    currentPlayerIndex = 0;
+    // Deal 4 cards to table
+    for(let i=0; i<4; i++) table.push(deck.pop());
+    dealRoundDuo();
+} 
+else {
+    // STANDARD MODES
+    if (gameMode === 'briscola') {
+    const bCard = deck[Math.floor(Math.random() * deck.length)];
+    briscolaSuit = bCard.s;
+    alert(`La Briscola è: ${briscolaSuit}`);
+    } else {
+    for(let i=0; i<4; i++) table.push(deck.pop());
+    }
+    dealRound();
 }
-dealRound();
+
 renderGame();
 if (turn === 'cpu' && cHand.length > 0) setTimeout(cpuTurn, 1500);
+if (gameMode === 'scopa_duo') nextDuoTurn();
 }
 
 function createDeck() {
@@ -1128,6 +1150,18 @@ if(deck.length) cHand.push(deck.pop());
 }
 renderGame();
 if (turn === 'cpu' && cHand.length > 0) setTimeout(cpuTurn, 1500);
+}
+
+function dealRoundDuo() {
+    if(!gameActive) return;
+    // Order: Player(0), Enemy1(1), Ally(2), Enemy2(3)
+    for(let i=0; i<6; i++) {
+        if(deck.length) duoHands[0].push(deck.pop()); // Player
+        if(deck.length) duoHands[1].push(deck.pop()); // Enemy 1
+        if(deck.length) duoHands[2].push(deck.pop()); // Ally
+        if(deck.length) duoHands[3].push(deck.pop()); // Enemy 2
+    }
+    renderGame();
 }
 
 function getMoves(card, tableArr) {
@@ -1167,6 +1201,27 @@ renderGame();
 
 function playCard() {
 if (selectedIdx === -1) { alert("Seleziona una carta!"); return; }
+
+// DUO MODE LOGIC
+if(gameMode === 'scopa_duo') {
+    const card = duoHands[0][selectedIdx]; // Player is index 0
+    const moves = getMoves(card, table);
+    
+    if (moves.length > 0) {
+        let best = moves.find(m => m.idx.length === table.length) || moves[0];
+        executeDuoMove(card, best, 0);
+    } else {
+        duoHands[0].splice(selectedIdx, 1);
+        table.push(card);
+    }
+    selectedIdx = -1;
+    renderGame();
+    currentPlayerIndex = 1; // Next is Enemy 1
+    setTimeout(nextDuoTurn, 1000);
+    return;
+}
+
+// STANDARD MODE LOGIC
 const card = pHand[selectedIdx];
 let move = null;
 if (gameMode === 'briscola') {
@@ -1218,6 +1273,20 @@ if (!isPlayer) cpuSendEmote();
 }
 }
 
+function executeDuoMove(card, move, playerIdx) {
+    if (move) {
+        move.idx.sort((a,b) => b-a);
+        move.idx.forEach(i => duoPiles[playerIdx].push(table.splice(i, 1)[0]));
+    }
+    duoPiles[playerIdx].push(card);
+    duoHands[playerIdx].splice(duoHands[playerIdx].indexOf(card), 1);
+    
+    if (table.length === 0 && deck.length > 0) {
+        duoScopas[playerIdx]++;
+        showNotify("SCOPA!");
+    }
+}
+
 function endTurn() {
 if (!gameActive) return;
 if (pHand.length === 0 && cHand.length === 0) {
@@ -1231,6 +1300,62 @@ setTimeout(cpuTurn, 1500);
 turn = 'player';
 renderGame();
 }
+}
+
+function nextDuoTurn() {
+    if(!gameActive) return;
+    
+    // Check if round ended
+    if(duoHands.every(h => h.length === 0)) {
+        if(deck.length > 0) {
+            setTimeout(dealRoundDuo, 1000);
+        } else {
+            setTimeout(endGameDuo, 1000);
+        }
+        return;
+    }
+
+    renderGame();
+
+    if(currentPlayerIndex === 0) {
+        // Player Turn - Wait for input
+    } else {
+        // CPU Turn (Enemy 1, Ally, Enemy 2)
+        setTimeout(() => cpuDuoTurn(currentPlayerIndex), 1500);
+    }
+}
+
+function cpuDuoTurn(idx) {
+    if(!gameActive) return;
+    const hand = duoHands[idx];
+    if(hand.length === 0) {
+        currentPlayerIndex = (currentPlayerIndex + 1) % 4;
+        nextDuoTurn();
+        return;
+    }
+
+    let played = false;
+    // Simple AI: Try to take cards
+    for (let i = 0; i < hand.length; i++) {
+        let moves = getMoves(hand[i], table);
+        if (moves.length > 0) {
+            let best = moves.find(m => m.idx.length === table.length) || moves[0];
+            executeDuoMove(hand[i], best, idx);
+            played = true;
+            break;
+        }
+    }
+    
+    if(!played) {
+        // Throw lowest card
+        let sorted = [...hand].sort((a,b) => a.v - b.v);
+        let card = sorted[0];
+        duoHands[idx].splice(duoHands[idx].indexOf(card), 1);
+        table.push(card);
+    }
+    
+    currentPlayerIndex = (currentPlayerIndex + 1) % 4;
+    nextDuoTurn();
 }
 
 function cpuTurn(forceImmediate = false) {
@@ -1330,6 +1455,82 @@ document.getElementById('result-modal').classList.add('show');
 }, 1000);
 }
 
+function endGameDuo() {
+    gameActive = false;
+    // Add remaining table cards to last player who took (simplified: add to player 0 for now or distribute)
+    // In standard scopa, last trick takes remaining. Here we just add to piles for simplicity or ignore if empty
+    
+    let teamAPoints = 0; // Player (0) + Ally (2)
+    let teamBPoints = 0; // Enemy1 (1) + Enemy2 (3)
+    
+    // Calculate points for each player
+    for(let i=0; i<4; i++) {
+        let stats = calcStats(duoPiles[i]);
+        let pts = 0;
+        
+        // Cards count (Team based usually, but let's do individual contribution)
+        if(stats.cards > 10) pts++; // 24 cards total, >10 is majority for a pair roughly
+        
+        // Simplified scoring for Duo:
+        // We sum all stats for Team A and Team B
+    }
+    
+    // Aggregate Stats
+    let statsA = { cards:0, coins:0, has7Coin:false, prim:0 };
+    let statsB = { cards:0, coins:0, has7Coin:false, prim:0 };
+    
+    for(let i=0; i<4; i++) {
+        let s = calcStats(duoPiles[i]);
+        let p = calcPrimiera(duoPiles[i]);
+        if(i===0 || i===2) {
+            statsA.cards += s.cards;
+            statsA.coins += s.coins;
+            if(s.has7Coin) statsA.has7Coin = true;
+            statsA.prim += p;
+        } else {
+            statsB.cards += s.cards;
+            statsB.coins += s.coins;
+            if(s.has7Coin) statsB.has7Coin = true;
+            statsB.prim += p;
+        }
+    }
+    
+    let scoreA = 0;
+    let scoreB = 0;
+    
+    if(statsA.cards > statsB.cards) scoreA++; else scoreB++;
+    if(statsA.coins > statsB.coins) scoreA++; else scoreB++;
+    if(statsA.has7Coin) scoreA++; else scoreB++;
+    if(statsA.prim > statsB.prim) scoreA++; else scoreB++;
+    
+    scoreA += (duoScopas[0] + duoScopas[2]);
+    scoreB += (duoScopas[1] + duoScopas[3]);
+    
+    state.totalScopas += (duoScopas[0] + duoScopas[2]);
+    
+    if(scoreA > scoreB) {
+        state.wins++;
+        state.coins += 50;
+        state.chests++;
+    }
+    saveState();
+    
+    document.getElementById('res-final-score').innerText = `${scoreA} - ${scoreB}`;
+    document.getElementById('res-cards').innerText = `${statsA.cards} - ${statsB.cards}`;
+    document.getElementById('res-coins').innerText = `${statsA.coins} - ${statsB.coins}`;
+    document.getElementById('res-seven').innerText = `${statsA.has7Coin?'SI':'NO'} - ${statsB.has7Coin?'SI':'NO'}`;
+    document.getElementById('res-prim').innerText = `${statsA.prim} - ${statsB.prim}`;
+    document.getElementById('res-scopas').innerText = `${duoScopas[0]+duoScopas[2]} - ${duoScopas[1]+duoScopas[3]}`;
+    
+    let title = scoreA > scoreB ? "VITTORIA SQUADRA!" : (scoreB > scoreA ? "SCONFITTA..." : "PARITÀ");
+    document.getElementById('res-title').innerText = title;
+    document.getElementById('res-title').style.color = scoreA > scoreB ? 'var(--secondary)' : (scoreB > scoreA ? 'var(--danger)' : 'var(--dark)');
+    
+    setTimeout(() => {
+        document.getElementById('result-modal').classList.add('show');
+    }, 1000);
+}
+
 function calcStats(pile) {
 return {
 cards: pile.length,
@@ -1365,6 +1566,42 @@ btn.disabled = (turn !== 'player');
 btn.style.transform = (turn === 'player') ? 'translateY(-50%) scale(1)' : 'translateY(-50%) scale(0.9)';
 btn.style.filter = (turn === 'player') ? 'none' : 'grayscale(1)';
 const skinClass = `skin-${state.selectedDeck}`;
+
+// DUO RENDER
+if(gameMode === 'scopa_duo') {
+    // Top Hand (Enemies/Ally mixed visually or just generic CPU hand)
+    const cHDiv = document.getElementById('cpu-hand');
+    cHDiv.innerHTML = '';
+    // Show backs for other players
+    let totalCpuCards = duoHands[1].length + duoHands[2].length + duoHands[3].length;
+    for(let i=0; i<totalCpuCards; i++) {
+        let el = document.createElement('div');
+        el.className = `card card-back`;
+        el.style.marginLeft = "-30px";
+        cHDiv.appendChild(el);
+    }
+    
+    // Player Hand
+    const pHDiv = document.getElementById('player-hand');
+    pHDiv.innerHTML = '';
+    duoHands[0].forEach((c, i) => {
+        let el = createCardEl(c, skinClass);
+        if (i === selectedIdx) el.classList.add('selected');
+        el.onclick = () => selectCard(i);
+        pHDiv.appendChild(el);
+    });
+    
+    // Table
+    const tDiv = document.getElementById('table-zone');
+    tDiv.innerHTML = '';
+    table.forEach(c => tDiv.appendChild(createCardEl(c, skinClass)));
+    
+    // Update Score Header for Duo
+    document.getElementById('cpu-score').innerText = "VS";
+    document.getElementById('player-score').innerText = "TU+ALL";
+    return;
+}
+
 const cHDiv = document.getElementById('cpu-hand');
 cHDiv.innerHTML = '';
 cHand.forEach(() => {
@@ -1425,7 +1662,8 @@ function redeemGiftCode(encodedCode) {
         const jsonStr = atob(encodedCode);
         const data = JSON.parse(jsonStr);
         
-        // 2. Controllo Scadenza
+        // 2. Controllo Scadenza (Timestamp in milliseconds)
+        // 1798761600000 corresponds to Jan 1, 2027
         if (Date.now() > data.exp) {
             throw new Error("Codice Scaduto!");
         }
