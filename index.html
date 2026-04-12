@@ -290,171 +290,6 @@ border-left: 5px solid transparent; text-align: left;
     .top-bar { top: 5px; right: 5px; }
     .resource-pill { padding: 5px 10px; font-size: 0.9rem; }
 }
-
-/* --- CARD PASS STYLES --- */
-.pass-container {
-    background: rgba(0,0,0,0.4);
-    border-radius: 20px;
-    padding: 20px;
-    border: 2px solid rgba(255,255,255,0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-.pass-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: linear-gradient(90deg, #ff9966, #ff5e62);
-    padding: 15px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-.pass-title { font-size: 1.5rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
-.pass-season { font-size: 0.9rem; opacity: 0.9; }
-.pass-progress-area {
-    background: rgba(0,0,0,0.3);
-    padding: 15px;
-    border-radius: 15px;
-    text-align: center;
-}
-.progress-bar-bg {
-    width: 100%;
-    height: 20px;
-    background: #333;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 10px 0;
-    position: relative;
-}
-.progress-bar-fill {
-    height: 100%;
-    background: linear-gradient(90deg, #f1c40f, #e67e22);
-    width: 0%;
-    transition: width 0.5s ease;
-}
-.credits-display { font-size: 1.2rem; font-weight: bold; color: var(--accent); }
-.pass-buy-btn {
-    background: linear-gradient(45deg, #8e44ad, #9b59b6);
-    border: none;
-    padding: 10px 20px;
-    border-radius: 25px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-    box-shadow: 0 4px 0 #6c3483;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-.pass-buy-btn:active { transform: translateY(4px); box-shadow: none; }
-.pass-buy-btn.purchased { background: #27ae60; box-shadow: 0 4px 0 #1e8449; cursor: default; }
-
-.pass-track {
-    display: flex;
-    flex-direction: column-reverse; /* Start from tier 1 at bottom */
-    gap: 15px;
-    padding-right: 10px;
-    overflow-y: auto;
-    max-height: calc(100vh - 350px);
-}
-.tier-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    position: relative;
-}
-.tier-line {
-    position: absolute;
-    left: 50%;
-    top: -15px;
-    bottom: -15px;
-    width: 4px;
-    background: #444;
-    z-index: 0;
-}
-.tier-row:first-child .tier-line { top: 50%; }
-.tier-row:last-child .tier-line { bottom: 50%; }
-
-.tier-reward {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border: 2px solid rgba(255,255,255,0.1);
-    border-radius: 10px;
-    padding: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    min-height: 80px;
-    position: relative;
-    transition: all 0.3s;
-}
-.tier-reward.free { border-left: 5px solid var(--secondary); }
-.tier-reward.premium { border-left: 5px solid var(--accent); background: rgba(241, 196, 15, 0.05); }
-.tier-reward.locked { opacity: 0.5; filter: grayscale(0.8); }
-.tier-reward.claimed { opacity: 0.8; border-color: var(--secondary); }
-.tier-reward-icon { font-size: 2rem; margin-bottom: 5px; }
-.tier-reward-name { font-size: 0.8rem; font-weight: bold; text-align: center; }
-
-.tier-marker {
-    width: 40px;
-    height: 40px;
-    background: #333;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    z-index: 1;
-    border: 3px solid #555;
-    flex-shrink: 0;
-}
-.tier-marker.active { background: var(--primary); border-color: white; box-shadow: 0 0 15px var(--primary); transform: scale(1.1); }
-.tier-marker.completed { background: var(--secondary); border-color: white; }
-
-.skip-btn {
-    background: var(--danger);
-    border: none;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 15px;
-    font-size: 0.7rem;
-    cursor: pointer;
-    margin-top: 5px;
-}
-
-/* Scrollbar styling for pass track */
-.pass-track::-webkit-scrollbar { width: 8px; }
-.pass-track::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
-.pass-track::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 4px; }
-
-/* LOBBY PASS BUTTON */
-.lobby-pass-btn {
-    background: linear-gradient(135deg, #ff9966, #ff5e62);
-    border: 4px solid white;
-    color: white;
-    padding: 15px 30px;
-    border-radius: 50px;
-    font-size: 1.5rem;
-    font-weight: 900;
-    cursor: pointer;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-top: 20px;
-    transition: transform 0.2s;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-.lobby-pass-btn:hover { transform: scale(1.05); }
-.lobby-pass-btn:active { transform: scale(0.95); }
-.pass-btn-icon { font-size: 2rem; }
-.pass-btn-text { display: flex; flex-direction: column; align-items: flex-start; line-height: 1; }
-.pass-btn-sub { font-size: 0.8rem; opacity: 0.9; font-weight: normal; margin-top: 5px; }
-
 </style>
 </head>
 <body>
@@ -493,7 +328,7 @@ border-left: 5px solid transparent; text-align: left;
 <div class="resource-pill"><span class="res-icon">💎</span> <span id="gem-display">0</span></div>
 <div class="resource-pill"><span class="res-icon">📦</span> <span id="chest-display">0</span></div>
 </div>
-<!-- PANEL: ARENA (PLAY + PASS BUTTON) -->
+<!-- PANEL: ARENA (PLAY) -->
 <div id="panel-arena" class="panel active">
 <div class="panel-header">
 <span>Arena</span>
@@ -536,19 +371,7 @@ border-left: 5px solid transparent; text-align: left;
 </div>
 </div>
 </div>
-
-<!-- LOBBY PASS BUTTON -->
-<div style="display:flex; justify-content:center; margin-top:20px;">
-    <button class="lobby-pass-btn" onclick="openPassScreen()">
-        <div class="pass-btn-icon">🎫</div>
-        <div class="pass-btn-text">
-            <span>CARD PASS</span>
-            <span class="pass-btn-sub">Stagione Estate ☀️</span>
-        </div>
-    </button>
 </div>
-</div>
-
 <!-- PANEL: DECKS & PINS -->
 <div id="panel-decks" class="panel">
 <div class="panel-header">Collezione</div>
@@ -666,50 +489,6 @@ border-left: 5px solid transparent; text-align: left;
 </div>
 </div>
 </div>
-
-<!-- MODAL: CARD PASS SCREEN -->
-<div id="pass-modal" class="modal-overlay" style="z-index: 3000;">
-    <div class="result-card" style="width: 95%; max-width: 600px; height: 90vh; padding: 0; display: flex; flex-direction: column; background: #2c3e50; border: 4px solid var(--accent);">
-        <!-- Modal Header -->
-        <div style="padding: 15px; background: rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid rgba(255,255,255,0.1);">
-            <h2 style="margin:0; font-size: 1.5rem; color: var(--accent);">CARD PASS ☀️</h2>
-            <button onclick="closePassScreen()" style="background:none; border:none; color:white; font-size:2rem; cursor:pointer;">&times;</button>
-        </div>
-        
-        <!-- Pass Content -->
-        <div style="flex-grow: 1; overflow-y: auto; padding: 20px;">
-            <div class="pass-container" style="background: transparent; border: none; padding: 0;">
-                <div class="pass-header">
-                    <div>
-                        <div class="pass-title">Summer Vibes</div>
-                        <div class="pass-season">Finisce tra 29 giorni</div>
-                    </div>
-                    <button id="buy-pass-btn" class="pass-buy-btn" onclick="buyPass()">
-                        <span>ACQUISTA PASS</span>
-                        <span>199 💎</span>
-                    </button>
-                </div>
-
-                <div class="pass-progress-area">
-                    <div class="credits-display"><span id="pass-credits">0</span> / 2500 Crediti</div>
-                    <div class="progress-bar-bg">
-                        <div class="progress-bar-fill" id="pass-progress-fill"></div>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.8rem; opacity:0.7;">
-                        <span>Tier <span id="current-tier">1</span></span>
-                        <button class="skip-btn" onclick="skipTier()">Skip Tier (29 💎)</button>
-                    </div>
-                </div>
-
-                <div class="pass-track" id="pass-track">
-                    <!-- Tiers generated by JS -->
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-</div>
 </div>
 <!-- REVEAL OVERLAY -->
 <div id="reveal-overlay" class="reveal-overlay">
@@ -815,7 +594,7 @@ const DECKS = [
 
 //RL - software SERIES
 { id: 'mrcat', name: 'RL|MRcat', price: 2700, locked: true, icon: '🐈'},
-{ id: 'brd', name: 'RL|BRD', price: 2700, locked: true, icon: '👨🏫'},
+{ id: 'brd', name: 'RL|BRD', price: 2700, locked: true, icon: '👨‍🏫'},
 { id: 'laserarena', name: 'RL|Laser Arena',price: 2700, locked:true, icon: '🔵'},
 
 //GLI ELEMENTI SERIES
@@ -868,7 +647,7 @@ const DECKS = [
 { id: 'gamepad', name: 'Gamer', price: 1900, locked: true, icon: '🎮' },
 { id: 'mac', name: 'Mac OS', price: 2500, locked: true, icon: '🍎'},
 { id: 'tech-code', name: 'Coding', price: 1800, locked: true, icon: '💻' },
-{ id: 'tech-hacker', name: 'Hacker', price: 2000, locked: true, icon: '👨‍' },
+{ id: 'tech-hacker', name: 'Hacker', price: 2000, locked: true, icon: '👨‍💻' },
 { id: 'tech-cpu', name: 'CPU Chip', price: 1900, locked: true, icon: '🖥️' },
 { id: 'tech-wifi', name: 'Wi-Fi', price: 1700, locked: true, icon: '📶' },
 { id: 'tech-robot', name: 'Robot', price: 2100, locked: true, icon: '🤖' },
@@ -879,12 +658,9 @@ const DECKS = [
 { id: 'tech-retro', name: 'Retro PC', price: 2000, locked: true, icon: '📼' },
 
 // VEHICLE SERIES
-{ id: 'vehicle-red-car', name: 'Auto rossa', price: 0, locked: true, icon: '🚗'},
+{ id: 'vehicle-red-car', name: 'Auto rossa', price: 1750, locked: true, icon: '🚗'},
 { id: 'vehicle-police-car', name: 'Auto della polizia', price: 9999999, locked: true, icon: '🚓'},
-{ id: 'vehicle-bus', name: 'Bus', price: 9999999, locked: true, icon: '🚌'},
-
-// PASS EXCLUSIVE DECK (SUMMER THEME)
-{ id: 'pass-summer-exclusive', name: 'Summer Paradise', price: 99, locked: true, icon: '🏖️', isPassExclusive: true }
+{ id: 'vehicle-bus', name: 'Bus', price: 9999999, locked: true, icon: '🚌'}
 ];
 
 const PINS = [
@@ -916,74 +692,6 @@ const PINS = [
     { id: 'pin_clippy', icon: '📎', price: 1000, locked: true, anim: 'pin-anim-clippy' }
 ];
 
-// --- CARD PASS CONFIGURATION ---
-const PASS_TIERS = 30;
-const CREDITS_PER_TIER = 2500;
-const SKIP_COST = 29;
-const PASS_PRICE = 199;
-
-// Generate Pass Rewards - DISTRIBUTED RESOURCES
-const PASS_REWARDS = [];
-
-// Helper to add rewards
-function addReward(tier, type, amount, icon, name) {
-    if(!PASS_REWARDS[tier-1]) PASS_REWARDS[tier-1] = { free: {}, premium: {} };
-    PASS_REWARDS[tier-1].free = { type, amount, icon, name };
-}
-function addPremReward(tier, type, amount, icon, name) {
-    if(!PASS_REWARDS[tier-1]) PASS_REWARDS[tier-1] = { free: {}, premium: {} };
-    PASS_REWARDS[tier-1].premium = { type, amount, icon, name };
-}
-
-// Distribute Free Rewards (Total ~2500 Coins, 100 Gems, 5 Chests)
-// Coins: ~83 per tier avg. Let's do small amounts every tier.
-for(let i=1; i<=30; i++) {
-    // Free: Small amount of coins every tier
-    addReward(i, 'coins', 80, '🪙', '80 Monete');
-}
-// Adjust specific tiers for variety
-addReward(5, 'coins', 100, '🪙', '100 Monete');
-addReward(10, 'coins', 100, '🪙', '100 Monete');
-addReward(15, 'coins', 100, '🪙', '100 Monete');
-addReward(20, 'coins', 100, '🪙', '100 Monete');
-addReward(25, 'coins', 100, '🪙', '100 Monete');
-addReward(30, 'coins', 150, '🪙', '150 Monete'); // Final boost
-
-// Free: Gems distributed sparsely
-addReward(10, 'gems', 20, '💎', '20 Gemme');
-addReward(20, 'gems', 30, '💎', '30 Gemme');
-addReward(30, 'gems', 50, '💎', '50 Gemme'); // Total 100
-
-// Free: Chests distributed sparsely
-addReward(7, 'chests', 1, '📦', '1 Busta');
-addReward(14, 'chests', 1, '📦', '1 Busta');
-addReward(21, 'chests', 1, '📦', '1 Busta');
-addReward(28, 'chests', 2, '📦', '2 Buste'); // Total 5
-
-// Distribute Premium Rewards (Total ~2500 Extra Coins, 5 Extra Chests, 1 Deck)
-// Premium: Extra coins on top of free
-for(let i=1; i<=30; i++) {
-    addPremReward(i, 'coins', 80, '🪙', '+80 Monete');
-}
-// Boost specific tiers
-addPremReward(5, 'coins', 120, '🪙', '+120 Monete');
-addPremReward(10, 'coins', 120, '🪙', '+120 Monete');
-addPremReward(15, 'coins', 120, '🪙', '+120 Monete');
-addPremReward(20, 'coins', 120, '🪙', '+120 Monete');
-addPremReward(25, 'coins', 120, '🪙', '+120 Monete');
-addPremReward(30, 'coins', 170, '🪙', '+170 Monete'); 
-
-// Premium: Extra Chests
-addPremReward(5, 'chests', 1, '📦', '+1 Busta');
-addPremReward(10, 'chests', 1, '📦', '+1 Busta');
-addPremReward(15, 'chests', 1, '📦', '+1 Busta');
-addPremReward(20, 'chests', 1, '📦', '+1 Busta');
-addPremReward(25, 'chests', 1, '📦', '+1 Busta');
-
-// Premium: Final Reward Deck
-addPremReward(30, 'deck', 1, '🏖️', 'Mazzo Estate');
-
-
 const DEFAULT_STATE = {
 coins: 1000,
 gems: 50,
@@ -995,11 +703,7 @@ selectedPin: 'pin_happy',
 wins: 0,
 totalScopas: 0,
 totalCards: 0,
-level: 1,
-// Pass State
-passCredits: 0,
-passPurchased: false,
-claimedTiers: [] // Array of claimed tier numbers
+level: 1
 };
 let state = { ...DEFAULT_STATE };
 
@@ -1051,7 +755,6 @@ renderShop();
 renderPins();
 updateArenaPreview();
 checkUrlForGift(); // Controlla se c'è un regalo da riscattare
-renderPass();
 }
 
 function updateUI() {
@@ -1067,11 +770,6 @@ document.getElementById('arena-level').innerText = state.level;
 document.getElementById('arena-wins').innerText = state.wins;
 let pct = (state.wins % 10) * 10;
 document.getElementById('win-bar').style.width = pct + '%';
-
-// Update Pass UI if visible
-if(document.getElementById('pass-modal').classList.contains('show')) {
-    renderPass();
-}
 }
 
 function showPanel(id) {
@@ -1084,10 +782,7 @@ if(id === 'decks') btns[1].classList.add('active');
 if(id === 'shop') btns[2].classList.add('active');
 if(id === 'trophies') btns[3].classList.add('active');
 if(id === 'events') btns[4].classList.add('active');
-
-if(id === 'arena') {
-    updateArenaPreview();
-}
+if(id === 'arena') updateArenaPreview();
 if(id === 'decks') switchDeckTab('decks');
 if(id === 'shop') renderShop();
 }
@@ -1158,10 +853,6 @@ const grid = document.getElementById('shop-grid');
 grid.innerHTML = '';
 DECKS.forEach(d => {
 if (state.ownedDecks.includes(d.id)) return;
-// Don't show pass exclusive decks in shop until next season logic would be implemented
-// For now, we just hide them or show them as locked special items
-if(d.isPassExclusive) return; 
-
 const el = document.createElement('div');
 el.className = 'card-item';
 let textColor = 'white';
@@ -1317,7 +1008,7 @@ rewardColor = '#3498db';
         rewardColor = '#f1c40f';
     }
 } else {
-const locked = DECKS.filter(d => !state.ownedDecks.includes(d.id) && !d.isPassExclusive);
+const locked = DECKS.filter(d => !state.ownedDecks.includes(d.id));
 if (locked.length > 0) {
 const newDeck = locked[Math.floor(Math.random() * locked.length)];
 state.ownedDecks.push(newDeck.id);
@@ -1371,7 +1062,7 @@ playerEmoteEl.className = '';
 }
 
 function cpuSendEmote() {
-const emotes = ['😡', '', '😴', ''];
+const emotes = ['😡', '😎', '😴', '🤪'];
 const emote = emotes[Math.floor(Math.random() * emotes.length)];
 const cpuEmoteEl = document.getElementById('cpu-emote');
 cpuEmoteEl.innerText = emote;
@@ -1744,24 +1435,11 @@ if (pStats.cards > 20) pPts = 1; else cPts = 1;
 }
 state.totalScopas += pScopas;
 state.totalCards += pPile.length;
-
-// --- PASS CREDITS LOGIC ---
-let creditsEarned = 0;
 if (pPts > cPts) {
-    state.wins++;
-    state.coins += 50;
-    state.chests++;
-    creditsEarned = 1000; // Win
-} else if (pPts === cPts) {
-    creditsEarned = 500; // Draw
-} else {
-    creditsEarned = 0; // Loss
+state.wins++;
+state.coins += 50;
+state.chests++;
 }
-
-if(creditsEarned > 0) {
-    addPassCredits(creditsEarned);
-}
-
 saveState();
 document.getElementById('res-final-score').innerText = `${pPts} - ${cPts}`;
 document.getElementById('res-cards').innerText = `${pStats.cards} - ${cStats.cards}`;
@@ -1834,11 +1512,7 @@ function endGameDuo() {
         state.wins++;
         state.coins += 50;
         state.chests++;
-        addPassCredits(1000); // Win
-    } else if (scoreA === scoreB) {
-        addPassCredits(500); // Draw
     }
-    
     saveState();
     
     document.getElementById('res-final-score').innerText = `${scoreA} - ${scoreB}`;
@@ -2044,177 +1718,6 @@ function redeemGiftCode(encodedCode) {
         console.error(e);
         msg.innerText = e.message || "Codice non valido.";
         icon.innerText = "❌";
-    }
-}
-
-// --- CARD PASS FUNCTIONS ---
-
-function openPassScreen() {
-    document.getElementById('pass-modal').classList.add('show');
-    renderPass();
-}
-
-function closePassScreen() {
-    document.getElementById('pass-modal').classList.remove('show');
-}
-
-function renderPass() {
-    const track = document.getElementById('pass-track');
-    track.innerHTML = '';
-    
-    // Calculate current tier based on credits
-    // Tier 1 is 0-2499, Tier 2 is 2500-4999, etc.
-    // But visually we want to show progress towards the NEXT tier
-    let currentTierLevel = Math.floor(state.passCredits / CREDITS_PER_TIER) + 1;
-    if(currentTierLevel > PASS_TIERS) currentTierLevel = PASS_TIERS;
-    
-    let progressInTier = state.passCredits % CREDITS_PER_TIER;
-    let pct = (progressInTier / CREDITS_PER_TIER) * 100;
-    
-    document.getElementById('pass-credits').innerText = state.passCredits;
-    document.getElementById('current-tier').innerText = currentTierLevel;
-    document.getElementById('pass-progress-fill').style.width = `${pct}%`;
-    
-    // Update Buy Button
-    const buyBtn = document.getElementById('buy-pass-btn');
-    if(state.passPurchased) {
-        buyBtn.classList.add('purchased');
-        buyBtn.innerHTML = '<span>PASS ACQUISTATO</span> <span>✅</span>';
-        buyBtn.onclick = null;
-    } else {
-        buyBtn.classList.remove('purchased');
-        buyBtn.innerHTML = '<span>ACQUISTA PASS</span> <span>199 💎</span>';
-        buyBtn.onclick = buyPass;
-    }
-
-    // Render Tiers (Reverse order so Tier 30 is at top if we use flex-col-reverse, 
-    // but here we use flex-col-reverse in CSS so we append 1 to 30)
-    for(let i=1; i<=PASS_TIERS; i++) {
-        const rewardData = PASS_REWARDS[i-1];
-        const isClaimedFree = state.claimedTiers.includes(`free_${i}`);
-        const isClaimedPrem = state.claimedTiers.includes(`prem_${i}`);
-        const isUnlocked = i <= currentTierLevel;
-        
-        const row = document.createElement('div');
-        row.className = 'tier-row';
-        
-        // Free Reward (Left)
-        const freeEl = createRewardEl(rewardData.free, isClaimedFree, isUnlocked, 'free', i);
-        
-        // Marker (Center)
-        const marker = document.createElement('div');
-        marker.className = `tier-marker ${i === currentTierLevel ? 'active' : ''} ${i < currentTierLevel ? 'completed' : ''}`;
-        marker.innerText = i;
-        
-        // Premium Reward (Right)
-        const premEl = createRewardEl(rewardData.premium, isClaimedPrem, isUnlocked && state.passPurchased, 'premium', i);
-        
-        // Line connector
-        const line = document.createElement('div');
-        line.className = 'tier-line';
-        
-        row.appendChild(freeEl);
-        row.appendChild(marker);
-        row.appendChild(premEl);
-        row.appendChild(line);
-        
-        track.appendChild(row);
-    }
-}
-
-function createRewardEl(reward, claimed, unlocked, type, tierNum) {
-    if(!reward) return document.createElement('div'); // Safety check
-
-    const el = document.createElement('div');
-    el.className = `tier-reward ${type} ${claimed ? 'claimed' : ''} ${!unlocked ? 'locked' : ''}`;
-    
-    let content = `<div class="tier-reward-icon">${reward.icon}</div>`;
-    content += `<div class="tier-reward-name">${reward.name}</div>`;
-    
-    if(unlocked && !claimed) {
-        content += `<button class="btn-action" style="margin-top:5px; padding:5px 10px; font-size:0.7rem;" onclick="claimReward(${tierNum}, '${type}')">RISCATTA</button>`;
-    } else if (claimed) {
-        content += `<div style="font-size:0.7rem; color:var(--secondary); margin-top:5px;">RISCATTATO</div>`;
-    } else if (!unlocked && type === 'premium' && !state.passPurchased) {
-        content += `<div style="font-size:0.7rem; color:#aaa; margin-top:5px;">🔒 PASS</div>`;
-    }
-    
-    el.innerHTML = content;
-    return el;
-}
-
-function claimReward(tier, type) {
-    const rewardData = PASS_REWARDS[tier-1];
-    const reward = type === 'free' ? rewardData.free : rewardData.premium;
-    
-    // Give Reward
-    giveReward(reward);
-    
-    // Mark Claimed
-    state.claimedTiers.push(`${type}_${tier}`);
-    saveState();
-    renderPass();
-}
-
-function giveReward(reward) {
-    if(reward.type === 'coins') {
-        state.coins += reward.amount;
-        alert(`Hai ricevuto ${reward.amount} Monete!`);
-    } else if (reward.type === 'gems') {
-        state.gems += reward.amount;
-        alert(`Hai ricevuto ${reward.amount} Gemme!`);
-    } else if (reward.type === 'chests') {
-        state.chests += reward.amount;
-        alert(`Hai ricevuto ${reward.amount} Buste!`);
-    } else if (reward.type === 'deck') {
-        if(!state.ownedDecks.includes(reward.id)) {
-            state.ownedDecks.push(reward.id);
-            alert(`Nuovo Mazzo Sbloccato: Summer Paradise!`);
-        } else {
-            state.coins += 1000; // Compensation
-            alert(`Hai già questo mazzo! Ecco 1000 monete.`);
-        }
-    }
-}
-
-function buyPass() {
-    if(state.gems >= PASS_PRICE) {
-        if(confirm(`Acquistare il Card Pass Estivo per ${PASS_PRICE} Gemme?`)) {
-            state.gems -= PASS_PRICE;
-            state.passPurchased = true;
-            saveState();
-            renderPass();
-        }
-    } else {
-        alert("Non hai abbastanza gemme!");
-    }
-}
-
-function skipTier() {
-    if(state.gems >= SKIP_COST) {
-        if(confirm(`Skippare al prossimo Tier per ${SKIP_COST} Gemme?`)) {
-            state.gems -= SKIP_COST;
-            state.passCredits += CREDITS_PER_TIER;
-            // Cap at max
-            if(state.passCredits > PASS_TIERS * CREDITS_PER_TIER) {
-                state.passCredits = PASS_TIERS * CREDITS_PER_TIER;
-            }
-            saveState();
-            renderPass();
-        }
-    } else {
-        alert("Non hai abbastanza gemme!");
-    }
-}
-
-function addPassCredits(amount) {
-    state.passCredits += amount;
-    // Optional: Cap credits
-    // if(state.passCredits > PASS_TIERS * CREDITS_PER_TIER) state.passCredits = PASS_TIERS * CREDITS_PER_TIER;
-    saveState();
-    // If on pass panel, update immediately
-    if(document.getElementById('pass-modal').classList.contains('show')) {
-        renderPass();
     }
 }
 
