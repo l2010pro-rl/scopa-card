@@ -6,62 +6,92 @@
 <title>Super Scopa Royale: Ultimate Edition</title>
 <style>
 :root {
---primary: #3498db;
---secondary: #2ecc71;
---accent: #f1c40f;
---danger: #e74c3c;
---dark: #2c3e50;
---light: #ecf0f1;
---sidebar-w: 260px;
---gold: #ffd700;
+    --primary: #3498db;
+    --secondary: #2ecc71;
+    --accent: #f1c40f;
+    --danger: #e74c3c;
+    --dark: #2c3e50;
+    --light: #ecf0f1;
+    --sidebar-w: 260px;
+    --gold: #ffd700;
 }
 * { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
 body {
-margin: 0;
-padding: 0;
-width: 100vw;
-height: 100vh;
-overflow: hidden;
-font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-background: radial-gradient(circle at center, #2b32b2, #1488cc);
-color: white;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: radial-gradient(circle at center, #2b32b2, #1488cc);
+    color: white;
 }
 
 /* --- LAYOUT RESPONSIVE --- */
 #app-container { display: flex; width: 100%; height: 100%; }
 .sidebar {
-width: var(--sidebar-w);
-background: rgba(20, 20, 30, 0.95);
-backdrop-filter: blur(10px);
-display: flex;
-flex-direction: column;
-padding: 20px;
-border-right: 2px solid rgba(255,255,255,0.1);
-z-index: 10;
-box-shadow: 5px 0 20px rgba(0,0,0,0.5);
-transition: transform 0.3s ease;
+    width: var(--sidebar-w);
+    background: rgba(20, 20, 30, 0.95);
+    backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border-right: 2px solid rgba(255,255,255,0.1);
+    z-index: 10;
+    box-shadow: 5px 0 20px rgba(0,0,0,0.5);
+    transition: transform 0.3s ease;
 }
 .logo-area { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid rgba(255,255,255,0.1); }
 .logo-text { font-size: 1.8rem; font-weight: 900; color: var(--accent); text-shadow: 2px 2px 0 #000; font-style: italic; line-height: 1.1; }
 .logo-sub { font-size: 0.8rem; color: #aaa; letter-spacing: 2px; }
 .menu-btn {
-background: linear-gradient(to right, #34495e, #2c3e50);
-border: none; border-radius: 10px; padding: 12px; margin-bottom: 10px;
-font-size: 1rem; font-weight: bold; color: white; cursor: pointer;
-display: flex; align-items: center; gap: 15px; transition: all 0.2s;
-border-left: 5px solid transparent; text-align: left;
+    background: linear-gradient(to right, #34495e, #2c3e50);
+    border: none; border-radius: 10px; padding: 12px; margin-bottom: 10px;
+    font-size: 1rem; font-weight: bold; color: white; cursor: pointer;
+    display: flex; align-items: center; gap: 15px; transition: all 0.2s;
+    border-left: 5px solid transparent; text-align: left;
 }
 .menu-btn:hover { transform: translateX(5px); background: linear-gradient(to right, #415b76, #34495e); }
 .menu-btn.active { background: linear-gradient(to right, var(--primary), #2980b9); border-left: 5px solid var(--accent); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
 .menu-icon { font-size: 1.4rem; width: 30px; text-align: center; }
 
-.main-content { flex-grow: 1; position: relative; overflow: hidden; background: url('image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIiBvcGFjaXR5PSIwLjEiPjxwYXRoIGQ9Ik0wIDIwaDIwdjIwSDBWMjB6bTIwIDBoMjB2MjBIMjBWMjB6IiBmaWxsPSIjZmZmIi8+PC9zdmc+'); }
+.main-content { 
+    flex-grow: 1; 
+    position: relative; 
+    overflow: hidden; 
+    background: transparent; 
+}
+
 .panel { position: absolute; top: 0; left: 0; width: 100%; height: 100%; padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s; overflow-y: auto; display: none; }
 .panel.active { opacity: 1; pointer-events: all; display: block; }
 .panel-header { font-size: 2.5rem; font-weight: 900; margin-bottom: 20px; text-transform: uppercase; text-shadow: 3px 3px 0 rgba(0,0,0,0.3); display: flex; justify-content: space-between; align-items: center; }
 
-.top-bar { position: absolute; top: 10px; right: 10px; display: flex; gap: 10px; z-index: 100; flex-wrap: wrap; justify-content: flex-end; }
-.resource-pill { background: rgba(0,0,0,0.8); padding: 8px 15px; border-radius: 30px; display: flex; align-items: center; gap: 8px; font-weight: bold; font-size: 1rem; border: 2px solid rgba(255,255,255,0.2); box-shadow: 0 5px 10px rgba(0,0,0,0.3); }
+.top-bar {
+    position: absolute;
+    top: 18px;
+    right: 58px;
+    display: flex;
+    gap: 12px;
+    z-index: 100;
+    flex-wrap: nowrap;
+    justify-content: flex-end;
+}
+.resource-pill {
+    min-width: 82px;
+    height: 28px;
+    background: rgba(0,0,0,0.72);
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    border: 2px solid rgba(255,255,255,0.22);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+    transform: skewX(-10deg);
+}
 .res-icon { font-size: 1.2rem; }
 
 .grid-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; padding-bottom: 50px; }
@@ -75,21 +105,100 @@ border-left: 5px solid transparent; text-align: left;
 .btn-action.buy { background: var(--accent); color: #333; box-shadow: 0 4px 0 #d4ac0d; }
 .btn-action.exchange { background: #9b59b6; color: white; box-shadow: 0 4px 0 #8e44ad; }
 
-.arena-dashboard { display: flex; gap: 20px; height: calc(100% - 100px); flex-wrap: wrap; }
-.arena-left { flex: 1; min-width: 300px; background: rgba(0,0,0,0.3); border-radius: 20px; padding: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid rgba(255,255,255,0.1); }
-.deck-showcase { width: 180px; height: 260px; background: #333; border-radius: 15px; border: 5px solid white; display: flex; justify-content: center; align-items: center; font-size: 4rem; box-shadow: 0 20px 50px rgba(0,0,0,0.5); margin-bottom: 20px; position: relative; }
-.deck-showcase::after { content: ''; position: absolute; top: 10px; left: 10px; right: -10px; bottom: -10px; border: 2px solid rgba(255,255,255,0.3); border-radius: 15px; z-index: -1; }
-.arena-right { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 15px; }
-.mode-card { background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05)); border: 2px solid rgba(255,255,255,0.2); border-radius: 15px; padding: 15px; display: flex; align-items: center; gap: 15px; cursor: pointer; transition: all 0.2s; }
-.mode-card:hover { background: rgba(255,255,255,0.2); transform: scale(1.02); }
-.mode-card.event { border-color: var(--danger); background: linear-gradient(135deg, rgba(231, 76, 60, 0.2), rgba(0,0,0,0.2)); }
-.mode-icon { font-size: 2.5rem; width: 60px; text-align: center; }
-.mode-info h3 { margin: 0; font-size: 1.2rem; }
-.mode-info p { margin: 5px 0 0; opacity: 0.8; font-size: 0.85rem; }
+/* LAYOUT LOBBY */
+.lobby-layout {
+    position: absolute; inset: 52px 24px 20px 12px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+}
+.lobby-center {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 18px; position: relative;
+}
+.lobby-deck-frame {
+    width: 44%; min-width: 320px; max-width: 360px; aspect-ratio: 3/4.3;
+    border: 3px solid rgba(255,255,255,0.85); border-radius: 2px;
+    background: rgba(0,0,0,0.08); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 16px;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.18); position: relative;
+}
+.lobby-deck-frame::before {
+    content: ""; position: absolute; inset: 18px;
+    border: 2px solid rgba(255,255,255,0.16); border-radius: 6px 12px 8px 14px;
+}
+.lobby-deck-label { font-weight: 700; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; opacity: 0.85; }
+.lobby-deck-card {
+    width: 56%; min-width: 170px; aspect-ratio: 2.5/3.7; border-radius: 12px 8px 14px 10px;
+    background: #333; border: 4px solid white; display: flex; align-items: center;
+    justify-content: center; font-size: 4.6rem; box-shadow: 0 10px 20px rgba(0,0,0,0.7);
+    transform: rotate(-2deg);
+}
+.lobby-deck-frame h2 { margin: 5px 0 0 0; font-size: 1rem; text-align: center; }
+
+.lobby-bottom-play {
+    display: flex; justify-content: center;
+    align-items: center; gap: 0;
+}
+.lobby-play-btn {
+    padding: 14px 72px; border-radius: 2px; border: 3px solid rgba(0,0,0,0.35);
+    background: linear-gradient(135deg, #2ecc71, #27ae60); color: white;
+    font-size: 1.3rem; font-weight: 900; text-transform: uppercase; cursor: pointer;
+    box-shadow: 0 10px 18px rgba(0,0,0,0.5); letter-spacing: 1px;
+    transition: transform 0.1s, box-shadow 0.1s; min-width: 190px;
+}
+.lobby-play-btn:active { transform: translateY(3px); box-shadow: 0 4px 10px rgba(0,0,0,0.6); }
+
+/* EVENT BUTTON STYLES */
+.lobby-event-btn {
+    width: 60px; height: 60px;
+    display: flex; align-items: center; justify-content: center;
+    border: 3px solid rgba(0,0,0,0.35); 
+    background: linear-gradient(135deg, #f1c40f, #f39c12);
+    margin-left: -2px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 1.5rem;
+    box-shadow: 0 10px 18px rgba(0,0,0,0.5);
+    transition: transform 0.1s;
+    position: relative;
+}
+.lobby-event-btn:active { transform: translateY(3px); box-shadow: 0 4px 10px rgba(0,0,0,0.6); }
+.lobby-event-tooltip {
+    position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%);
+    font-size: 0.7rem; text-transform: uppercase; white-space: nowrap;
+    background: rgba(0,0,0,0.8); padding: 2px 6px; border-radius: 4px;
+    pointer-events: none;
+}
+
+.screen-note { opacity: 0.8; margin-top: 6px; font-size: 0.95rem; }
+.friend-club-panel {
+    max-width: 980px; margin: 52px auto 0; background: rgba(20, 24, 34, 0.75);
+    border: 2px solid rgba(255,255,255,0.18); border-radius: 18px 10px 20px 12px;
+    padding: 18px; box-shadow: 0 18px 32px rgba(0,0,0,0.35);
+}
+.friend-club-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 18px; }
+.back-lobby-btn {
+    background: rgba(255,255,255,0.12); color: white; border: 2px solid rgba(255,255,255,0.25);
+    padding: 10px 16px; border-radius: 14px 10px 16px 8px; cursor: pointer; font-weight: 700;
+}
+.friend-club-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 18px; }
+.friend-club-box {
+    background: rgba(255,255,255,0.08); border: 2px solid rgba(255,255,255,0.14);
+    border-radius: 18px 10px 16px 12px; padding: 16px; min-height: 220px;
+}
+.list-card {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 12px; margin-bottom: 10px; background: rgba(0,0,0,0.2);
+    border-radius: 14px 8px 16px 10px;
+}
+.mini-btn {
+    background: linear-gradient(135deg, #3498db, #2ecc71); color: white; border: none;
+    padding: 8px 12px; border-radius: 12px 8px 14px 10px; font-weight: 700; cursor: pointer;
+}
 
 .chest-stage { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; position: relative; background: rgba(0,0,0,0.2); border-radius: 20px; padding: 20px; border: 2px solid rgba(255,255,255,0.1); }
 .chest-big { font-size: 8rem; cursor: pointer; animation: float 3s ease-in-out infinite; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); transition: transform 0.2s; position: relative; z-index: 2; }
-.chest-big:hover { transform: scale(1.1); }
+.chest-big-img { width: 150px; height: 150px; object-fit: contain; cursor: pointer; animation: float 3s ease-in-out infinite; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); transition: transform 0.2s; position: relative; z-index: 2; }
+.chest-big:hover, .chest-big-img:hover { transform: scale(1.1); }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
 .reveal-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 50; display: none; justify-content: center; align-items: center; flex-direction: column; }
@@ -115,6 +224,7 @@ border-left: 5px solid transparent; text-align: left;
 .emote-btn:active { transform: scale(0.9); }
 .emote-trigger { position: absolute; left: 10px; bottom: 120px; width: 50px; height: 50px; border-radius: 50%; background: var(--primary); border: 4px solid white; color: white; font-size: 1.2rem; cursor: pointer; z-index: 250; display: flex; justify-content: center; align-items: center; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
 
+/* --- ANIMATIONS & PINS --- */
 @keyframes pinBounce { 0% { transform: scale(0) rotate(-180deg); opacity: 0; } 60% { transform: scale(1.3) rotate(10deg); opacity: 1; } 80% { transform: scale(0.9) rotate(-5deg); } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
 @keyframes pinSpin { 0% { transform: scale(0) rotate(0deg); opacity: 0; } 100% { transform: scale(1) rotate(360deg); opacity: 1; } }
 @keyframes pinShake { 0% { transform: scale(0) translateX(0); opacity: 0; } 20% { transform: scale(1.2) translateX(-10px); opacity: 1; } 40% { transform: scale(1.2) translateX(10px); } 60% { transform: scale(1.2) translateX(-10px); } 80% { transform: scale(1.2) translateX(10px); } 100% { transform: scale(1) translateX(0); } }
@@ -122,6 +232,28 @@ border-left: 5px solid transparent; text-align: left;
 .pin-anim-spin { animation: pinSpin 0.6s ease-out forwards; }
 .pin-anim-shake { animation: pinShake 0.6s ease-in-out forwards; }
 .pin-anim-clippy { animation: pinBounce 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; filter: drop-shadow(0 0 10px gold); }
+
+/* CARD LEVEL 2 ANIMATIONS */
+@keyframes cardGlow { 0% { box-shadow: 0 0 5px var(--accent); } 50% { box-shadow: 0 0 20px var(--accent), 0 0 10px white; } 100% { box-shadow: 0 0 5px var(--accent); } }
+@keyframes cardFloat { 0% { transform: translateY(0); } 50% { transform: translateY(-5px); } 100% { transform: translateY(0); } }
+@keyframes cardRotate3D { 0% { transform: perspective(500px) rotateY(0deg); } 100% { transform: perspective(500px) rotateY(360deg); } }
+@keyframes cardPulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+/* SIX-SEVEN STYLE ANIMATION (Teddy/Coso Deck) */
+@keyframes sixSevenWiggle {
+    0% { transform: scale(1) rotate(0deg); }
+    20% { transform: scale(1.1) rotate(-15deg); }
+    40% { transform: scale(1.1) rotate(15deg); }
+    60% { transform: scale(1.1) rotate(-15deg); }
+    80% { transform: scale(1.1) rotate(15deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+.card-lvl2-glow { animation: cardGlow 2s infinite; border-color: var(--gold) !important; }
+.card-lvl2-float { animation: cardFloat 3s ease-in-out infinite; }
+.card-lvl2-spin { animation: cardRotate3D 4s linear infinite; }
+.card-lvl2-pulse { animation: cardPulse 1.5s ease-in-out infinite; }
+.card-lvl2-sixseven { animation: sixSevenWiggle 0.8s ease-in-out infinite; border: 2px solid #ff00de; box-shadow: 0 0 15px #ff00de; }
 
 .card { width: 60px; height: 90px; border-radius: 8px; position: relative; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; box-shadow: 2px 2px 5px rgba(0,0,0,0.3); display: flex; flex-direction: column; justify-content: space-between; padding: 4px; font-weight: bold; font-family: 'Courier New', monospace; background: white; border: 1px solid #ccc; flex-shrink: 0; }
 .card:hover { transform: translateY(-15px); z-index: 10; }
@@ -175,8 +307,9 @@ border-left: 5px solid transparent; text-align: left;
 .skin-mac { background: linear-gradient(#857bc9, #6d6790); border: 4px solid #bcc1c3; color: #1d0b11; border-radius: 20px; } .skin-mac .card-suit { font-size: 3rem; } .skin-mac.red { color: #d30b51; border-color: #fd79a8; }
 .skin-fenice { background: linear-gradient(#d6881c, #ff3b0a); border: none; color: #1d0b11; border-radius: 10px 25px 10px 25px; } .skin-fenice .card-suit { font-size: 3rem; } .skin-fenice.red { color: #d30b51; border-color: #fd79a8; }
 .skin-fantasma { background: #b2b2b2; border: none; color: #171113; border-radius: 15px; } .skin-fantasma .card-suit { font-size: 3rem; } .skin-fantasma.red { color: #b30909; border-color: #fd4f3f; }
-.skin-teddy { background: linear-gradient(#e15fb2, #e796c9); border: 2px; color: #59192e; border-radius: 20px; } .skin-teddy .card-suit { font-size: 3rem; } .skin-teddy.red { color: #df0a8e; border-color: #e477ff; }
+.skin-maiale { background: linear-gradient(#e15fb2, #e796c9); border: 2px; color: #59192e; border-radius: 20px; } .skin-maiale .card-suit { font-size: 3rem; } .skin-maiale.red { color: #df0a8e; border-color: #e477ff; }
 .skin-pollo { background: linear-gradient(#f0360d, #f09d0d, #ffb192, #fdc9c9, white, white); border: 3px; color: #171113; border-radius: 3px 3px 3px 3px; } .skin-pollo .card-suit { font-size: 3rem; } .skin-pollo.red { color: #b30909; border-color: #fd4f3f; }
+.skin-teddy { background: linear-gradient(#f0360d, #0df015, #2a0aa9, #a8ad41, rgb(23, 198, 189), rgb(144, 34, 138), #8e0000, #1a4d2e, #f09d0d, #38ef7d); border: 3px; color: #171113; border-radius: 10px 10px 10px 10px; } .skin-teddy .card-suit { font-size: 3rem; } .skin-teddy.red { color: #b30909; border-color: #fd4f3f; }
 
 /* RL-software SERIES*/
 .skin-mrcat { background: #b2b2b2; border: 4px solid #bcc1c3; color: #1d0b11; border-radius: 20px; } .skin-mrcat .card-suit { font-size: 3rem; } .skin-mrcat.red { color: #d30b51; border-color: #bcc1c3; }
@@ -237,6 +370,9 @@ border-left: 5px solid transparent; text-align: left;
 .skin-vehicle-police-car { background: linear-gradient(to bottom, #0b3c5d, #003366); border: 1px solid #0000ff; color: #000fff; font-family: 'Times New Roman', serif; } .skin-vehicle-police-car.red { color: #ff0000; }
 .skin-vehicle-bus { background: linear-gradient(to bottom, #ffff00, #fffb7d); border: 2px solid #f8c301; color: #0f0f0f; font-family: 'Times New Roman', serif; } .skin-vehicle-bus.red { color: #ff0000; }
 
+/* PASS SKIN*/
+.skin-pass-summer-exclusive { background: linear-gradient(45deg, #FFD700, #FF8C00); border: 3px solid #FFF; color: #fff; text-shadow: 1px 1px 2px #000; }
+
 .card-back { background: repeating-linear-gradient(45deg, #34495e, #34495e 10px, #2c3e50 10px, #2c3e50 20px); border: 2px solid white; }
 .deck-pile { width: 60px; height: 90px; background: #333; border-radius: 8px; border: 3px solid white; display: flex; justify-content: center; align-items: center; font-size: 1.2rem; font-weight: bold; box-shadow: 5px 5px 15px rgba(0,0,0,0.5); }
 .notify-pop { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%) scale(0); font-size: 4rem; font-weight: 900; color: var(--accent); text-shadow: 4px 4px 0 #000; z-index: 300; pointer-events: none; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
@@ -271,6 +407,89 @@ border-left: 5px solid transparent; text-align: left;
 .tab-btn:hover { color: white; background: rgba(255,255,255,0.1); }
 .tab-btn.active { color: var(--primary); background: rgba(52, 152, 219, 0.2); border-bottom: 3px solid var(--primary); border-radius: 10px 10px 0 0; }
 
+/* --- TROPHY ROAD STYLES --- */
+.trophy-road-container {
+    width: 100%;
+    padding: 20px 0;
+    overflow-x: auto;
+    white-space: nowrap;
+    background: rgba(0,0,0,0.3);
+    border-radius: 15px;
+    margin-bottom: 20px;
+    border: 2px solid rgba(255,255,255,0.1);
+    position: relative;
+}
+.trophy-track {
+    display: inline-flex;
+    align-items: center;
+    padding: 0 40px;
+    position: relative;
+    min-width: 100%;
+}
+.trophy-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 6px;
+    background: #444;
+    z-index: 0;
+    transform: translateY(-50%);
+}
+.trophy-node {
+    width: 60px;
+    height: 60px;
+    background: #2c3e50;
+    border: 4px solid #555;
+    border-radius: 50%;
+    margin-right: 60px; /* Spacing between nodes */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+    font-size: 0.9rem;
+    color: #aaa;
+    position: relative;
+    z-index: 1;
+    transition: all 0.3s;
+    flex-shrink: 0;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.3);
+}
+.trophy-node.unlocked {
+    background: var(--gold);
+    border-color: #fff;
+    color: #333;
+    box-shadow: 0 0 15px var(--gold);
+    transform: scale(1.1);
+}
+.trophy-node.current-target {
+    border-color: var(--accent);
+    animation: pulseNode 2s infinite;
+}
+.trophy-reward-icon {
+    font-size: 1.5rem;
+}
+@keyframes pulseNode {
+    0% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(241, 196, 15, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0); }
+}
+.trophy-current-display {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.trophy-big-number {
+    font-size: 4rem;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 2px 2px 0 #000;
+}
+.trophy-label {
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
 @media (max-width: 768px) {
     #app-container { flex-direction: column; }
     .sidebar { width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 10px; border-right: none; border-bottom: 2px solid rgba(255,255,255,0.1); }
@@ -301,24 +520,24 @@ border-left: 5px solid transparent; text-align: left;
 <div class="logo-text">SUPER<br>SCOPA</div>
 <div class="logo-sub">ROYALE EDITION</div>
 </div>
-<button class="menu-btn active" onclick="showPanel('arena')">
-<span class="menu-icon">⚔️</span> Arena
+<button class="menu-btn active" data-panel="arena" onclick="showPanel('arena')">
+<span class="menu-icon">⚔️</span> Lobby
 </button>
-<button class="menu-btn" onclick="showPanel('decks')">
+<button class="menu-btn" data-panel="decks" onclick="showPanel('decks')">
 <span class="menu-icon">🃏</span> Mazzi
 </button>
-<button class="menu-btn" onclick="showPanel('shop')">
+<button class="menu-btn" data-panel="shop" onclick="showPanel('shop')">
 <span class="menu-icon">🛒</span> Shop
 </button>
-<button class="menu-btn" onclick="showPanel('trophies')">
-<span class="menu-icon">🏆</span> Trofei
+<button class="menu-btn" data-panel="trophies" onclick="showPanel('trophies')">
+<span class="menu-icon">🛣️</span> Cammino
 </button>
-<button class="menu-btn" onclick="showPanel('events')">
+<button class="menu-btn" data-panel="events" onclick="showPanel('events')">
 <span class="menu-icon">📅</span> Eventi
 </button>
 <div style="flex-grow:1"></div>
-<button class="menu-btn" style="background:#e74c3c;" onclick="resetData()">
-<span class="menu-icon">🗑️</span> Reset
+<button class="menu-btn" data-panel="settings" onclick="showPanel('settings')">
+<span class="menu-icon">⚙️</span> Settings
 </button>
 </div>
 <!-- MAIN CONTENT -->
@@ -327,52 +546,63 @@ border-left: 5px solid transparent; text-align: left;
 <div class="top-bar">
 <div class="resource-pill"><span class="res-icon">🪙</span> <span id="coin-display">0</span></div>
 <div class="resource-pill"><span class="res-icon">💎</span> <span id="gem-display">0</span></div>
-<div class="resource-pill"><span class="res-icon">📦</span> <span id="chest-display">0</span></div>
+<div class="resource-pill"><span class="res-icon">🎁</span> <span id="chest-display">0</span></div>
+<div class="resource-pill"><span class="res-icon">🟦</span> <span id="blue-chest-display">0</span></div>
+<div class="resource-pill"><span class="res-icon">🎟️</span> <span id="ticket-display">0</span></div>
 </div>
-<!-- PANEL: ARENA (PLAY) -->
+
+<!-- PANEL: LOBBY PRINCIPALE -->
 <div id="panel-arena" class="panel active">
-<div class="panel-header">
-<span>Arena</span>
-<div style="font-size: 1.2rem; color: var(--accent);">Lvl <span id="arena-level">1</span></div>
+  <div class="lobby-layout">
+    
+    <!-- Centro: mazzo in uso -->
+    <div class="lobby-center">
+      
+      <div class="lobby-deck-frame">
+        <div class="lobby-deck-label">Mazzo in uso</div>
+        <div class="lobby-deck-card" id="arena-deck-preview">🃏</div>
+        <h2 id="arena-deck-name">Classico</h2>
+      </div>
+    </div>
+
+    <!-- Fondo centrale: bottone Gioca + evento -->
+    <div class="lobby-bottom-play">
+      <button class="lobby-play-btn" onclick="startGame('scopa')">Gioca</button>
+      
+      <!-- Event Button (Clickable) -->
+      <div class="lobby-event-btn" onclick="showPanel('events')">
+        ^
+        <div class="lobby-event-tooltip">Eventi</div>
+      </div>
+    </div>
+
+  </div>
 </div>
-<div class="arena-dashboard">
-<div class="arena-left">
-<h3 style="margin-top:0;">Mazzo Attivo</h3>
-<div class="deck-showcase" id="arena-deck-preview">🃏</div>
-<h2 id="arena-deck-name">Classico</h2>
-<p style="opacity:0.7; font-size:0.9rem; text-align:center;">Seleziona un mazzo nella sezione "Mazzi".</p>
-<div style="margin-top: 20px; width: 100%;">
-<div style="display:flex; justify-content:space-between; margin-bottom:5px; font-size:0.9rem;"><span>Vittorie</span> <span id="arena-wins">0</span></div>
-<div style="background:#333; height:8px; border-radius:5px; overflow:hidden;">
-<div style="background:var(--secondary); width:0%; height:100%;" id="win-bar"></div>
+
+<!-- PANEL: IMPOSTAZIONI -->
+<div id="panel-settings" class="panel">
+<div class="friend-club-panel">
+    <div class="friend-club-header">
+        <div>
+            <div class="panel-header" style="margin:0; font-size:2rem;">Impostazioni</div>
+            <div class="screen-note">Audio, dati e reset progressi.</div>
+        </div>
+        <button class="back-lobby-btn" onclick="showPanel('arena')">Torna alla Lobby</button>
+    </div>
+    <div class="friend-club-grid">
+        <div class="friend-club-box">
+            <h3 style="margin-top:0;">Gioco</h3>
+            <div class="list-card"><span>Effetti sonori</span><button class="mini-btn" type="button">On</button></div>
+            <div class="list-card"><span>Musica</span><button class="mini-btn" type="button">Off</button></div>
+        </div>
+        <div class="friend-club-box">
+            <h3 style="margin-top:0;">Account e dati</h3>
+            <button class="mini-btn" type="button" style="width:100%; background:linear-gradient(135deg,#e74c3c,#c0392b);" onclick="resetData()">Reset progressi</button>
+        </div>
+    </div>
 </div>
 </div>
-</div>
-<div class="arena-right">
-<div class="mode-card" onclick="startGame('scopa')">
-<div class="mode-icon">🧹</div>
-<div class="mode-info">
-<h3>Scopa Classica</h3>
-<p>Regole tradizionali.</p>
-</div>
-</div>
-<div class="mode-card event" onclick="startGame('scopa_ace')">
-<div class="mode-icon">🂱</div>
-<div class="mode-info">
-<h3>Scopa d'Assi</h3>
-<p>L'Asso prende tutto!</p>
-</div>
-</div>
-<div class="mode-card event" style="border-color: var(--primary);" onclick="startGame('scopa_duo')">
-<div class="mode-icon">👥</div>
-<div class="mode-info">
-<h3>Scopa DUO</h3>
-<p>2 vs 2 (Tu + Alleato vs Nemici)</p>
-</div>
-</div>
-</div>
-</div>
-</div>
+
 <!-- PANEL: DECKS & PINS -->
 <div id="panel-decks" class="panel">
 <div class="panel-header">Collezione</div>
@@ -398,18 +628,25 @@ border-left: 5px solid transparent; text-align: left;
         <div class="pin-grid" id="shop-pins-grid"></div>
     </div>
 </div>
-<!-- PANEL: SHOP (REDESIGNED) -->
+<!-- PANEL: SHOP -->
 <div id="panel-shop" class="panel">
 <div class="panel-header">Negozio</div>
 <!-- Section 1: Chest Opening -->
 <div class="shop-section">
 <h2><span style="font-size:1.5rem;">🎁</span> Apri Buste</h2>
-<div style="display:flex; justify-content:center;">
-<div class="chest-stage" style="width:100%; max-width:300px;">
-<p style="margin-bottom:15px; font-size:1rem;">Hai <span id="shop-chests" style="color:var(--accent); font-weight:bold; font-size:1.2rem;">0</span> buste.</p>
-<div class="chest-big" onclick="openChestAnimation()">🎁</div>
-<p style="margin-top:15px; opacity:0.7; font-size:0.9rem;">Clicca per aprire!</p>
-</div>
+<div style="display:flex; justify-content:center; gap: 20px; flex-wrap: wrap;">
+    <!-- Classic Chest -->
+    <div class="chest-stage" style="width:100%; max-width:300px;">
+        <p style="margin-bottom:15px; font-size:1rem;">Buste Classiche: <span id="shop-chests" style="color:var(--accent); font-weight:bold; font-size:1.2rem;">0</span></p>
+        <img src="Box.png" class="chest-big-img" onclick="openChestAnimation('classic')" alt="Box">
+        <p style="margin-top:15px; opacity:0.7; font-size:0.9rem;">Contiene: Monete, Gemme, Ticket, Mazzi Base</p>
+    </div>
+    <!-- Blue Box -->
+    <div class="chest-stage" style="width:100%; max-width:300px; border-color: #3498db;">
+        <p style="margin-bottom:15px; font-size:1rem;">Blue Box: <span id="shop-blue-chests" style="color:#3498db; font-weight:bold; font-size:1.2rem;">0</span></p>
+        <img src="BluBox.png" class="chest-big-img" onclick="openChestAnimation('blue')" alt="Blue Box">
+        <p style="margin-top:15px; opacity:0.7; font-size:0.9rem;">Contiene: Mazzi Rari, Doppio Pin, Biglietti</p>
+    </div>
 </div>
 </div>
 <!-- Section 2: Deck Catalog -->
@@ -440,55 +677,54 @@ border-left: 5px solid transparent; text-align: left;
 <p style="text-align:center; margin-top:10px; opacity:0.7; font-size:0.8rem;">Converti gemme in monete.</p>
 </div>
 </div>
-<!-- PANEL: TROPHIES -->
+<!-- PANEL: TROPHIES (NEW BRAWL STARS STYLE) -->
 <div id="panel-trophies" class="panel">
-<div class="panel-header">Statistiche</div>
-<div class="grid-container">
-<div class="card-item">
-<div class="item-preview">🏆</div>
-<h3>Vittorie</h3>
-<h1 id="stat-wins">0</h1>
-</div>
-<div class="card-item">
-<div class="item-preview">🧹</div>
-<h3>Scope</h3>
-<h1 id="stat-scopas">0</h1>
-</div>
-<div class="card-item">
-<div class="item-preview">🃏</div>
-<h3>Carte</h3>
-<h1 id="stat-cards">0</h1>
-</div>
-<div class="card-item">
-<div class="item-preview">⭐</div>
-<h3>Livello</h3>
-<h1 id="stat-level">1</h1>
-</div>
-</div>
+    <div class="panel-header">Cammino dei Trofei</div>
+    
+    <div class="trophy-current-display">
+        <div class="trophy-big-number" id="trophy-main-count">0</div>
+        <div class="trophy-label">Trofei Totali</div>
+        <p style="opacity:0.7; font-size:0.9rem;">Vinci: +8 | Pari: 0 | Perdi: -3</p>
+    </div>
+
+    <div class="trophy-road-container" id="trophy-road-scroll">
+        <div class="trophy-track" id="trophy-track">
+            <div class="trophy-line"></div>
+            <!-- Nodes generated by JS -->
+        </div>
+    </div>
+
+    <div class="grid-container" style="margin-top:20px;">
+        <div class="card-item">
+            <div class="item-preview">🧹</div>
+            <h3>Scope Totali</h3>
+            <h1 id="stat-scopas">0</h1>
+        </div>
+        <div class="card-item">
+            <div class="item-preview">🃏</div>
+            <h3>Carte Presa</h3>
+            <h1 id="stat-cards">0</h1>
+        </div>
+    </div>
 </div>
 <!-- PANEL: EVENTS -->
 <div id="panel-events" class="panel">
 <div class="panel-header">Eventi</div>
 <div class="grid-container">
-<div class="card-item event" style="border-color: var(--danger);">
-<div class="item-preview">🂱</div>
-<h3>Scopa d'Assi</h3>
-<p>Disponibile ora!</p>
-<button class="btn-action" onclick="showPanel('arena')">Gioca</button>
-</div>
-<div class="card-item event" style="border-color: var(--primary);">
-<div class="item-preview">👥</div>
-<h3>Scopa DUO</h3>
-<p>Nuova modalità 2vs2.</p>
-<button class="btn-action" onclick="showPanel('arena')">Gioca</button>
-</div>
-<div class="card-item locked">
-<div class="item-preview">🔒</div>
-<h3>Doppio Scopa</h3>
-<p>Prossimamente...</p>
+    <div class="card-item event" id="event-ace-card" style="border-color: var(--danger);">
+        <div class="item-preview">🂱</div>
+        <h3>Scopa d'Assi</h3>
+        <p id="ace-lock-msg">Sblocca a 150 Trofei</p>
+        <button class="btn-action" id="btn-play-ace" disabled onclick="startGame('scopa_ace')">Gioca</button>
+    </div>
+    <div class="card-item locked">
+        <div class="item-preview">🔒</div>
+        <h3>Doppio Scopa</h3>
+        <p>Prossimamente...</p>
+    </div>
 </div>
 </div>
-</div>
+
 </div>
 </div>
 <!-- REVEAL OVERLAY -->
@@ -557,111 +793,118 @@ TU: <span id="player-score">0</span>
 
 <script>
 // --- DATA & STATE MANAGEMENT ---
+const UPGRADEABLE_DECKS = ['classic', 'ancient', 'panda', 'ocean', 'steampunk', 'teddy'];
+
 const DECKS = [
-{ id: 'classic', name: 'Classico', price: 0, locked: false, icon: '🃏' },
-{ id: 'neon', name: 'Cyber Neon', price: 500, locked: true, icon: '👾' },
-{ id: 'gold', name: 'Edizione Oro', price: 1000, locked: true, icon: '👑' },
-{ id: 'silver', name: 'Argento Vivo', price: 750, locked: true, icon: '🥈' },
-{ id: 'ancient', name: 'Antico', price: 600, locked: true, icon: '📜' },
-{ id: 'pixel', name: 'Pixel Art', price: 2000, locked: true, icon: '👾' },
-{ id: 'cartoon', name: 'Cartoon', price: 2000, locked: true, icon: '🤡' },
-{ id: 'computer', name: 'PC', price: 1500, locked: true, icon: '🖥️' },
-{ id: 'ocean', name: 'Sea King', price: 1800, locked: true, icon: '🌊' },
-{ id: 'summer', name: 'Estate', price: 900, locked: true, icon: '☀️' },
-{ id: 'panda', name: 'Panda', price: 2500, locked: true, icon: '🐼' },
-{ id: 'diamond', name: 'Diamante', price: 3000, locked: true, icon: '💎' },
-{ id: 'space', name: 'Spazio', price: 2200, locked: true, icon: '🌌' },
-{ id: 'vampire', name: 'Vampiro', price: 1800, locked: true, icon: '🦇' },
-{ id: 'jungle', name: 'Giungla', price: 1400, locked: true, icon: '🌴' },
-{ id: 'steampunk', name: 'Steampunk', price: 1600, locked: true, icon: '⚙️' },
-{ id: 'candy', name: 'Caramella', price: 1100, locked: true, icon: '🍬' },
-{ id: 'magma', name: 'Magma', price: 1900, locked: true, icon: '🌋' },
-{ id: 'aurora', name: 'Aurora', price: 2100, locked: true, icon: '🌌' },
-{ id: 'cyberpunk', name: 'Cyber City', price: 2400, locked: true, icon: '🏙️' },
-{ id: 'velvet', name: 'Velvet', price: 2800, locked: true, icon: '👑' },
+{ id: 'classic', name: 'Classico', price: 0, locked: false, icon: '🃏', upgradable: true },
+{ id: 'neon', name: 'Cyber Neon', price: 500, locked: true, icon: '👾', upgradable: false },
+{ id: 'gold', name: 'Edizione Oro', price: 1000, locked: true, icon: '👑', upgradable: false },
+{ id: 'silver', name: 'Argento Vivo', price: 750, locked: true, icon: '🥈', upgradable: false },
+{ id: 'ancient', name: 'Antico', price: 600, locked: true, icon: '📜', upgradable: true },
+{ id: 'pixel', name: 'Pixel Art', price: 2000, locked: true, icon: '👾', upgradable: false },
+{ id: 'cartoon', name: 'Cartoon', price: 2000, locked: true, icon: '🤡', upgradable: false },
+{ id: 'computer', name: 'PC', price: 1500, locked: true, icon: '🖥️', upgradable: false },
+{ id: 'ocean', name: 'Sea King', price: 1800, locked: true, icon: '🌊', upgradable: true },
+{ id: 'summer', name: 'Estate', price: 900, locked: true, icon: '☀️', upgradable: false },
+{ id: 'panda', name: 'Panda', price: 2500, locked: true, icon: '🐼', upgradable: true },
+{ id: 'diamond', name: 'Diamante', price: 3000, locked: true, icon: '💎', upgradable: false },
+{ id: 'space', name: 'Spazio', price: 2200, locked: true, icon: '🌌', upgradable: false },
+{ id: 'vampire', name: 'Vampiro', price: 1800, locked: true, icon: '🦇', upgradable: false },
+{ id: 'jungle', name: 'Giungla', price: 1400, locked: true, icon: '🌴', upgradable: false },
+{ id: 'steampunk', name: 'Steampunk', price: 1600, locked: true, icon: '⚙️', upgradable: true },
+{ id: 'candy', name: 'Caramella', price: 1100, locked: true, icon: '🍬', upgradable: false },
+{ id: 'magma', name: 'Magma', price: 1900, locked: true, icon: '🌋', upgradable: false },
+{ id: 'aurora', name: 'Aurora', price: 2100, locked: true, icon: '🌌', upgradable: false },
+{ id: 'cyberpunk', name: 'Cyber City', price: 2400, locked: true, icon: '🏙️', upgradable: false },
+{ id: 'velvet', name: 'Velvet', price: 2800, locked: true, icon: '👑', upgradable: false },
 // NEW DECKS (ORIGINAL REQUEST)
-{ id: 'explosion', name: 'Big Bang', price: 1800, locked: true, icon: '💥' },
-{ id: 'trident', name: 'Poseidon', price: 2000, locked: true, icon: '🔱' },
-{ id: 'radioactive', name: 'Nuclear', price: 2200, locked: true, icon: '☢️' },
-{ id: 'money', name: 'Money', price: 1600, locked: true, icon: '💲' },
-{ id: 'urn', name: 'Urn', price: 1400, locked: true, icon: '🏺' },
-{ id: 'leaf', name: 'Leaf', price: 1300, locked: true, icon: '🍂' },
-{ id: 'balloon', name: 'Balloon', price: 1100, locked: true, icon: '🎈' },
-{ id: 'basketball', name: 'Basket', price: 1700, locked: true, icon: '🏀' },
-{ id: 'fenice', name: 'Fenice', price: 2300, locked: true, icon: '🐦‍🔥'},
-{ id: 'fantasma', name: 'Fantasma', price: 1700, locked: true, icon: '👻'},
-{ id: 'teddy', name: 'Maiale', price: 1350, locked: true, icon: '🐷'},
-{ id: 'pollo', name: 'Gallo', price: 1350, locked: true, icon: '🐔'},
+{ id: 'explosion', name: 'Big Bang', price: 1800, locked: true, icon: '💥', upgradable: false },
+{ id: 'trident', name: 'Poseidon', price: 2000, locked: true, icon: '🔱', upgradable: false },
+{ id: 'radioactive', name: 'Nuclear', price: 2200, locked: true, icon: '☢️', upgradable: false },
+{ id: 'money', name: 'Money', price: 1600, locked: true, icon: '💲', upgradable: false },
+{ id: 'urn', name: 'Urn', price: 1400, locked: true, icon: '🏺', upgradable: false },
+{ id: 'leaf', name: 'Leaf', price: 1300, locked: true, icon: '🍂', upgradable: false },
+{ id: 'balloon', name: 'Balloon', price: 1100, locked: true, icon: '🎈', upgradable: false },
+{ id: 'basketball', name: 'Basket', price: 1700, locked: true, icon: '🏀', upgradable: false },
+{ id: 'fenice', name: 'Fenice', price: 2300, locked: true, icon: '🐦', upgradable: false},
+{ id: 'fantasma', name: 'Fantasma', price: 1700, locked: true, icon: '👻', upgradable: false},
+{ id: 'maiale', name: 'Maiale', price: 1350, locked: true, icon: '🐷', upgradable: false},
+{ id: 'pollo', name: 'Gallo', price: 1350, locked: true, icon: '🐔', upgradable: false},
+{ id: 'teddy', name: 'Coso', price: 1067, locked: true, icon: '🤷', upgradable: true},
 
 //RL - software SERIES
-{ id: 'mrcat', name: 'RL|MRcat', price: 2700, locked: true, icon: '🐈'},
-{ id: 'brd', name: 'RL|BRD', price: 2700, locked: true, icon: '👨‍🏫'},
-{ id: 'laserarena', name: 'RL|Laser Arena',price: 2700, locked:true, icon: '🔵'},
+{ id: 'mrcat', name: 'RL|MRcat', price: 2700, locked: true, icon: '🐈', upgradable: false},
+{ id: 'brd', name: 'RL|BRD', price: 2700, locked: true, icon: '👨', upgradable: false},
+{ id: 'laserarena', name: 'RL|Laser Arena',price: 2700, locked:true, icon: '🔵', upgradable: false},
 
 //GLI ELEMENTI SERIES
-{ id: 'wood', name: 'Legno', price: 400, locked: true, icon: '🪵' },
-{ id: 'ice', name: 'Ghiaccio', price: 800, locked: true, icon: '❄️' },
-{ id: 'fire', name: 'Fuoco', price: 1200, locked: true, icon: '🔥' },
-{ id: 'water', name: 'Acqua', price: 1200, locked: true, icon: '💧' },
-{ id: 'earth', name: 'Terra', price: 1200, locked: true, icon: '🌿' },
-{ id: 'air', name: 'Aria', price: 1200, locked: true, icon: '💨' },
+{ id: 'wood', name: 'Legno', price: 400, locked: true, icon: '🪵', upgradable: false },
+{ id: 'ice', name: 'Ghiaccio', price: 800, locked: true, icon: '❄️', upgradable: false },
+{ id: 'fire', name: 'Fuoco', price: 1200, locked: true, icon: '🔥', upgradable: false },
+{ id: 'water', name: 'Acqua', price: 1200, locked: true, icon: '💧', upgradable: false },
+{ id: 'earth', name: 'Terra', price: 1200, locked: true, icon: '🌿', upgradable: false },
+{ id: 'air', name: 'Aria', price: 1200, locked: true, icon: '💨', upgradable: false },
 
 // FARM SERIES
-{ id: 'farm-cow', name: 'Mucca Pezzata', price: 1400, locked: true, icon: '🐄' },
-{ id: 'farm-sheep', name: 'Pecora Lanosa', price: 1400, locked: true, icon: '🐑' },
-{ id: 'farm-duck', name: 'Anatra Gialla', price: 1400, locked: true, icon: '🦆' },
-{ id: 'farm-horse', name: 'Cavallo Brown', price: 1500, locked: true, icon: '🐎' },
-{ id: 'farm-cat', name: 'Gatto Nero', price: 1400, locked: true, icon: '🐈‍⬛' },
-{ id: 'farm-dog', name: 'Cane Fedele', price: 1400, locked: true, icon: '🐕' },
-{ id: 'farm-rabbit', name: 'Coniglio Bianco', price: 1400, locked: true, icon: '🐇' },
-{ id: 'farm-rooster', name: 'Gallo Colorato', price: 1500, locked: true, icon: '🐓' },
-{ id: 'farm-pig', name: 'Maiale Rosa', price: 1400, locked: true, icon: '🐖' },
-{ id: 'farm-tractor', name: 'Trattore Verde', price: 1600, locked: true, icon: '🚜' },
-{ id: 'farm-cinghiale', name: 'Cinghiale', price: 1200, locked: true, icon: '🐗'},
+{ id: 'farm-cow', name: 'Mucca Pezzata', price: 1400, locked: true, icon: '🐄', upgradable: false },
+{ id: 'farm-sheep', name: 'Pecora Lanosa', price: 1400, locked: true, icon: '🐑', upgradable: false },
+{ id: 'farm-duck', name: 'Anatra Gialla', price: 1400, locked: true, icon: '🦆', upgradable: false },
+{ id: 'farm-horse', name: 'Cavallo Brown', price: 1500, locked: true, icon: '🐎', upgradable: false },
+{ id: 'farm-cat', name: 'Gatto Nero', price: 1400, locked: true, icon: '🐈', upgradable: false },
+{ id: 'farm-dog', name: 'Cane Fedele', price: 1400, locked: true, icon: '🐕', upgradable: false },
+{ id: 'farm-rabbit', name: 'Coniglio Bianco', price: 1400, locked: true, icon: '🐇', upgradable: false },
+{ id: 'farm-rooster', name: 'Gallo Colorato', price: 1500, locked: true, icon: '🐓', upgradable: false },
+{ id: 'farm-pig', name: 'Maiale Rosa', price: 1400, locked: true, icon: '🐖', upgradable: false },
+{ id: 'farm-tractor', name: 'Trattore Verde', price: 1600, locked: true, icon: '🚜', upgradable: false },
+{ id: 'farm-cinghiale', name: 'Cinghiale', price: 1200, locked: true, icon: '🐗', upgradable: false},
 
 // SUPERHEROES SERIES
-{ id: 'hero-marvel', name: 'Marvel Red', price: 2000, locked: true, icon: '🕷️' },
-{ id: 'hero-dc', name: 'DC Blue', price: 2000, locked: true, icon: '🦇' },
-{ id: 'hero-anime', name: 'Anime Power', price: 1800, locked: true, icon: '⚡' },
-{ id: 'hero-spider', name: 'Spider Web', price: 2200, locked: true, icon: '🕸️' },
-{ id: 'hero-bat', name: 'Dark Knight', price: 2200, locked: true, icon: '🦇' },
-{ id: 'hero-cap', name: 'Captain Stars', price: 2100, locked: true, icon: '🛡️' },
-{ id: 'hero-hulk', name: 'Hulk Smash', price: 2300, locked: true, icon: '💪' },
-{ id: 'hero-flash', name: 'Flash Speed', price: 2300, locked: true, icon: '⚡' },
-{ id: 'hero-aqua', name: 'Aqua King', price: 1900, locked: true, icon: '🔱' },
-{ id: 'hero-thor', name: 'Thor Hammer', price: 2400, locked: true, icon: '🔨' },
+{ id: 'hero-marvel', name: 'Marvel Red', price: 2000, locked: true, icon: '🕷️', upgradable: false },
+{ id: 'hero-dc', name: 'DC Blue', price: 2000, locked: true, icon: '🦇', upgradable: false },
+{ id: 'hero-anime', name: 'Anime Power', price: 1800, locked: true, icon: '⚡', upgradable: false },
+{ id: 'hero-spider', name: 'Spider Web', price: 2200, locked: true, icon: '🕸️', upgradable: false },
+{ id: 'hero-bat', name: 'Dark Knight', price: 2200, locked: true, icon: '🦇', upgradable: false },
+{ id: 'hero-cap', name: 'Captain Stars', price: 2100, locked: true, icon: '🛡️', upgradable: false },
+{ id: 'hero-hulk', name: 'Hulk Smash', price: 2300, locked: true, icon: '💪', upgradable: false },
+{ id: 'hero-flash', name: 'Flash Speed', price: 2300, locked: true, icon: '⚡', upgradable: false },
+{ id: 'hero-aqua', name: 'Aqua King', price: 1900, locked: true, icon: '🔱', upgradable: false },
+{ id: 'hero-thor', name: 'Thor Hammer', price: 2400, locked: true, icon: '🔨', upgradable: false },
 
 // BACK TO SCHOOL SERIES
-{ id: 'school-math', name: 'Matematica', price: 1500, locked: true, icon: '📐' },
-{ id: 'school-art', name: 'Arte', price: 1500, locked: true, icon: '🎨' },
-{ id: 'school-history', name: 'Storia', price: 1500, locked: true, icon: '📜' },
-{ id: 'school-science', name: 'Scienze', price: 1500, locked: true, icon: '🧪' },
-{ id: 'school-geo', name: 'Geografia', price: 1500, locked: true, icon: '🌍' },
-{ id: 'school-book', name: 'Libro', price: 1400, locked: true, icon: '📕' },
-{ id: 'school-pencil', name: 'Matita', price: 1300, locked: true, icon: '✏️' },
-{ id: 'school-notebook', name: 'Quaderno', price: 1300, locked: true, icon: '📓' },
-{ id: 'school-backpack', name: 'Zaino', price: 1600, locked: true, icon: '🎒' },
-{ id: 'school-grad', name: 'Laurea', price: 2000, locked: true, icon: '🎓' },
+{ id: 'school-math', name: 'Matematica', price: 1500, locked: true, icon: '📐', upgradable: false },
+{ id: 'school-art', name: 'Arte', price: 1500, locked: true, icon: '🎨', upgradable: false },
+{ id: 'school-history', name: 'Storia', price: 1500, locked: true, icon: '📜', upgradable: false },
+{ id: 'school-science', name: 'Scienze', price: 1500, locked: true, icon: '🧪', upgradable: false },
+{ id: 'school-geo', name: 'Geografia', price: 1500, locked: true, icon: '🌍', upgradable: false },
+{ id: 'school-book', name: 'Libro', price: 1400, locked: true, icon: '📕', upgradable: false },
+{ id: 'school-pencil', name: 'Matita', price: 1300, locked: true, icon: '✏️', upgradable: false },
+{ id: 'school-notebook', name: 'Quaderno', price: 1300, locked: true, icon: '📓', upgradable: false },
+{ id: 'school-backpack', name: 'Zaino', price: 1600, locked: true, icon: '🎒', upgradable: false },
+{ id: 'school-grad', name: 'Laurea', price: 2000, locked: true, icon: '🎓', upgradable: false },
 
 // INFO & TECH SERIES
-{ id: 'clippy', name: 'Clippy', price: 1500, locked: true, icon: '📎' },
-{ id: 'gamepad', name: 'Gamer', price: 1900, locked: true, icon: '🎮' },
-{ id: 'mac', name: 'Mac OS', price: 2500, locked: true, icon: '🍎'},
-{ id: 'tech-code', name: 'Coding', price: 1800, locked: true, icon: '💻' },
-{ id: 'tech-hacker', name: 'Hacker', price: 2000, locked: true, icon: '👨‍💻' },
-{ id: 'tech-cpu', name: 'CPU Chip', price: 1900, locked: true, icon: '🖥️' },
-{ id: 'tech-wifi', name: 'Wi-Fi', price: 1700, locked: true, icon: '📶' },
-{ id: 'tech-robot', name: 'Robot', price: 2100, locked: true, icon: '🤖' },
-{ id: 'tech-data', name: 'Big Data', price: 2200, locked: true, icon: '💾' },
-{ id: 'tech-binary', name: 'Binary', price: 1900, locked: true, icon: '0️⃣' },
-{ id: 'tech-glitch', name: 'Glitch', price: 2300, locked: true, icon: '👾' },
-{ id: 'tech-neon', name: 'Neon Tech', price: 2400, locked: true, icon: '🟣' },
-{ id: 'tech-retro', name: 'Retro PC', price: 2000, locked: true, icon: '📼' },
+{ id: 'clippy', name: 'Clippy', price: 1500, locked: true, icon: '📎', upgradable: false },
+{ id: 'gamepad', name: 'Gamer', price: 1900, locked: true, icon: '🎮', upgradable: false },
+{ id: 'mac', name: 'Mac OS', price: 2500, locked: true, icon: '🍎', upgradable: false},
+{ id: 'tech-code', name: 'Coding', price: 1800, locked: true, icon: '💻', upgradable: false },
+{ id: 'tech-hacker', name: 'Hacker', price: 2000, locked: true, icon: '👨', upgradable: false },
+{ id: 'tech-cpu', name: 'CPU Chip', price: 1900, locked: true, icon: '🖥️', upgradable: false },
+{ id: 'tech-wifi', name: 'Wi-Fi', price: 1700, locked: true, icon: '📶', upgradable: false },
+{ id: 'tech-robot', name: 'Robot', price: 2100, locked: true, icon: '🤖', upgradable: false },
+{ id: 'tech-data', name: 'Big Data', price: 2200, locked: true, icon: '💾', upgradable: false },
+{ id: 'tech-binary', name: 'Binary', price: 1900, locked: true, icon: '0️⃣', upgradable: false },
+{ id: 'tech-glitch', name: 'Glitch', price: 2300, locked: true, icon: '👾', upgradable: false },
+{ id: 'tech-neon', name: 'Neon Tech', price: 2400, locked: true, icon: '🟣', upgradable: false },
+{ id: 'tech-retro', name: 'Retro PC', price: 2000, locked: true, icon: '📼', upgradable: false },
 
 // VEHICLE SERIES
-{ id: 'vehicle-red-car', name: 'Auto rossa', price: 1750, locked: true, icon: '🚗'},
-{ id: 'vehicle-police-car', name: 'Auto della polizia', price: 1750, locked: true, icon: '🚓'},
-{ id: 'vehicle-bus', name: 'Bus', price: 1750, locked: true, icon: '🚌'}
+{ id: 'vehicle-red-car', name: 'Auto rossa', price: 1750, locked: true, icon: '🚗', upgradable: false},
+{ id: 'vehicle-police-car', name: 'Auto della polizia', price: 1750, locked: true, icon: '🚓', upgradable: false},
+{ id: 'vehicle-bus', name: 'Bus', price: 1750, locked: true, icon: '🚌', upgradable: false},
+
+
+// PASS EXCLUSIVE DECK (SUMMER THEME)
+{ id: 'pass-summer-exclusive', name: 'Summer Paradise', price: 99, locked: true, icon: '🏖️', isPassExclusive: true, upgradable: false }
 ];
 
 const PINS = [
@@ -690,28 +933,55 @@ const PINS = [
     { id: 'pin_clap', icon: '👏', price: 200, locked: true, anim: 'pin-anim-shake' },
     { id: 'pin_party', icon: '🎉', price: 300, locked: true, anim: 'pin-anim-spin' },
     { id: 'pin_sparkle', icon: '✨', price: 150, locked: true, anim: 'pin-anim-bounce' },
-    { id: 'pin_clippy', icon: '📎', price: 1000, locked: true, anim: 'pin-anim-clippy' }
+    { id: 'pin_clippy', icon: '📎', price: 1000, locked: true, anim: 'pin-anim-clippy' },
+    
+    // EXCLUSIVE UPGRADE PINS
+    { id: 'ex_classic_1', icon: '🃏', price: 0, locked: true, anim: 'pin-anim-bounce' },
+    { id: 'ex_classic_2', icon: '🎴', price: 0, locked: true, anim: 'pin-anim-spin' },
+    { id: 'ex_ancient_1', icon: '📜', price: 0, locked: true, anim: 'pin-anim-bounce' },
+    { id: 'ex_ancient_2', icon: '⌛', price: 0, locked: true, anim: 'pin-anim-spin' },
+    { id: 'ex_panda_1', icon: '🐼', price: 0, locked: true, anim: 'pin-anim-bounce' },
+    { id: 'ex_panda_2', icon: '🧸', price: 0, locked: true, anim: 'pin-anim-spin' },
+    { id: 'ex_ocean_1', icon: '🧜‍♂️', price: 0, locked: true, anim: 'pin-anim-bounce' },
+    { id: 'ex_ocean_2', icon: '👑', price: 0, locked: true, anim: 'pin-anim-spin' },
+    { id: 'ex_steampunk_1', icon: '⚙️', price: 0, locked: true, anim: 'pin-anim-bounce' },
+    { id: 'ex_steampunk_2', icon: '🔩', price: 0, locked: true, anim: 'pin-anim-spin' },
+    { id: 'ex_teddy_1', icon: '🤷‍♀️', price: 0, locked: true, anim: 'pin-anim-shake' },
+    { id: 'ex_teddy_2', icon: '🤷‍♂️', price: 0, locked: true, anim: 'pin-anim-shake' }
 ];
 
 const DEFAULT_STATE = {
-coins: 1000,
-gems: 50,
+coins: 999999,
+gems: 67,
 chests: 3,
+blueChests: 1, // New Blue Box currency
+tickets: 999999, // New Ticket currency
 ownedDecks: ['classic'],
 selectedDeck: 'classic',
+deckLevels: {}, // Stores level of upgradable decks: { 'classic': 1, 'ancient': 0 }
 ownedPins: ['pin_happy', 'pin_cry', 'pin_cool', 'pin_sleep'],
 selectedPin: 'pin_happy',
 wins: 0,
 totalScopas: 0,
 totalCards: 0,
-level: 1
+level: 1,
+// Trophy Road State
+trophies: 0, // Current Trophy Count
 };
 let state = { ...DEFAULT_STATE };
 
 function loadState() {
 const saved = localStorage.getItem('superScopaState');
 if (saved) {
-state = JSON.parse(saved);
+    const parsed = JSON.parse(saved);
+    state = { ...DEFAULT_STATE, ...parsed };
+    
+    // MIGRATION LOGIC FOR TROPHIES
+    if (!parsed.trophies && (parsed.level || parsed.wins)) {
+        let oldScoreProxy = (parsed.wins * 10) + (parsed.level * 50); 
+        state.trophies = oldScoreProxy * 7;
+        saveState(); // Save the converted value
+    }
 }
 updateUI();
 }
@@ -756,36 +1026,62 @@ renderShop();
 renderPins();
 updateArenaPreview();
 checkUrlForGift(); // Controlla se c'è un regalo da riscattare
+renderTrophyRoad(); // Renderizza il cammino dei trofei
 }
 
 function updateUI() {
 document.getElementById('coin-display').innerText = state.coins;
 document.getElementById('gem-display').innerText = state.gems;
 document.getElementById('chest-display').innerText = state.chests;
+document.getElementById('blue-chest-display').innerText = state.blueChests;
+document.getElementById('ticket-display').innerText = state.tickets;
+
 document.getElementById('shop-chests').innerText = state.chests;
-document.getElementById('stat-wins').innerText = state.wins;
+document.getElementById('shop-blue-chests').innerText = state.blueChests;
+
 document.getElementById('stat-scopas').innerText = state.totalScopas;
 document.getElementById('stat-cards').innerText = state.totalCards;
-document.getElementById('stat-level').innerText = state.level;
-document.getElementById('arena-level').innerText = state.level;
-document.getElementById('arena-wins').innerText = state.wins;
-let pct = (state.wins % 10) * 10;
-document.getElementById('win-bar').style.width = pct + '%';
+document.getElementById('trophy-main-count').innerText = state.trophies;
+
+// Update Event Lock Status
+const aceBtn = document.getElementById('btn-play-ace');
+const aceMsg = document.getElementById('ace-lock-msg');
+const aceCard = document.getElementById('event-ace-card');
+
+if (state.trophies >= 150) {
+    aceBtn.disabled = false;
+    aceBtn.style.background = 'var(--secondary)';
+    aceBtn.style.color = '#333';
+    aceMsg.innerText = "Disponibile!";
+    aceCard.classList.remove('locked');
+} else {
+    aceBtn.disabled = true;
+    aceBtn.style.background = '#7f8c8d';
+    aceBtn.style.color = '#bdc3c7';
+    aceMsg.innerText = `Sblocca a 150 Trofei (${state.trophies}/150)`;
+    aceCard.classList.add('locked');
+}
 }
 
 function showPanel(id) {
+const target = document.getElementById(`panel-${id}`);
+if (!target) {
+    console.warn('Pannello sconosciuto:', id);
+    return;
+}
 document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
 document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
-document.getElementById(`panel-${id}`).classList.add('active');
-const btns = document.querySelectorAll('.menu-btn');
-if(id === 'arena') btns[0].classList.add('active');
-if(id === 'decks') btns[1].classList.add('active');
-if(id === 'shop') btns[2].classList.add('active');
-if(id === 'trophies') btns[3].classList.add('active');
-if(id === 'events') btns[4].classList.add('active');
-if(id === 'arena') updateArenaPreview();
+target.classList.add('active');
+document.querySelectorAll('.menu-btn').forEach(b => {
+    if (b.dataset.panel === id) b.classList.add('active');
+});
+
+if(id === 'arena') {
+    updateArenaPreview();
+}
 if(id === 'decks') switchDeckTab('decks');
 if(id === 'shop') renderShop();
+if(id === 'trophies') renderTrophyRoad();
 }
 
 function switchDeckTab(tab) {
@@ -810,9 +1106,12 @@ function switchDeckTab(tab) {
 
 function updateArenaPreview() {
 const d = DECKS.find(x => x.id === state.selectedDeck);
+const level = state.deckLevels[state.selectedDeck] || 0;
+const levelSuffix = level > 0 ? ` LVL${level}` : '';
+
 document.getElementById('arena-deck-preview').innerText = d.icon;
-document.getElementById('arena-deck-name').innerText = d.name;
-document.getElementById('arena-deck-preview').className = `deck-showcase skin-${state.selectedDeck}`;
+document.getElementById('arena-deck-name').innerText = d.name + levelSuffix;
+document.getElementById('arena-deck-preview').className = `lobby-deck-card skin-${state.selectedDeck}`;
 }
 
 function renderDecks() {
@@ -821,17 +1120,34 @@ grid.innerHTML = '';
 DECKS.forEach(d => {
 const owned = state.ownedDecks.includes(d.id);
 const selected = state.selectedDeck === d.id;
+const level = state.deckLevels[d.id] || 0;
+const canUpgrade = d.upgradable && level < 2;
+
 const el = document.createElement('div');
 el.className = `card-item ${selected ? 'selected' : ''} ${!owned ? 'locked' : ''}`;
 el.onclick = () => selectDeck(d.id);
 let textColor = 'white';
-// Basic check for light backgrounds to ensure text visibility
 if(['classic','panda','steampunk','velvet','clippy','urn','basketball','farm-cow','farm-sheep','farm-duck','farm-rabbit','farm-pig','paper','marble','holographic','glass','school-math','school-notebook','school-pencil','tech-cpu','tech-robot'].includes(d.id)) textColor = 'black';
+
+let actionHtml = '';
+if (!owned) {
+    actionHtml = `<div style="color:var(--danger); font-size:0.8rem;">🔒 Bloccato</div>`;
+} else if (selected) {
+    actionHtml = `<div style="color:var(--secondary); font-size:0.8rem;">IN USO</div>`;
+    if (canUpgrade) {
+        const cost = level === 0 ? 1000 : 2500;
+        actionHtml += `<button class="btn-action buy" style="margin-top:5px; font-size:0.8rem;" onclick="event.stopPropagation(); upgradeDeck('${d.id}')">UPGRADE LVL${level+1} (${cost} 🎟️)</button>`;
+    } else if (level > 0) {
+        actionHtml += `<div style="color:var(--gold); font-size:0.8rem; margin-top:5px;">MAX LEVEL</div>`;
+    }
+} else {
+     actionHtml = `<button class="btn-action" style="margin-top:5px; font-size:0.8rem;" onclick="event.stopPropagation(); selectDeck('${d.id}')">SELEZIONA</button>`;
+}
 
 el.innerHTML = `
 <div class="item-preview skin-${d.id}" style="color:${textColor}">${d.icon}</div>
-<div style="font-weight:bold; font-size:0.9rem;">${d.name}</div>
-${!owned ? `<div style="color:var(--danger); font-size:0.8rem;">🔒 Bloccato</div>` : (selected ? '<div style="color:var(--secondary); font-size:0.8rem;">IN USO</div>' : '')}
+<div style="font-weight:bold; font-size:0.9rem;">${d.name} ${level > 0 ? `<span style="color:var(--gold)">LVL${level}</span>` : ''}</div>
+${actionHtml}
 `;
 grid.appendChild(el);
 });
@@ -849,11 +1165,58 @@ showPanel('shop');
 }
 }
 
+function upgradeDeck(id) {
+    const currentLevel = state.deckLevels[id] || 0;
+    if (currentLevel >= 2) return;
+
+    const cost = currentLevel === 0 ? 1000 : 2500;
+
+    if (state.tickets >= cost) {
+        state.tickets -= cost;
+        state.deckLevels[id] = currentLevel + 1;
+        
+        // REWARD LOGIC
+        let rewards = [];
+        
+        if (currentLevel === 0) {
+            // LEVEL 1 REWARDS: Exclusive Pins
+            if (id === 'classic') rewards = ['ex_classic_1', 'ex_classic_2'];
+            if (id === 'ancient') rewards = ['ex_ancient_1', 'ex_ancient_2'];
+            if (id === 'panda') rewards = ['ex_panda_1', 'ex_panda_2'];
+            if (id === 'ocean') rewards = ['ex_ocean_1', 'ex_ocean_2'];
+            if (id === 'steampunk') rewards = ['ex_steampunk_1', 'ex_steampunk_2'];
+            if (id === 'teddy') rewards = ['ex_teddy_1', 'ex_teddy_2']; // COSO DECK REWARDS
+            
+            if(rewards.length > 0) {
+                rewards.forEach(pinId => {
+                    if(!state.ownedPins.includes(pinId)) {
+                        state.ownedPins.push(pinId);
+                    }
+                });
+                alert(`Livello 1 raggiunto! Hai sbloccato i Pin Esclusivi: ${rewards.map(r => PINS.find(p=>p.id===r).icon).join(' ')}`);
+            }
+        } else if (currentLevel === 1) {
+            // LEVEL 2 REWARDS: Better Animations (Handled in CSS/Render)
+            alert(`Livello MAX raggiunto! Le tue carte ora hanno animazioni potenziate.`);
+        }
+
+        saveState();
+        renderDecks();
+        updateArenaPreview();
+        renderPins(); // Refresh pins to show new ones
+        
+    } else {
+        alert(`Ti servono ${cost} Biglietti! Apri le buste classiche.`);
+    }
+}
+
 function renderShop() {
 const grid = document.getElementById('shop-grid');
 grid.innerHTML = '';
 DECKS.forEach(d => {
 if (state.ownedDecks.includes(d.id)) return;
+if(d.isPassExclusive) return; 
+
 const el = document.createElement('div');
 el.className = 'card-item';
 let textColor = 'white';
@@ -873,6 +1236,9 @@ const pinGrid = document.getElementById('shop-pins-full-grid');
 pinGrid.innerHTML = '';
 PINS.forEach(p => {
     if(state.ownedPins.includes(p.id)) return;
+    // Don't show exclusive upgrade pins in shop
+    if(p.id.startsWith('ex_')) return;
+
     const el = document.createElement('div');
     el.className = 'pin-item';
     el.innerHTML = `
@@ -919,6 +1285,9 @@ function renderPins() {
         const owned = state.ownedPins.includes(p.id);
         const selected = state.selectedPin === p.id;
         
+        // Skip exclusive pins in shop grid logic if not owned
+        if(!owned && p.id.startsWith('ex_')) return;
+
         const el = document.createElement('div');
         el.className = `pin-item ${owned ? '' : 'locked'} ${selected ? 'selected' : ''}`;
         
@@ -960,12 +1329,19 @@ function buyPin(id, price) {
     }
 }
 
-function openChestAnimation() {
-if (state.chests <= 0) {
-alert("Nessuna busta disponibile!");
-return;
+function openChestAnimation(type) {
+if (type === 'classic' && state.chests <= 0) {
+    alert("Nessuna busta classica disponibile!");
+    return;
 }
-state.chests--;
+if (type === 'blue' && state.blueChests <= 0) {
+    alert("Nessuna Blue Box disponibile!");
+    return;
+}
+
+if (type === 'classic') state.chests--;
+else state.blueChests--;
+
 saveState();
 const overlay = document.getElementById('reveal-overlay');
 const cardEl = document.getElementById('reveal-card-content');
@@ -974,69 +1350,147 @@ overlay.style.display = 'flex';
 cardEl.classList.remove('show');
 textEl.classList.remove('show');
 cardEl.innerText = '?';
-cardEl.style.background = 'var(--gold)';
+cardEl.style.background = type === 'blue' ? '#3498db' : 'var(--gold)';
 cardEl.style.color = 'white';
+
 setTimeout(() => {
-const rand = Math.random();
-let rewardText = "";
-let rewardIcon = "";
-let rewardColor = "#fff";
-if (rand < 0.4) {
-const amt = Math.floor(Math.random() * 200) + 50;
-state.coins += amt;
-rewardText = `${amt} Monete`;
-rewardIcon = '🪙';
-rewardColor = '#f1c40f';
-} else if (rand < 0.7) {
-const gems = Math.floor(Math.random() * 10) + 5;
-state.gems += gems;
-rewardText = `${gems} Gemme`;
-rewardIcon = '💎';
-rewardColor = '#3498db';
-} else if (rand < 0.85) {
-    const lockedPins = PINS.filter(p => !state.ownedPins.includes(p.id));
-    if(lockedPins.length > 0) {
-        const newPin = lockedPins[Math.floor(Math.random() * lockedPins.length)];
-        state.ownedPins.push(newPin.id);
-        state.selectedPin = newPin.id;
-        rewardText = `Pin: ${newPin.icon}`;
-        rewardIcon = newPin.icon;
-        rewardColor = '#9b59b6';
-    } else {
-        state.coins += 300;
-        rewardText = `300 Monete`;
-        rewardIcon = '🪙';
-        rewardColor = '#f1c40f';
+    const rand = Math.random();
+    let rewardText = "";
+    let rewardIcon = "";
+    let rewardColor = "#fff";
+    
+    // BLUE BOX LOGIC (Better Rewards)
+    if (type === 'blue') {
+        // 1. Double Pin Chance (30%)
+        if (rand < 0.3) {
+            const lockedPins = PINS.filter(p => !state.ownedPins.includes(p.id) && !p.id.startsWith('ex_'));
+            if (lockedPins.length >= 2) {
+                // Pick 2 random unique pins
+                const shuffled = [...lockedPins].sort(() => 0.5 - Math.random());
+                const p1 = shuffled[0];
+                const p2 = shuffled[1];
+                state.ownedPins.push(p1.id);
+                state.ownedPins.push(p2.id);
+                state.selectedPin = p1.id;
+                rewardText = `Doppio Pin: ${p1.icon} & ${p2.icon}`;
+                rewardIcon = `${p1.icon}${p2.icon}`;
+                rewardColor = '#9b59b6';
+            } else if (lockedPins.length === 1) {
+                 const p1 = lockedPins[0];
+                 state.ownedPins.push(p1.id);
+                 state.selectedPin = p1.id;
+                 rewardText = `Pin: ${p1.icon} (+250 🪙 Bonus)`;
+                 rewardIcon = p1.icon;
+                 rewardColor = '#9b59b6';
+                 state.coins += 250;
+            } else {
+                // All pins owned -> Big Coin Bonus
+                state.coins += 500;
+                rewardText = `Tutti i Pin! +500 🪙`;
+                rewardIcon = '🪙';
+                rewardColor = '#f1c40f';
+            }
+        } 
+        // 2. High Tier Deck Chance (40%)
+        else if (rand < 0.7) {
+            const locked = DECKS.filter(d => !state.ownedDecks.includes(d.id) && !d.isPassExclusive && d.price >= 1000);
+            if (locked.length > 0) {
+                const newDeck = locked[Math.floor(Math.random() * locked.length)];
+                state.ownedDecks.push(newDeck.id);
+                rewardText = `Mazzo Raro: ${newDeck.name}`;
+                rewardIcon = newDeck.icon;
+                rewardColor = '#e74c3c';
+            } else {
+                state.coins += 1000;
+                rewardText = `1000 Monete`;
+                rewardIcon = '🪙';
+                rewardColor = '#f1c40f';
+            }
+        }
+        // 3. Tickets or Gems (30%)
+        else {
+            if (Math.random() > 0.5) {
+                const tickets = Math.floor(Math.random() * 100) + 50;
+                state.tickets += tickets;
+                rewardText = `${tickets} Biglietti 🎟️`;
+                rewardIcon = '🎟️';
+                rewardColor = '#3498db';
+            } else {
+                const gems = Math.floor(Math.random() * 20) + 10;
+                state.gems += gems;
+                rewardText = `${gems} Gemme`;
+                rewardIcon = '💎';
+                rewardColor = '#3498db';
+            }
+        }
+    } 
+    // CLASSIC CHEST LOGIC (Standard)
+    else {
+        if (rand < 0.4) {
+            const amt = Math.floor(Math.random() * 200) + 50;
+            state.coins += amt;
+            rewardText = `${amt} Monete`;
+            rewardIcon = '🪙';
+            rewardColor = '#f1c40f';
+        } else if (rand < 0.6) {
+            const gems = Math.floor(Math.random() * 10) + 5;
+            state.gems += gems;
+            rewardText = `${gems} Gemme`;
+            rewardIcon = '💎';
+            rewardColor = '#3498db';
+        } else if (rand < 0.8) {
+            // Tickets Drop (Classic Chests give tickets too)
+            const tickets = Math.floor(Math.random() * 100) + 100; // 100-200 as requested
+            state.tickets += tickets;
+            rewardText = `${tickets} Biglietti 🎟️`;
+            rewardIcon = '🎟️';
+            rewardColor = '#3498db';
+        } else if (rand < 0.9) {
+            const lockedPins = PINS.filter(p => !state.ownedPins.includes(p.id) && !p.id.startsWith('ex_'));
+            if(lockedPins.length > 0) {
+                const newPin = lockedPins[Math.floor(Math.random() * lockedPins.length)];
+                state.ownedPins.push(newPin.id);
+                state.selectedPin = newPin.id;
+                rewardText = `Pin: ${newPin.icon}`;
+                rewardIcon = newPin.icon;
+                rewardColor = '#9b59b6';
+            } else {
+                state.coins += 300;
+                rewardText = `300 Monete`;
+                rewardIcon = '🪙';
+                rewardColor = '#f1c40f';
+            }
+        } else {
+            const locked = DECKS.filter(d => !state.ownedDecks.includes(d.id) && !d.isPassExclusive);
+            if (locked.length > 0) {
+                const newDeck = locked[Math.floor(Math.random() * locked.length)];
+                state.ownedDecks.push(newDeck.id);
+                rewardText = `Mazzo: ${newDeck.name}`;
+                rewardIcon = newDeck.icon;
+                rewardColor = '#e74c3c';
+            } else {
+                state.coins += 500;
+                rewardText = `500 Monete`;
+                rewardIcon = '🪙';
+                rewardColor = '#f1c40f';
+            }
+        }
     }
-} else {
-const locked = DECKS.filter(d => !state.ownedDecks.includes(d.id));
-if (locked.length > 0) {
-const newDeck = locked[Math.floor(Math.random() * locked.length)];
-state.ownedDecks.push(newDeck.id);
-rewardText = `Mazzo: ${newDeck.name}`;
-rewardIcon = newDeck.icon;
-rewardColor = '#e74c3c';
-} else {
-state.coins += 500;
-rewardText = `500 Monete`;
-rewardIcon = '🪙';
-rewardColor = '#f1c40f';
-}
-}
-saveState();
-cardEl.innerText = rewardIcon;
-cardEl.style.background = rewardColor;
-cardEl.classList.add('show');
-setTimeout(() => {
-textEl.innerText = rewardText;
-textEl.classList.add('show');
-setTimeout(() => {
-overlay.style.display = 'none';
-renderDecks();
-renderShop();
-renderPins();
-}, 2000);
-}, 800);
+
+    saveState();
+    cardEl.innerText = rewardIcon;
+    cardEl.style.background = rewardColor;
+    cardEl.classList.add('show');
+    setTimeout(() => {
+        textEl.innerText = rewardText;
+        textEl.classList.add('show');
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            renderDecks();
+            renderShop();
+            renderPins();
+        }, 2000);
+    }, 800);
 }, 500);
 }
 
@@ -1063,7 +1517,7 @@ playerEmoteEl.className = '';
 }
 
 function cpuSendEmote() {
-const emotes = ['😡', '😎', '😴', '🤪'];
+const emotes = ['😡', '', '😴', ''];
 const emote = emotes[Math.floor(Math.random() * emotes.length)];
 const cpuEmoteEl = document.getElementById('cpu-emote');
 cpuEmoteEl.innerText = emote;
@@ -1077,6 +1531,12 @@ cpuEmoteEl.style.display = 'none';
 }
 
 function startGame(mode) {
+// Check Event Lock
+if (mode === 'scopa_ace' && state.trophies < 150) {
+    alert("Devi raggiungere 150 Trofei per sbloccare la Scopa d'Assi!");
+    return;
+}
+
 gameMode = mode;
 document.getElementById('game-overlay').classList.add('active');
 initGame();
@@ -1436,11 +1896,30 @@ if (pStats.cards > 20) pPts = 1; else cPts = 1;
 }
 state.totalScopas += pScopas;
 state.totalCards += pPile.length;
+
+// --- TROPHY LOGIC ---
+let trophyChange = 0;
 if (pPts > cPts) {
-state.wins++;
-state.coins += 50;
-state.chests++;
+    state.wins++;
+    state.coins += 50;
+    state.chests++; // Give classic chest on win
+    trophyChange = 8; // Win
+} else if (pPts === cPts) {
+    trophyChange = 0; // Draw
+} else {
+    trophyChange = -3; // Loss
 }
+
+state.trophies += trophyChange;
+if(state.trophies < 0) state.trophies = 0;
+
+// Pass Credits Logic (Legacy support)
+let creditsEarned = 0;
+if (pPts > cPts) creditsEarned = 1000; 
+else if (pPts === cPts) creditsEarned = 500; 
+
+if(creditsEarned > 0) addPassCredits(creditsEarned);
+
 saveState();
 document.getElementById('res-final-score').innerText = `${pPts} - ${cPts}`;
 document.getElementById('res-cards').innerText = `${pStats.cards} - ${cStats.cards}`;
@@ -1451,6 +1930,12 @@ document.getElementById('res-scopas').innerText = `${pScopas} - ${cScopas}`;
 let title = pPts > cPts ? "VITTORIA!" : (cPts > pPts ? "SCONFITTA" : "PARITÀ");
 document.getElementById('res-title').innerText = title;
 document.getElementById('res-title').style.color = pPts > cPts ? 'var(--secondary)' : (cPts > pPts ? 'var(--danger)' : 'var(--dark)');
+
+// Show Trophy Change in Result
+const resScore = document.getElementById('res-final-score');
+let changeText = trophyChange > 0 ? ` (+${trophyChange} 🏆)` : (trophyChange < 0 ? ` (${trophyChange} 🏆)` : '');
+resScore.innerText += changeText;
+
 setTimeout(() => {
 document.getElementById('result-modal').classList.add('show');
 }, 1000);
@@ -1458,23 +1943,9 @@ document.getElementById('result-modal').classList.add('show');
 
 function endGameDuo() {
     gameActive = false;
-    // Add remaining table cards to last player who took (simplified: add to player 0 for now or distribute)
-    // In standard scopa, last trick takes remaining. Here we just add to piles for simplicity or ignore if empty
     
     let teamAPoints = 0; // Player (0) + Ally (2)
     let teamBPoints = 0; // Enemy1 (1) + Enemy2 (3)
-    
-    // Calculate points for each player
-    for(let i=0; i<4; i++) {
-        let stats = calcStats(duoPiles[i]);
-        let pts = 0;
-        
-        // Cards count (Team based usually, but let's do individual contribution)
-        if(stats.cards > 10) pts++; // 24 cards total, >10 is majority for a pair roughly
-        
-        // Simplified scoring for Duo:
-        // We sum all stats for Team A and Team B
-    }
     
     // Aggregate Stats
     let statsA = { cards:0, coins:0, has7Coin:false, prim:0 };
@@ -1509,11 +1980,22 @@ function endGameDuo() {
     
     state.totalScopas += (duoScopas[0] + duoScopas[2]);
     
+    // Duo Trophy Logic (Same as standard for simplicity)
+    let trophyChange = 0;
     if(scoreA > scoreB) {
         state.wins++;
         state.coins += 50;
         state.chests++;
+        trophyChange = 8; // Win
+    } else if (scoreA === scoreB) {
+        trophyChange = 0; // Draw
+    } else {
+        trophyChange = -3; // Loss
     }
+    
+    state.trophies += trophyChange;
+    if(state.trophies < 0) state.trophies = 0;
+    
     saveState();
     
     document.getElementById('res-final-score').innerText = `${scoreA} - ${scoreB}`;
@@ -1626,6 +2108,18 @@ table.forEach(c => tDiv.appendChild(createCardEl(c, skinClass)));
 function createCardEl(c, skinClass) {
 let el = document.createElement('div');
 el.className = `card ${skinClass} ${c.c === 'red' ? 'red' : ''}`;
+
+// APPLY LEVEL 2 ANIMATIONS
+const deckLevel = state.deckLevels[state.selectedDeck] || 0;
+if (deckLevel === 2) {
+    if (state.selectedDeck === 'classic') el.classList.add('card-lvl2-glow');
+    if (state.selectedDeck === 'ancient') el.classList.add('card-lvl2-float');
+    if (state.selectedDeck === 'panda') el.classList.add('card-lvl2-pulse');
+    if (state.selectedDeck === 'ocean') el.classList.add('card-lvl2-float');
+    if (state.selectedDeck === 'steampunk') el.classList.add('card-lvl2-spin');
+    if (state.selectedDeck === 'teddy') el.classList.add('card-lvl2-sixseven'); // COSO DECK ANIMATION
+}
+
 el.innerHTML = `
 <div class="card-val">${c.v}</div>
 <div class="card-suit">${c.s}</div>
@@ -1635,7 +2129,6 @@ return el;
 }
 
 // --- GIFT SYSTEM (OFFLINE CRYPTO) ---
-// Chiave segreta per criptare i codici. Non cambiarla o i vecchi codici smetteranno di funzionare.
 const SECRET_KEY = "SuperScopaSecretKey2026"; 
 
 function closeGiftModal() {
@@ -1683,15 +2176,27 @@ function redeemGiftCode(encodedCode) {
             successMsg = `Hai ricevuto ${data.amount} Monete!`;
             icon.innerText = "🪙";
         } 
+        // --- AGGIUNGI QUESTO BLOCCO PER I TICKET ---
+        else if (data.type === 'tickets') {
+            state.tickets += parseInt(data.amount);
+            successMsg = `Hai ricevuto ${data.amount} Biglietti!`;
+            icon.innerText = "🎟️";
+        }
+        // --- AGGIUNGI QUESTO BLOCCO PER LA BLUE BOX ---
+        else if (data.type === 'blueChest') {
+            state.blueChests += parseInt(data.amount);
+            successMsg = `Hai ricevuto ${data.amount} Blue Box!`;
+            icon.innerText = "🟦";
+        }
+        // ---------------------------------------------
         else if (data.type === 'chest') {
             state.chests += parseInt(data.amount);
             successMsg = `Hai ricevuto ${data.amount} Busta(e)!`;
             icon.innerText = "🎁";
             
-            // Se è una busta, programmiamo l'apertura immediata
             setTimeout(() => {
                 closeGiftModal();
-                setTimeout(openChestAnimation, 500);
+                setTimeout(openChestAnimation, 500); // Apre una busta classica
             }, 2000);
         }
         else if (data.type === 'deck') {
@@ -1720,6 +2225,74 @@ function redeemGiftCode(encodedCode) {
         msg.innerText = e.message || "Codice non valido.";
         icon.innerText = "❌";
     }
+}
+
+// --- CARD PASS FUNCTIONS (MAIN FILE) ---
+function addPassCredits(amount) {
+    state.passCredits += amount;
+    saveState();
+}
+
+// --- TROPHY ROAD LOGIC ---
+function generateTrophyThresholds() {
+    let thresholds = [];
+    let current = 0;
+    let step = 15; // Start small
+    
+    while (current < 50000) {
+        current += step;
+        thresholds.push(current);
+        
+        // Increase step size progressively
+        if (current < 500) step = 20;
+        else if (current < 1000) step = 50;
+        else if (current < 2000) step = 100;
+        else if (current < 5000) step = 150;
+        else step = 200;
+    }
+    return thresholds;
+}
+
+function renderTrophyRoad() {
+    const track = document.getElementById('trophy-track');
+    // Keep the line, remove nodes
+    const line = track.querySelector('.trophy-line');
+    track.innerHTML = '';
+    track.appendChild(line);
+    
+    const thresholds = generateTrophyThresholds();
+    const currentTrophies = state.trophies;
+    
+    // Find the next target index
+    let nextTargetIndex = thresholds.findIndex(t => t > currentTrophies);
+    if (nextTargetIndex === -1) nextTargetIndex = thresholds.length; // Maxed out
+
+    thresholds.forEach((threshold, index) => {
+        const node = document.createElement('div');
+        const isUnlocked = currentTrophies >= threshold;
+        const isNextTarget = index === nextTargetIndex;
+        
+        node.className = `trophy-node ${isUnlocked ? 'unlocked' : ''} ${isNextTarget ? 'current-target' : ''}`;
+        
+        // Content: Icon if unlocked, Number if locked/target
+        if (isUnlocked) {
+            node.innerHTML = '<span class="trophy-reward-icon">✅</span>';
+        } else {
+            node.innerText = threshold;
+        }
+        
+        track.appendChild(node);
+    });
+    
+    // Scroll to current position
+    setTimeout(() => {
+        const scrollContainer = document.getElementById('trophy-road-scroll');
+        const targetNode = track.children[nextTargetIndex + 1]; // +1 because of line div
+        if (targetNode) {
+            const scrollPos = targetNode.offsetLeft - (scrollContainer.clientWidth / 2) + (targetNode.clientWidth / 2);
+            scrollContainer.scrollTo({ left: scrollPos, behavior: 'smooth' });
+        }
+    }, 100);
 }
 
 init();
