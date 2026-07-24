@@ -1,0 +1,2584 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Chess City: Test Edition</title>
+<style>
+:root {
+    --primary: #3b82f6; /* Blue */
+    --secondary: #10b981; /* Emerald */
+    --accent: #f59e0b; /* Amber */
+    --danger: #ef4444; /* Red */
+    --dark: #1e293b; /* Slate 800 */
+    --darker: #0f172a; /* Slate 900 */
+    --light: #f8fafc; /* Slate 50 */
+    --sidebar-w: 260px;
+    --gold: #fbbf24;
+}
+
+* { box-sizing: border-box; user-select: none; -webkit-tap-highlight-color: transparent; }
+
+body {
+    margin: 0; padding: 0; width: 100vw; height: 100vh; overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: radial-gradient(circle at center, #1e1b4b, #0f172a);
+    color: white;
+}
+
+/* ═══════════════════════════════════════════════════
+   AUTH SCREEN
+   ═══════════════════════════════════════════════════ */
+#auth-screen {
+    position: fixed; inset: 0; z-index: 9999;
+    background: radial-gradient(circle at 30% 70%, #0f172a, #020617, #1e1b4b);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 20px;
+}
+#auth-screen.hidden { display: none; }
+
+.auth-logo { text-align: center; margin-bottom: 30px; }
+.auth-logo-text { 
+    font-size: 3rem; font-weight: 900; color: var(--accent); 
+    text-shadow: 0 0 20px rgba(245, 158, 11, 0.5); 
+    line-height: 1; letter-spacing: -2px;
+}
+.auth-logo-sub { font-size: 0.9rem; letter-spacing: 4px; color: #94a3b8; margin-top: 5px; text-transform: uppercase; }
+
+.auth-box {
+    background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 30px; width: 100%; max-width: 380px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); backdrop-filter: blur(10px);
+}
+.auth-box h2 { margin: 0 0 20px; font-size: 1.5rem; color: var(--light); text-align: center; font-weight: 600; }
+
+.auth-input {
+    width: 100%; padding: 12px 16px; margin-bottom: 12px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px; color: white; font-size: 1rem; outline: none;
+    transition: all 0.2s; font-family: inherit;
+}
+.auth-input:focus { border-color: var(--primary); background: rgba(255,255,255,0.08); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2); }
+.auth-input::placeholder { color: rgba(255,255,255,0.3); }
+
+.auth-btn {
+    width: 100%; padding: 12px; border: none; border-radius: 8px;
+    font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.2s;
+    margin-bottom: 10px; font-family: inherit;
+}
+.auth-btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); }
+.auth-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4); }
+.auth-btn-secondary { background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #cbd5e1; }
+.auth-btn-secondary:hover { background: rgba(255,255,255,0.05); }
+
+.auth-error { color: #f87171; font-size: 0.85rem; min-height: 20px; margin-bottom: 10px; text-align: center; }
+.auth-switch { text-align: center; font-size: 0.9rem; color: #94a3b8; margin-top: 15px; }
+.auth-switch span { color: var(--primary); cursor: pointer; font-weight: 600; }
+.auth-switch span:hover { text-decoration: underline; }
+
+.auth-loader { display: flex; flex-direction: column; align-items: center; gap: 15px; padding: 20px; }
+.auth-spinner {
+    width: 32px; height: 32px;
+    border: 3px solid rgba(255,255,255,0.1); border-left-color: var(--primary);
+    border-radius: 50%; animation: spin 0.8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.auth-divider { display: flex; align-items: center; gap: 10px; margin: 10px 0; opacity: 0.4; font-size: 0.8rem; color: #94a3b8; }
+.auth-divider::before, .auth-divider::after { content: ''; flex: 1; height: 1px; background: rgba(255,255,255,0.2); }
+
+/* ═══════════════════════════════════════════════════
+   MAIN APP
+   ═══════════════════════════════════════════════════ */
+#app-container { display: flex; width: 100%; height: 100%; }
+
+.sidebar {
+    width: var(--sidebar-w); background: rgba(15, 23, 42, 0.98);
+    display: flex; flex-direction: column; padding: 20px;
+    border-right: 1px solid rgba(255,255,255,0.05); z-index: 10;
+    box-shadow: 4px 0 24px rgba(0,0,0,0.2); transition: transform 0.3s ease;
+}
+
+.logo-area { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.logo-text { font-size: 1.6rem; font-weight: 800; color: var(--light); letter-spacing: -1px; line-height: 1.1; }
+.logo-sub { font-size: 0.75rem; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; font-weight: 700; }
+
+.menu-btn {
+    background: transparent; border: none; border-radius: 8px;
+    padding: 12px 16px; margin-bottom: 6px; font-size: 0.95rem; font-weight: 500; color: #94a3b8;
+    cursor: pointer; display: flex; align-items: center; gap: 12px; transition: all 0.2s;
+    text-align: left; position: relative; overflow: hidden;
+}
+.menu-btn:hover { color: white; background: rgba(255,255,255,0.05); }
+.menu-btn.active { background: rgba(59, 130, 246, 0.15); color: var(--primary); font-weight: 600; }
+.menu-btn.active::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: var(--primary); border-radius: 0 2px 2px 0; }
+.menu-icon { font-size: 1.2rem; width: 24px; text-align: center; }
+
+.main-content { flex-grow: 1; position: relative; overflow: hidden; background: transparent; }
+
+.panel { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+    padding: 20px; opacity: 0; pointer-events: none; transition: opacity 0.3s; 
+    overflow-y: auto; display: none; 
+}
+.panel.active { opacity: 1; pointer-events: all; display: block; }
+
+.panel-header { 
+    font-size: 2rem; font-weight: 800; margin-bottom: 25px; 
+    display: flex; justify-content: space-between; align-items: center; 
+    color: white; letter-spacing: -0.5px;
+}
+
+.top-bar { 
+    position: absolute; top: 20px; right: 20px; display: flex; gap: 12px; z-index: 100; 
+}
+.resource-pill { 
+    min-width: 90px; height: 36px; background: rgba(15, 23, 42, 0.8); 
+    padding: 0 14px; border-radius: 18px; display: flex; align-items: center; justify-content: center; 
+    gap: 8px; font-weight: 600; font-size: 0.9rem; border: 1px solid rgba(255,255,255,0.1); 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2); backdrop-filter: blur(4px);
+}
+.res-icon { width: 18px; height: 18px; object-fit: contain; }
+
+.grid-container { 
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+    gap: 20px; padding-bottom: 50px; 
+}
+
+.card-item { 
+    background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(10px); 
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; 
+    padding: 20px; text-align: center; cursor: pointer; transition: all 0.3s; 
+    position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; 
+}
+.card-item:hover { transform: translateY(-4px); background: rgba(30, 41, 59, 0.8); border-color: rgba(255,255,255,0.2); }
+.card-item.selected { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3); }
+.card-item.locked { opacity: 0.6; filter: grayscale(0.8); }
+.card-item.search-hidden { display: none !important; }
+
+.item-preview { 
+    height: 120px; width: 100%; display: flex; justify-content: center; align-items: center; 
+    margin-bottom: 15px; background: rgba(0,0,0,0.2); border-radius: 12px; 
+    font-size: 4rem; position: relative;
+}
+
+.btn-action { 
+    background: var(--secondary); border: none; padding: 10px 20px; border-radius: 8px; 
+    font-weight: 600; cursor: pointer; width: 100%; margin-top: 15px; 
+    transition: transform 0.1s; font-size: 0.9rem; color: white;
+    box-shadow: 0 4px 0 #059669;
+}
+.btn-action:active { transform: translateY(4px); box-shadow: none; }
+.btn-action.buy { background: var(--accent); color: #1e293b; box-shadow: 0 4px 0 #d97706; }
+.btn-action.exchange { background: #8b5cf6; color: white; box-shadow: 0 4px 0 #7c3aed; }
+.btn-action.claimed { background: #475569; color: #94a3b8; cursor: not-allowed; box-shadow: none; }
+.btn-action.disabled { background: #475569; cursor: not-allowed; box-shadow: none; opacity: 0.6; }
+
+/* LOBBY & BOT SELECTION */
+.lobby-layout { 
+    position: absolute; inset: 60px 24px 20px 12px; 
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; 
+}
+.lobby-center { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+
+.lobby-board-frame { 
+    width: 320px; height: 320px; 
+    border: 8px solid #334155; border-radius: 4px; 
+    background: #1e293b; 
+    display: flex; flex-direction: column; align-items: center; justify-content: center; 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4); position: relative; 
+    background-image: 
+        linear-gradient(45deg, #1e293b 25%, transparent 25%, transparent 75%, #1e293b 75%, #1e293b), 
+        linear-gradient(45deg, #1e293b 25%, transparent 25%, transparent 75%, #1e293b 75%, #1e293b);
+    background-size: 80px 80px;
+    background-position: 0 0, 40px 40px;
+}
+.lobby-board-frame::before {
+    content: ""; position: absolute; inset: -12px; border: 2px solid rgba(255,255,255,0.1); border-radius: 8px; pointer-events: none;
+}
+
+.lobby-deck-label { font-weight: 700; font-size: 0.9rem; letter-spacing: 1px; text-transform: uppercase; opacity: 0.8; color: #94a3b8; margin-bottom: 10px; }
+.lobby-piece-preview { 
+    font-size: 6rem; filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5)); 
+    animation: float 4s ease-in-out infinite;
+}
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+.lobby-bottom-play { display: flex; justify-content: center; align-items: center; gap: 15px; }
+.lobby-play-btn { 
+    padding: 16px 60px; border-radius: 12px; border: none; 
+    background: linear-gradient(135deg, var(--primary), #2563eb); 
+    color: white; font-size: 1.2rem; font-weight: 800; text-transform: uppercase; 
+    cursor: pointer; box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4); 
+    letter-spacing: 1px; transition: all 0.2s; 
+}
+.lobby-play-btn:active { transform: translateY(3px); box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3); }
+
+.lobby-event-btn { 
+    width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; 
+    border: none; background: linear-gradient(135deg, var(--accent), #d97706); 
+    border-radius: 12px; cursor: pointer; font-size: 1.5rem; 
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3); transition: transform 0.1s; position: relative; 
+}
+.lobby-event-btn:active { transform: translateY(3px); }
+
+.daily-wins-bar { 
+    display: flex; gap: 8px; align-items: center; justify-content: center; 
+    padding: 8px 16px; background: rgba(0,0,0,0.2); border-radius: 12px; 
+    border: 1px solid rgba(255,255,255,0.05); 
+}
+.win-slot { 
+    width: 32px; height: 32px; border-radius: 6px; 
+    display: flex; align-items: center; justify-content: center; 
+    font-size: 1rem; border: 1px solid rgba(255,255,255,0.1); 
+    background: rgba(255,255,255,0.05); transition: all 0.3s; 
+}
+.win-slot.claimed { background: rgba(16, 185, 129, 0.2); border-color: var(--secondary); color: var(--secondary); }
+.win-slot.reward { border-color: var(--gold); background: rgba(251, 191, 36, 0.1); color: var(--gold); }
+.win-slot.empty { opacity: 0.3; }
+
+.screen-note { opacity: 0.6; margin-top: 6px; font-size: 0.9rem; }
+
+/* SETTINGS & PROFILE */
+.friend-club-panel { 
+    max-width: 900px; margin: 60px auto 0; 
+    background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255,255,255,0.1); 
+    border-radius: 20px; padding: 24px; 
+}
+.friend-club-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 24px; }
+.back-lobby-btn { 
+    background: rgba(255,255,255,0.1); color: white; border: 1px solid rgba(255,255,255,0.2); 
+    padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.9rem; 
+}
+.friend-club-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.friend-club-box { 
+    background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.05); 
+    border-radius: 16px; padding: 20px; 
+}
+.list-card { 
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; 
+    padding: 12px; margin-bottom: 8px; background: rgba(255,255,255,0.03); border-radius: 8px; 
+}
+.mini-btn { 
+    background: var(--primary); color: white; border: none; 
+    padding: 6px 12px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 0.85rem; 
+}
+
+/* CHESTS & REVEAL */
+.chest-stage { 
+    display: flex; flex-direction: column; align-items: center; justify-content: center; 
+    height: 100%; position: relative; background: rgba(0,0,0,0.2); 
+    border-radius: 20px; padding: 20px; border: 1px solid rgba(255,255,255,0.1); 
+}
+.chest-big-img { 
+    width: 120px; height: 120px; object-fit: contain; cursor: pointer; 
+    animation: float 3s ease-in-out infinite; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5)); 
+    transition: transform 0.2s; position: relative; z-index: 2; 
+}
+.chest-big-img:hover { transform: scale(1.1); }
+
+.reveal-overlay { 
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.95); z-index: 50; display: none; 
+    justify-content: center; align-items: center; flex-direction: column; 
+}
+.reveal-card { 
+    width: 160px; height: 220px; background: var(--dark); 
+    border-radius: 12px; transform: rotateY(90deg); 
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+    display: flex; justify-content: center; align-items: center; 
+    font-size: 4rem; box-shadow: 0 0 50px rgba(59, 130, 246, 0.5); 
+    border: 2px solid var(--primary); color: white;
+}
+.reveal-card.show { transform: rotateY(0deg); }
+.reveal-text { 
+    margin-top: 20px; font-size: 1.5rem; font-weight: bold; color: white; 
+    opacity: 0; transform: translateY(20px); transition: all 0.5s; 
+}
+.reveal-text.show { opacity: 1; transform: translateY(0); }
+
+/* GAME OVERLAY */
+#game-overlay { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: #0f172a; z-index: 1000; display: none; 
+    flex-direction: column; 
+}
+#game-overlay.active { display: flex; }
+
+/* BATTLEGROUND BACKGROUNDS (LVL 2) */
+#game-overlay.bg-classic { background: radial-gradient(circle at center, #1e293b, #0f172a); }
+#game-overlay.bg-wood { background: repeating-linear-gradient(45deg, #3e2723 0px, #3e2723 10px, #4e342e 10px, #4e342e 20px); }
+#game-overlay.bg-silver { background: radial-gradient(circle at center, #475569, #1e293b); }
+#game-overlay.bg-gold { background: radial-gradient(circle at center, #78350f, #451a03); box-shadow: inset 0 0 100px rgba(251, 191, 36, 0.2); }
+#game-overlay.bg-diamond { background: radial-gradient(circle at center, #0891b2, #164e63); }
+#game-overlay.bg-carrots { background: repeating-linear-gradient(90deg, #ea580c 0px, #ea580c 20px, #16a34a 20px, #16a34a 40px); }
+
+.game-header { 
+    height: 60px; background: rgba(15, 23, 42, 0.95); 
+    display: flex; justify-content: space-between; align-items: center; 
+    padding: 0 20px; color: white; font-weight: 600; font-size: 1.1rem; 
+    position: relative; z-index: 1; border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.game-board { 
+    flex-grow: 1; display: flex; flex-direction: column; 
+    justify-content: center; align-items: center; padding: 10px; 
+    position: relative; z-index: 1; 
+}
+
+/* CHESS BOARD SPECIFIC */
+.chess-board-container {
+    width: 90vmin; height: 90vmin; max-width: 600px; max-height: 600px;
+    display: grid; grid-template-columns: repeat(8, 1fr); grid-template-rows: repeat(8, 1fr);
+    border: 8px solid #334155; border-radius: 4px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    background: #1e293b;
+}
+
+.chess-square {
+    display: flex; justify-content: center; align-items: center;
+    font-size: clamp(1.5rem, 5vmin, 3rem);
+    cursor: pointer; position: relative;
+}
+.chess-square.light { background-color: #e2e8f0; color: #1e293b; }
+.chess-square.dark { background-color: #475569; color: #f8fafc; }
+.chess-square.selected { background-color: rgba(59, 130, 246, 0.6) !important; }
+.chess-square.valid-move::after {
+    content: ''; position: absolute; width: 30%; height: 30%;
+    background: rgba(16, 185, 129, 0.6); border-radius: 50%;
+}
+.chess-square.capture-move { background-color: rgba(239, 68, 68, 0.6) !important; }
+
+.hand-zone { 
+    height: 80px; display: flex; justify-content: center; align-items: center; 
+    gap: 5px; padding: 5px; background: rgba(0,0,0,0.1); border-radius: 15px; 
+    margin: 0 10px; overflow-x: auto; visibility: hidden; /* Hidden for chess, used for captured pieces if needed */
+}
+
+.deck-zone { 
+    position: absolute; left: 20px; top: 50%; transform: translateY(-50%); 
+    text-align: center; z-index: 2; display: none; /* Hidden for chess */
+}
+
+.emote-trigger { 
+    position: absolute; left: 20px; bottom: 20px; 
+    width: 45px; height: 45px; border-radius: 50%; 
+    background: var(--primary); border: 2px solid white; 
+    color: white; font-size: 1.2rem; cursor: pointer; z-index: 250; 
+    display: flex; justify-content: center; align-items: center; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3); 
+}
+.emote-wheel-container { 
+    position: absolute; left: 20px; bottom: 75px; z-index: 300; 
+    display: none; flex-direction: column; gap: 5px;
+}
+.emote-wheel-container.active { display: flex; }
+.emote-btn { 
+    width: 40px; height: 40px; border-radius: 50%; background: white; 
+    border: 2px solid var(--dark); font-size: 1.2rem; cursor: pointer; 
+    display: flex; justify-content: center; align-items: center; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); 
+}
+
+.notify-pop { 
+    position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%) scale(0); 
+    font-size: 3rem; font-weight: 900; color: var(--accent); 
+    text-shadow: 0 0 20px rgba(245, 158, 11, 0.8); z-index: 300; 
+    pointer-events: none; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+}
+.notify-pop.show { transform: translate(-50%, -50%) scale(1); }
+
+.modal-overlay { 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: rgba(0,0,0,0.85); z-index: 2000; 
+    display: flex; justify-content: center; align-items: center; 
+    opacity: 0; pointer-events: none; transition: opacity 0.3s; 
+}
+.modal-overlay.show { opacity: 1; pointer-events: all; }
+
+.result-card { 
+    background: #1e293b; width: 90%; max-width: 400px; border-radius: 20px; 
+    padding: 30px; text-align: center; border: 1px solid rgba(255,255,255,0.1); 
+    transform: scale(0.9); transition: transform 0.3s; color: white; 
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+.modal-overlay.show .result-card { transform: scale(1); }
+
+.res-title { font-size: 2.2rem; margin: 0 0 10px; color: white; font-weight: 800; }
+.res-score { font-size: 2.5rem; color: var(--primary); font-weight: 800; margin: 15px 0; }
+.res-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); font-size: 1rem; color: #cbd5e1; }
+.btn-home { 
+    background: var(--primary); color: white; border: none; 
+    padding: 12px 30px; font-size: 1.1rem; border-radius: 8px; 
+    cursor: pointer; margin-top: 20px; font-weight: 600; 
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); 
+}
+
+/* SHOP & DECKS */
+.shop-section { 
+    margin-bottom: 40px; background: rgba(30, 41, 59, 0.4); 
+    padding: 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); 
+}
+.shop-section h2 { 
+    margin-top: 0; border-bottom: 1px solid rgba(255,255,255,0.1); 
+    padding-bottom: 15px; margin-bottom: 20px; display: flex; align-items: center; 
+    gap: 10px; font-size: 1.3rem; color: white;
+}
+
+.exchange-card { 
+    background: linear-gradient(135deg, #4f46e5, #4338ca); 
+    padding: 15px; border-radius: 12px; display: flex; 
+    justify-content: space-between; align-items: center; 
+    max-width: 400px; margin: 0 auto; border: 1px solid rgba(255,255,255,0.1); 
+}
+.exchange-info { display: flex; align-items: center; gap: 10px; font-size: 1rem; font-weight: 600; }
+.exchange-arrow { font-size: 1.2rem; opacity: 0.7; }
+
+.pin-grid { 
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); 
+    gap: 10px; margin-top: 20px; 
+}
+.pin-item { 
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
+    border-radius: 10px; padding: 10px; display: flex; flex-direction: column; 
+    align-items: center; justify-content: center; cursor: pointer; 
+    transition: all 0.2s; position: relative; aspect-ratio: 1; 
+}
+.pin-item:hover { background: rgba(255,255,255,0.1); transform: scale(1.05); }
+.pin-item.selected { border-color: var(--accent); background: rgba(245, 158, 11, 0.1); }
+.pin-item.locked { opacity: 0.5; filter: grayscale(1); cursor: not-allowed; }
+.pin-icon { font-size: 2rem; line-height: 1; }
+.pin-price { font-size: 0.7rem; color: var(--accent); margin-top: 5px; font-weight: 600; }
+.pin-owned-badge { 
+    position: absolute; top: 4px; right: 4px; 
+    background: var(--secondary); color: white; 
+    font-size: 0.6rem; padding: 2px 5px; border-radius: 4px; font-weight: 700; 
+}
+
+.section-tabs { 
+    display: flex; gap: 10px; margin-bottom: 20px; 
+    border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; 
+}
+.tab-btn { 
+    background: transparent; border: none; color: #94a3b8; 
+    font-size: 0.95rem; font-weight: 600; padding: 8px 16px; 
+    cursor: pointer; border-radius: 8px; transition: all 0.2s; 
+}
+.tab-btn:hover { color: white; background: rgba(255,255,255,0.05); }
+.tab-btn.active { color: var(--primary); background: rgba(59, 130, 246, 0.1); }
+
+/* SCHOOL */
+.school-container {
+    max-width: 800px; margin: 0 auto; padding: 20px;
+}
+.lesson-card {
+    background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px; padding: 20px; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 20px; transition: all 0.3s;
+}
+.lesson-card:hover { transform: translateX(5px); border-color: var(--primary); }
+.lesson-card.completed { border-color: var(--secondary); background: rgba(16, 185, 129, 0.1); }
+.lesson-card.locked { opacity: 0.5; filter: grayscale(0.8); pointer-events: none; }
+.lesson-icon { font-size: 3rem; width: 60px; text-align: center; }
+.lesson-info { flex-grow: 1; }
+.lesson-title { font-size: 1.2rem; font-weight: 700; color: white; margin-bottom: 5px; }
+.lesson-desc { font-size: 0.9rem; color: #94a3b8; }
+.lesson-status { font-size: 1.5rem; }
+
+/* STREAK */
+.streak-hero-section { 
+    text-align: center; padding: 30px 20px; 
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(245, 158, 11, 0.1)); 
+    border-radius: 16px; margin-bottom: 30px; border: 1px solid rgba(251, 191, 36, 0.2); 
+}
+.streak-hero-fire { font-size: 4rem; display: block; margin-bottom: 10px; }
+.streak-hero-count { font-size: 3.5rem; font-weight: 900; color: var(--gold); margin: 5px 0; }
+.streak-hero-label { font-size: 1rem; text-transform: uppercase; letter-spacing: 2px; opacity: 0.8; color: #cbd5e1; }
+.streak-hero-next { font-size: 0.9rem; color: #94a3b8; margin-top: 10px; }
+.streak-hero-next span { color: var(--gold); font-weight: 600; }
+
+.streak-track { display: flex; flex-direction: column; gap: 8px; padding: 10px; max-height: 50vh; overflow-y: auto; }
+.streak-day { 
+    display: flex; align-items: center; gap: 15px; 
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); 
+    border-radius: 10px; padding: 12px 16px; transition: all 0.3s; 
+}
+.streak-day.claimed { background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); }
+.streak-day.current { border-color: var(--gold); background: rgba(251, 191, 36, 0.05); }
+.streak-day.locked { opacity: 0.4; }
+.streak-day-num { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; opacity: 0.7; min-width: 60px; color: #94a3b8; }
+.streak-day-reward { font-size: 1.5rem; min-width: 30px; text-align: center; }
+.streak-day-info { flex-grow: 1; }
+.streak-day-amount { font-size: 0.9rem; font-weight: 600; color: var(--gold); }
+.streak-day-status { 
+    font-size: 0.7rem; font-weight: 700; padding: 3px 8px; 
+    border-radius: 6px; text-transform: uppercase; min-width: 60px; text-align: center; 
+}
+.streak-day-status.done { background: var(--secondary); color: white; }
+.streak-day-status.now { background: var(--gold); color: #1e293b; }
+.streak-day-status.future { background: rgba(255,255,255,0.1); color: #94a3b8; }
+
+.streak-claim-btn { 
+    background: linear-gradient(135deg, var(--gold), #d97706); 
+    color: #1e293b; border: none; padding: 14px 30px; 
+    border-radius: 10px; font-weight: 800; font-size: 1rem; 
+    cursor: pointer; box-shadow: 0 5px 15px rgba(251, 191, 36, 0.3); 
+    transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px; 
+    width: 100%; max-width: 400px; display: block; margin: 20px auto; 
+}
+.streak-claim-btn:disabled { background: #475569; color: #94a3b8; cursor: not-allowed; box-shadow: none; }
+
+/* PROFILE */
+.profile-icon-container { 
+    position: absolute; top: 15px; left: 15px; z-index: 100; 
+    cursor: pointer; transition: transform 0.2s; 
+}
+.profile-icon-container:hover { transform: scale(1.05); }
+.profile-avatar { 
+    width: 45px; height: 45px; border-radius: 10px; 
+    border: 2px solid var(--gold); background: #1e293b; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3); object-fit: cover; 
+}
+.profile-modal-content { text-align: center; padding: 30px; color: white; max-height: 90vh; overflow-y: auto; }
+.profile-large-avatar { 
+    width: 100px; height: 100px; border-radius: 16px; 
+    border: 3px solid var(--gold); margin: 0 auto 20px; 
+    background: #1e293b; object-fit: cover; 
+}
+.profile-name-input { 
+    font-size: 1.3rem; font-weight: 600; text-align: center; 
+    border: none; border-bottom: 2px solid #334155; 
+    background: transparent; width: 80%; margin-bottom: 20px; 
+    color: white; outline: none; padding-bottom: 5px;
+}
+.profile-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
+.stat-box { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+.stat-value { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+.stat-label { font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; margin-top: 4px; }
+
+.profile-streak-mini { 
+    margin: 15px 0; background: linear-gradient(135deg, #ef4444, #f59e0b); 
+    border-radius: 12px; padding: 15px; cursor: pointer; 
+    transition: transform 0.2s; display: flex; align-items: center; 
+    justify-content: space-between; color: white; font-weight: 600; 
+}
+.profile-streak-mini:hover { transform: scale(1.02); }
+.profile-streak-mini .streak-fire { font-size: 1.8rem; }
+.profile-streak-mini .streak-count-big { font-size: 1.5rem; font-weight: 800; }
+.profile-streak-mini .streak-sub { font-size: 0.8rem; opacity: 0.9; }
+
+/* SEARCH */
+.deck-search-container { 
+    display: flex; align-items: center; 
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); 
+    border-radius: 10px; padding: 0 12px; margin-bottom: 16px; 
+    width: 100%; max-width: 400px; 
+}
+.deck-search-container:focus-within { border-color: var(--primary); }
+.deck-search-input { 
+    background: transparent; border: none; color: white; 
+    font-size: 0.95rem; padding: 10px 0; width: 100%; outline: none; font-family: inherit; 
+}
+.deck-search-input::placeholder { color: rgba(255,255,255,0.3); }
+.deck-search-clear { 
+    background: rgba(255,255,255,0.1); border: none; color: white; 
+    width: 24px; height: 24px; border-radius: 50%; 
+    cursor: pointer; font-size: 0.8rem; display: none; 
+    align-items: center; justify-content: center; margin-left: 8px; 
+}
+.deck-search-clear.visible { display: flex; }
+.no-results-message { 
+    text-align: center; padding: 40px 20px; opacity: 0.6; 
+    font-size: 1rem; display: none; width: 100%; grid-column: 1 / -1; 
+}
+.no-results-message.visible { display: block; }
+
+/* SYNC */
+.sync-indicator { 
+    position: fixed; bottom: 15px; left: 15px; z-index: 500; 
+    background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(255,255,255,0.1); 
+    border-radius: 20px; padding: 6px 12px; font-size: 0.75rem; 
+    display: flex; align-items: center; gap: 6px; transition: opacity 0.5s; 
+    backdrop-filter: blur(4px);
+}
+.sync-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--secondary); }
+.sync-dot.syncing { animation: syncPulse 1s ease-in-out infinite; background: var(--accent); }
+.sync-dot.error { background: var(--danger); }
+@keyframes syncPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.logout-btn { 
+    width: 100%; padding: 12px; 
+    background: linear-gradient(135deg, #ef4444, #dc2626); 
+    border: none; border-radius: 8px; color: white; 
+    font-weight: 600; cursor: pointer; font-size: 0.95rem; margin-top: 10px; 
+}
+
+@media (max-width: 768px) {
+    #app-container { flex-direction: column; }
+    .sidebar { 
+        width: 100%; height: auto; flex-direction: row; 
+        overflow-x: auto; padding: 10px; border-right: none; 
+        border-bottom: 1px solid rgba(255,255,255,0.1); 
+    }
+    .logo-area { display: none; }
+    .menu-btn { 
+        flex-direction: column; padding: 8px; margin-bottom: 0; 
+        margin-right: 8px; min-width: 70px; font-size: 0.75rem; 
+    }
+    .menu-btn.active::before { display: none; }
+    .menu-btn.active { background: rgba(59, 130, 246, 0.2); }
+    .menu-icon { width: auto; font-size: 1.3rem; margin-bottom: 4px; }
+    .top-bar { top: 10px; right: 10px; }
+    .friend-club-grid { grid-template-columns: 1fr; }
+    .chess-board-container { width: 95vw; height: 95vw; }
+}
+</style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+    <div class="auth-logo">
+        <div class="auth-logo-text">CHESS<br>CITY</div>
+        <div class="auth-logo-sub">Test Edition</div>
+    </div>
+    
+    <div class="auth-box" id="auth-main-menu">
+        <h2>Accedi per Giocare</h2>
+        <button class="auth-btn auth-btn-primary" onclick="authShowLogin()">Ho già un account</button>
+        <div class="auth-divider">oppure</div>
+        <button class="auth-btn auth-btn-secondary" onclick="authShowRegister()">Crea nuovo account</button>
+        <div style="text-align:center; font-size:0.75rem; opacity:0.5; margin-top:15px;">☁️ I progressi vengono salvati nel cloud</div>
+    </div>
+
+    <div class="auth-box" id="auth-login-form" style="display:none;">
+        <h2>🔑 Accedi</h2>
+        <input type="email" id="login-email" class="auth-input" placeholder="Email">
+        <input type="password" id="login-pass" class="auth-input" placeholder="Password">
+        <div class="auth-error" id="login-error"></div>
+        <button class="auth-btn auth-btn-primary" onclick="handleLogin()">Entra</button>
+        <button class="auth-btn auth-btn-secondary" onclick="authShowMenu()">← Indietro</button>
+        <div class="auth-switch">Non hai un account? <span onclick="authShowRegister()">Registrati</span></div>
+    </div>
+
+    <div class="auth-box" id="auth-register-form" style="display:none;">
+        <h2>🎮 Nuovo Account</h2>
+        <input type="text" id="reg-nick" class="auth-input" placeholder="Nickname (max 12 caratteri)" maxlength="12">
+        <input type="email" id="reg-email" class="auth-input" placeholder="Email">
+        <input type="password" id="reg-pass" class="auth-input" placeholder="Password (min 6 caratteri)">
+        <div class="auth-error" id="reg-error"></div>
+        <button class="auth-btn auth-btn-primary" onclick="handleRegister()">Crea Account</button>
+        <button class="auth-btn auth-btn-secondary" onclick="authShowMenu()">← Indietro</button>
+        <div class="auth-switch">Hai già un account? <span onclick="authShowLogin()">Accedi</span></div>
+    </div>
+
+    <div class="auth-box" id="auth-loading" style="display:none;">
+        <div class="auth-loader">
+            <div class="auth-spinner"></div>
+            <div id="auth-loading-text">Connessione in corso...</div>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN GAME -->
+<div id="app-container" style="display:none;">
+    <div class="sidebar">
+        <div class="logo-area">
+            <div class="logo-text">CHESS<br>CITY</div>
+            <div class="logo-sub">Test Edition</div>
+        </div>
+        <button class="menu-btn active" data-panel="arena" onclick="showPanel('arena')"><span class="menu-icon">♟️</span> Lobby</button>
+        <button class="menu-btn" data-panel="decks" onclick="showPanel('decks')"><span class="menu-icon">🏰</span> Scacchiere</button>
+        <button class="menu-btn" data-panel="shop" onclick="showPanel('shop')"><span class="menu-icon">🛒</span> Shop</button>
+        <button class="menu-btn" data-panel="school" onclick="showPanel('school')"><span class="menu-icon">🎓</span> Scuola</button>
+        <button class="menu-btn" data-panel="events" onclick="showPanel('events')"><span class="menu-icon">⚡</span> Modalità</button>
+        <div style="flex-grow:1"></div>
+        <button class="menu-btn" data-panel="settings" onclick="showPanel('settings')"><span class="menu-icon">⚙️</span> Settings</button>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <div class="resource-pill"><img src="icon.png" class="res-icon" onerror="this.style.display='none'"><span id="coin-display">0</span></div>
+            <div class="resource-pill"><img src="gem.png" class="res-icon" onerror="this.style.display='none'"><span id="gem-display">0</span></div>
+            <div class="resource-pill"><img src="ticket.png" class="res-icon" onerror="this.style.display='none'"><span id="ticket-display">0</span></div>
+        </div>
+
+        <div class="profile-icon-container" id="profile-icon-container" onclick="openProfile()" style="display:none;">
+            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIj48cGF0aCBkPSJNMjAgMjF2LTJhNCA0IDAgMCAwLTQtNEg4YTQgNCAwIDAgMC00IDR2MiIvPjxjaXJjbGUgY3g9IjEyIiBjeT0iNyIgcj0iNCIvPjwvc3ZnPg==" alt="Profilo" class="profile-avatar">
+        </div>
+
+        <!-- ARENA -->
+        <div id="panel-arena" class="panel active">
+            <div class="lobby-layout">
+                <div class="lobby-center">
+                    <div class="lobby-board-frame">
+                        <div class="lobby-deck-label">Scacchiera in uso</div>
+                        <div class="lobby-piece-preview" id="arena-deck-preview">♟️</div>
+                        <h2 id="arena-deck-name" style="color:white; font-size:1.2rem; margin-top:10px;">Classica</h2>
+                    </div>
+                </div>
+                <div class="daily-wins-bar" id="daily-wins-bar" title="Premi vittorie giornaliere">
+                    <span style="font-size:0.75rem;opacity:0.7;margin-right:5px;">WIN:</span>
+                </div>
+                <div class="lobby-bottom-play">
+                    <button class="lobby-play-btn" onclick="showBotSelection()">Gioca</button>
+                    <div class="lobby-event-btn" onclick="showPanel('events')">⚡<div class="lobby-event-tooltip" style="position:absolute;bottom:-25px;font-size:0.7rem;background:rgba(0,0,0,0.8);padding:2px 6px;border-radius:4px;">Modalità</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOT SELECTION PANEL -->
+        <div id="panel-bots" class="panel">
+            <div class="panel-header">Scegli Avversario <button class="back-lobby-btn" onclick="showPanel('arena')" style="margin-left:auto;">Indietro</button></div>
+            <div class="grid-container" id="bot-grid"></div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div id="panel-settings" class="panel">
+            <div class="friend-club-panel">
+                <div class="friend-club-header">
+                    <div>
+                        <div class="panel-header" style="margin:0;font-size:1.8rem;">Impostazioni</div>
+                        <div class="screen-note">Account, audio e dati.</div>
+                    </div>
+                    <button class="back-lobby-btn" onclick="showPanel('arena')">Torna alla Lobby</button>
+                </div>
+                <div class="friend-club-grid">
+                    <div class="friend-club-box">
+                        <h3 style="margin-top:0;color:white;">Gioco</h3>
+                        <div class="list-card"><span style="color:#cbd5e1;">Effetti sonori</span><button class="mini-btn" type="button">On</button></div>
+                        <div class="list-card"><span style="color:#cbd5e1;">Musica</span><button class="mini-btn" type="button">Off</button></div>
+                    </div>
+                    <div class="friend-club-box">
+                        <h3 style="margin-top:0;color:white;">Account</h3>
+                        <div id="settings-user-info" style="margin-bottom:12px;font-size:0.9rem;opacity:0.7;color:#94a3b8;"></div>
+                        <button class="mini-btn" type="button" style="width:100%;background:linear-gradient(135deg,#ef4444,#dc2626);margin-bottom:8px;" onclick="resetData()">Reset progressi</button>
+                        <button class="logout-btn" onclick="handleLogout()">🚪 Disconnetti</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DECKS (BOARDS) -->
+        <div id="panel-decks" class="panel">
+            <div class="panel-header">Collezione Scacchiere</div>
+            <div class="section-tabs">
+                <button class="tab-btn active" onclick="switchDeckTab('decks')">♟️ Scacchiere</button>
+                <button class="tab-btn" onclick="switchDeckTab('pins')">📌 Pins</button>
+            </div>
+            
+            <div id="decks-grid-container">
+                <div class="deck-search-container">
+                    <span style="font-size:1.2rem;margin-right:10px;opacity:0.7;">🔍</span>
+                    <input type="text" id="deck-search-input" class="deck-search-input" placeholder="Cerca scacchiera..." oninput="filterDecks(this.value)">
+                    <button class="deck-search-clear" id="deck-search-clear" onclick="clearDeckSearch()">✕</button>
+                </div>
+                <div class="grid-container" id="decks-grid"></div>
+                <div class="no-results-message" id="no-results-decks">Nessuna scacchiera trovata 😕</div>
+            </div>
+
+            <div id="pins-grid-container" style="display:none;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+                    <h3 style="margin:0;color:white;">I Tuoi Pins</h3>
+                    <button class="btn-action" style="width:auto;padding:8px 15px;" onclick="showPanel('shop')">Shop</button>
+                </div>
+                <div class="pin-grid" id="my-pins-grid"></div>
+                <h3 style="margin-top:30px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:10px;color:white;">Catalogo Pins</h3>
+                <div class="pin-grid" id="shop-pins-grid"></div>
+            </div>
+        </div>
+
+        <!-- SHOP -->
+        <div id="panel-shop" class="panel">
+            <div class="panel-header">Negozio</div>
+            
+            <div class="shop-section" id="daily-shop-section">
+                <h2><span style="font-size:1.5rem;">⏰</span> Offerte del Giorno <span id="daily-shop-timer" style="font-size:0.8rem;opacity:0.6;margin-left:auto;"></span></h2>
+                <div class="grid-container" id="daily-offers-grid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));"></div>
+            </div>
+
+            <div class="shop-section">
+                <h2><span style="font-size:1.5rem;">📦</span> Acquista Cassaforti</h2>
+                <div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap;">
+                    <div class="chest-stage" style="width:100%;max-width:300px;">
+                        <p style="margin-bottom:15px;color:#cbd5e1;">Prezzo: <span style="color:var(--primary);font-weight:bold;font-size:1.2rem;">29 💎</span></p>
+                        <img src="Box1.png" class="chest-big-img" onclick="buyAndOpenChest('classic')" alt="Box" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzMzNDE1OSIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik0yMCAxMnY4YTIgMiAwIDAgMS0yIDJINmEyIDIgMCAwIDEtMi0ydi04Ii8+PHBhdGggZD0iTTEyIDJhNCA0IDAgMCAxIDQgNHYyaC04VjZhNCA0IDAgMCAxIDQtNHoiLz48L3N2Zz4='">
+                        <p style="margin-top:15px;opacity:0.7;font-size:0.9rem;color:#94a3b8;">Contiene: Monete, Gemme, Ticket, Scacchiere Base</p>
+                    </div>
+                    <div class="chest-stage" style="width:100%;max-width:300px;border-color:var(--primary);">
+                        <p style="margin-bottom:15px;color:#cbd5e1;">Prezzo: <span style="color:var(--primary);font-weight:bold;font-size:1.2rem;">49 💎</span></p>
+                        <img src="Box2.png" class="chest-big-img" onclick="buyAndOpenChest('blue')" alt="Blue Box" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzFiMjM4YSIgc3Ryb2tlPSIjNjBhNWZhIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik0yMCAxMnY4YTIgMiAwIDAgMS0yIDJINmEyIDIgMCAwIDEtMi0ydi04Ii8+PHBhdGggZD0iTTEyIDJhNCA0IDAgMCAxIDQgNHYyaC04VjZhNCA0IDAgMCAxIDQtNHoiLz48L3N2Zz4='">
+                        <p style="margin-top:15px;opacity:0.7;font-size:0.9rem;color:#94a3b8;">Contiene: Scacchiere Rare, Botti di Fortuna, Biglietti</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="shop-section">
+                <h2><span style="font-size:1.5rem;">♟️</span> Catalogo Scacchiere</h2>
+                <div class="grid-container" id="shop-grid"></div>
+            </div>
+
+            <div class="shop-section">
+                <h2><span style="font-size:1.5rem;">📌</span> Catalogo Pins</h2>
+                <div class="pin-grid" id="shop-pins-full-grid"></div>
+            </div>
+
+            <div class="shop-section">
+                <h2><span style="font-size:1.5rem;">💱</span> Scambio</h2>
+                <div class="exchange-card">
+                    <div class="exchange-info"><span>30 💎</span><span class="exchange-arrow">➜</span><span>250 🪙</span></div>
+                    <button class="btn-action exchange" style="width:auto;padding:8px 20px;" onclick="exchangeResources()">SCAMBIA</button>
+                </div>
+                <p style="text-align:center;margin-top:10px;opacity:0.7;font-size:0.8rem;color:#94a3b8;">Converti gemme in monete.</p>
+            </div>
+        </div>
+
+        <!-- SCHOOL -->
+        <div id="panel-school" class="panel">
+            <div class="panel-header">Chess School <span style="font-size:1rem;opacity:0.7;margin-left:10px;">con Orlando</span></div>
+            <div class="school-container" id="school-list">
+                <!-- Lessons generated by JS -->
+            </div>
+        </div>
+
+        <!-- EVENTS -->
+        <div id="panel-events" class="panel">
+            <div class="panel-header">Modalità Speciali</div>
+            <div class="grid-container" style="grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));">
+                <div class="card-item event-card">
+                    <div class="item-preview" style="background: linear-gradient(135deg, #1e293b, #334155);">♟️</div>
+                    <h3 style="color:white;">Classica</h3>
+                    <p style="color:#94a3b8;">La modalità standard. Vinci trofei.</p>
+                    <button class="btn-action" onclick="startGame('classic')">Gioca</button>
+                </div>
+                <div class="card-item event-card" id="event-blitz-card">
+                    <div class="item-preview" style="background: linear-gradient(135deg, #ef4444, #b91c1c);">⚡</div>
+                    <h3 style="color:white;">Blitz Test</h3>
+                    <p id="blitz-lock-msg" style="color:#94a3b8;">Sblocca a 150 Trofei</p>
+                    <button class="btn-action" id="btn-play-blitz" disabled onclick="startGame('blitz')">Gioca</button>
+                </div>
+                <div class="card-item event-card">
+                    <div class="item-preview" style="background: linear-gradient(135deg, #8b5cf6, #6d28d9);">🎲</div>
+                    <h3 style="color:white;">Scacchi Matti</h3>
+                    <p style="color:#94a3b8;">Mosse casuali! Caos totale.</p>
+                    <button class="btn-action" onclick="startGame('random')" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);box-shadow:0 4px 0 #5b21b6;">Gioca</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STREAK -->
+        <div id="panel-streak" class="panel">
+            <div class="panel-header">🔥 Streak Giornaliera</div>
+            <div class="streak-hero-section">
+                <span class="streak-hero-fire">🔥</span>
+                <div class="streak-hero-count" id="streak-count-display">0</div>
+                <div class="streak-hero-label">Giorni Consecutivi</div>
+                <div class="streak-hero-next" id="streak-timer">Prossimo premio disponibile tra: --:--:--</div>
+            </div>
+            <div class="streak-track" id="streak-track"></div>
+            <button class="streak-claim-btn" id="streak-claim-btn" onclick="claimStreakReward()">Riscuoti Premio</button>
+        </div>
+    </div>
+</div>
+
+<!-- GAME OVERLAY -->
+<div id="game-overlay">
+    <div class="game-header">
+        <div style="position:relative;">CPU: <span id="cpu-score">0</span><div id="cpu-emote" style="position:absolute;top:-30px;right:0;font-size:2rem;display:none;"></div></div>
+        <div style="color:var(--accent);">TURNO: <span id="turn-indicator">TU</span></div>
+        <div style="position:relative;">TU: <span id="player-score">0</span><div id="player-emote" style="position:absolute;top:-30px;right:0;font-size:2rem;display:none;"></div></div>
+        <button onclick="quitGame()" style="background:none;border:1px solid rgba(255,255,255,0.3);color:white;padding:5px 10px;border-radius:6px;cursor:pointer;font-size:0.8rem;">ESCI</button>
+    </div>
+    
+    <div class="game-board">
+        <div class="hand-zone" id="cpu-hand"></div> <!-- Hidden for chess -->
+        
+        <div class="chess-board-container" id="chess-board">
+            <!-- Generated by JS -->
+        </div>
+        
+        <div class="hand-zone" id="player-hand"></div> <!-- Hidden for chess -->
+    </div>
+
+    <div class="deck-zone"><div class="deck-pile" id="deck-pile"><span id="deck-count">40</span></div></div>
+    
+    <div class="emote-trigger" onclick="toggleEmoteWheel()">😃</div>
+    <div class="emote-wheel-container" id="emote-wheel">
+        <div class="emote-btn" onclick="sendEmote('😀')">😀</div>
+        <div class="emote-btn" onclick="sendEmote('😭')">😭</div>
+        <div class="emote-btn" onclick="sendEmote('😎')">😎</div>
+        <div class="emote-btn" onclick="sendEmote('😴')">😴</div>
+    </div>
+
+    <div id="notify" class="notify-pop">SCACCO MATTO!</div>
+
+    <div id="result-modal" class="modal-overlay">
+        <div class="result-card">
+            <h1 class="res-title" id="res-title">VITTORIA!</h1>
+            <div class="res-score" id="res-final-score">3 - 1</div>
+            <div class="res-row"><span>Pezzi Presi:</span><span id="res-cards">0 - 0</span></div>
+            <div class="res-row"><span>Material Advantage:</span><span id="res-material">0</span></div>
+            <div class="res-row"><span>Mosse Totali:</span><span id="res-moves">0</span></div>
+            <button class="btn-home" onclick="quitGame()">TORNA ALLA LOBBY</button>
+        </div>
+    </div>
+</div>
+
+<!-- PROFILE MODAL -->
+<div id="profile-modal" class="modal-overlay">
+    <div class="result-card profile-modal-content">
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOTRhM2I4IiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGQ9Ik0yMCAyMXYtMmE0IDQgMCAwIDAtNC00SDhhNCA0IDAgMCAwLTQgNHYyIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSI3IiByPSI0Ii8+PC9zdmc+" alt="Profile" class="profile-large-avatar">
+        <input type="text" id="profile-name-input" class="profile-name-input" placeholder="Il tuo nome..." onchange="updateProfileName(this.value)">
+        
+        <div class="profile-streak-mini" onclick="openStreakFromProfile()">
+            <div class="streak-fire">🔥</div>
+            <div class="streak-info"><div class="streak-count-big" id="profile-streak-count">0</div><div class="streak-sub">Giorni consecutivi · Clicca per la streak</div></div>
+            <div class="streak-status-dot" id="profile-streak-dot">⏳</div>
+        </div>
+
+        <div class="profile-stats-grid">
+            <div class="stat-box"><div class="stat-value" id="profile-stat-scopas">0</div><div class="stat-label">Partite Vinte</div></div>
+            <div class="stat-box"><div class="stat-value" id="profile-stat-cards">0</div><div class="stat-label">Pezzi Presi</div></div>
+            <div class="stat-box"><div class="stat-value" id="profile-stat-wins">0</div><div class="stat-label">Vittorie Totali</div></div>
+            <div class="stat-box"><div class="stat-value" id="profile-stat-level">1</div><div class="stat-label">Livello</div></div>
+        </div>
+        <button class="btn-home" onclick="closeProfile()" style="margin-top:25px;">Chiudi</button>
+    </div>
+</div>
+
+<!-- STREAK FROM PROFILE -->
+<div id="streak-from-profile-modal" class="modal-overlay" style="z-index:3000;">
+    <div class="result-card" style="max-width:450px;background:#1e293b;border:1px solid rgba(255,255,255,0.1);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;">
+            <div style="font-size:1.4rem;font-weight:800;color:white;">🔥 Streak Giornaliera</div>
+            <button onclick="closeStreakFromProfile()" style="background:rgba(255,255,255,0.1);border:none;color:white;padding:6px 12px;border-radius:8px;cursor:pointer;">✕ Chiudi</button>
+        </div>
+        <div style="text-align:center;margin-bottom:15px;"><span style="font-size:3rem;font-weight:900;color:var(--gold);" id="sfp-streak-count">0</span><div style="font-size:0.9rem;opacity:0.7;color:#94a3b8;">Giorni Consecutivi</div></div>
+        <div class="streak-modal-scroll" style="max-height:400px;overflow-y:auto;"><div id="sfp-streak-track"></div></div>
+        <button class="streak-claim-btn" id="sfp-claim-btn" onclick="claimStreakRewardFromProfile()" style="margin-top:15px;font-size:0.95rem;padding:12px 20px;">Riscuoti</button>
+    </div>
+</div>
+
+<!-- REVEAL OVERLAY -->
+<div id="reveal-overlay" class="reveal-overlay">
+    <div class="reveal-card" id="reveal-card-content">?</div>
+    <div class="reveal-text" id="reveal-text">Hai vinto!</div>
+</div>
+
+<!-- CLOUD SYNC BADGE -->
+<div class="sync-indicator" id="sync-indicator" style="display:none;">
+    <div class="sync-dot" id="sync-dot"></div>
+    <span id="sync-text">Sincronizzato</span>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+    apiKey: "AIzaSyBwWvn-_OokHcOt44LLusDOZe4isUimF8w",
+    authDomain: "super-scopa.firebaseapp.com",
+    projectId: "super-scopa",
+    storageBucket: "super-scopa.firebasestorage.app",
+    messagingSenderId: "616890463017",
+    appId: "1:616890463017:web:1abea8e62b006cf27e3d38"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const auth = getAuth(fbApp);
+const db = getFirestore(fbApp);
+
+// AUTH UI HELPERS
+window.authShowMenu = () => { ['auth-main-menu','auth-login-form','auth-register-form','auth-loading'].forEach(id => document.getElementById(id).style.display = 'none'); document.getElementById('auth-main-menu').style.display = ''; };
+window.authShowLogin = () => { ['auth-main-menu','auth-register-form','auth-loading'].forEach(id => document.getElementById(id).style.display = 'none'); document.getElementById('auth-login-form').style.display = ''; document.getElementById('login-error').innerText = ''; };
+window.authShowRegister = () => { ['auth-main-menu','auth-login-form','auth-loading'].forEach(id => document.getElementById(id).style.display = 'none'); document.getElementById('auth-register-form').style.display = ''; document.getElementById('reg-error').innerText = ''; };
+function authShowLoading(text = 'Connessione in corso...') { ['auth-main-menu','auth-login-form','auth-register-form'].forEach(id => document.getElementById(id).style.display = 'none'); document.getElementById('auth-loading').style.display = ''; document.getElementById('auth-loading-text').innerText = text; }
+
+// AUTH HANDLERS
+window.handleLogin = async () => {
+    const email = document.getElementById('login-email').value.trim();
+    const pass = document.getElementById('login-pass').value;
+    const errDiv = document.getElementById('login-error');
+    if (!email || !pass) { errDiv.innerText = 'Compila tutti i campi!'; return; }
+    try {
+        authShowLoading('Accesso in corso...');
+        await signInWithEmailAndPassword(auth, email, pass);
+    } catch(e) {
+        authShowLogin();
+        errDiv.innerText = translateAuthError(e.code);
+    }
+};
+
+window.handleRegister = async () => {
+    const nick = document.getElementById('reg-nick').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
+    const pass = document.getElementById('reg-pass').value;
+    const errDiv = document.getElementById('reg-error');
+    if (!nick || !email || !pass) { errDiv.innerText = 'Compila tutti i campi!'; return; }
+    if (nick.length < 2) { errDiv.innerText = 'Nickname troppo corto!'; return; }
+    try {
+        authShowLoading('Creazione account...');
+        const cred = await createUserWithEmailAndPassword(auth, email, pass);
+        await updateProfile(cred.user, { displayName: nick });
+        const initial = buildInitialState(nick);
+        await setDoc(doc(db, 'players', cred.user.uid), initial);
+    } catch(e) {
+        authShowRegister();
+        errDiv.innerText = translateAuthError(e.code);
+    }
+};
+
+window.handleLogout = async () => {
+    if (!confirm('Vuoi davvero disconnetterti?')) return;
+    await signOut(auth);
+    window.location.reload();
+};
+
+function translateAuthError(code) {
+    const map = {
+        'auth/invalid-email': 'Email non valida.',
+        'auth/user-not-found': 'Account non trovato.',
+        'auth/wrong-password': 'Password errata.',
+        'auth/email-already-in-use': 'Email già registrata.',
+        'auth/weak-password': 'Password troppo corta (min 6 caratteri).',
+        'auth/network-request-failed': 'Errore di rete. Controlla la connessione.',
+        'auth/too-many-requests': 'Troppi tentativi. Riprova tra poco.',
+        'auth/invalid-credential': 'Credenziali non valide. Controlla email e password.',
+    };
+    return map[code] || `Errore: ${code}`;
+}
+
+// AUTH STATE
+let currentUser = null;
+onAuthStateChanged(auth, async (user) => {
+    if (user) {
+        currentUser = user;
+        authShowLoading('Caricamento dati...');
+        await loadCloudState(user.uid, user.displayName || user.email);
+        document.getElementById('auth-screen').classList.add('hidden');
+        document.getElementById('app-container').style.display = 'flex';
+        document.getElementById('sync-indicator').style.display = 'flex';
+        const infoEl = document.getElementById('settings-user-info');
+        if (infoEl) infoEl.innerText = `👤 ${user.displayName || 'Utente'}\n📧 ${user.email}`;
+        init();
+    } else {
+        currentUser = null;
+        document.getElementById('auth-screen').classList.remove('hidden');
+        document.getElementById('app-container').style.display = 'none';
+        document.getElementById('sync-indicator').style.display = 'none';
+        authShowMenu();
+    }
+});
+
+// CLOUD STATE
+let cloudSaveTimeout = null;
+function setSyncStatus(status) {
+    const dot = document.getElementById('sync-dot');
+    const text = document.getElementById('sync-text');
+    if (!dot || !text) return;
+    dot.className = 'sync-dot' + (status === 'syncing' ? ' syncing' : status === 'error' ? ' error' : '');
+    text.innerText = status === 'syncing' ? 'Salvataggio...' : status === 'error' ? 'Errore sync' : 'Sincronizzato';
+}
+
+async function loadCloudState(uid, displayName) {
+    try {
+        const ref = doc(db, 'players', uid);
+        const snap = await getDoc(ref);
+        if (snap.exists()) {
+            const data = snap.data();
+            state = Object.assign({}, DEFAULT_STATE, data);
+            if (!Array.isArray(state.ownedDecks) || state.ownedDecks.length === 0) state.ownedDecks = ['classic'];
+            if (!Array.isArray(state.ownedPins) || state.ownedPins.length === 0) state.ownedPins = ['pin_happy','pin_cry','pin_cool','pin_sleep'];
+            if (typeof state.deckLevels !== 'object' || !state.deckLevels) state.deckLevels = {};
+            state.playerName = state.playerName || displayName || '';
+        } else {
+            const initial = buildInitialState(displayName || '');
+            await setDoc(ref, initial);
+            state = { ...DEFAULT_STATE, ...initial };
+        }
+        checkDailyReset();
+    } catch(e) {
+        console.error('Cloud load error:', e);
+        setSyncStatus('error');
+        const saved = localStorage.getItem('chessCityState_fallback');
+        if (saved) state = Object.assign({}, DEFAULT_STATE, JSON.parse(saved));
+    }
+}
+
+function buildInitialState(nickname) {
+    return {
+        ...DEFAULT_STATE,
+        playerName: nickname,
+        hasAskedName: !!nickname,
+        createdAt: Date.now(),
+    };
+}
+
+window._saveState = function saveState() {
+    try { localStorage.setItem('chessCityState_fallback', JSON.stringify(state)); } catch(e) {}
+    updateUI();
+    if (!currentUser) return;
+    setSyncStatus('syncing');
+    clearTimeout(cloudSaveTimeout);
+    cloudSaveTimeout = setTimeout(async () => {
+        try {
+            const ref = doc(db, 'players', currentUser.uid);
+            const cleanState = JSON.parse(JSON.stringify(state));
+            await setDoc(ref, { ...cleanState, lastSaved: Date.now() }, { merge: true });
+            setSyncStatus('ok');
+        } catch(e) {
+            console.error('Cloud save error:', e);
+            setSyncStatus('error');
+        }
+    }, 500);
+};
+
+window.db = db;
+window.auth = auth;
+window.currentUser_getter = () => currentUser;
+window.saveState = window._saveState;
+window._firebaseReady = true;
+</script>
+
+<script>
+// DATA DEFINITIONS
+const UPGRADEABLE_DECKS = ['classic','wood','silver','gold','diamond','carrots'];
+
+const DECKS = [
+    { id:'classic',name:'Classica',price:0,locked:false,icon:'♟️',upgradable:true },
+    { id:'wood',name:'Legno',price:500,locked:true,icon:'🪵',upgradable:true },
+    { id:'silver',name:'Argento',price:1000,locked:true,icon:'🥈',upgradable:true },
+    { id:'gold',name:'24 Carati',price:2000,locked:true,icon:'👑',upgradable:true },
+    { id:'diamond',name:'Diamante',price:3000,locked:true,icon:'💎',upgradable:true },
+    { id:'carrots',name:'24 Carote',price:1500,locked:true,icon:'🥕',upgradable:true }, // Joke board
+];
+
+const PINS = [
+    { id:'pin_happy', icon:'😀', price:0, locked:false, anim:'pin-anim-bounce' },
+    { id:'pin_cry', icon:'😭', price:0, locked:false, anim:'pin-anim-shake' },
+    { id:'pin_cool', icon:'😎', price:0, locked:false, anim:'pin-anim-spin' },
+    { id:'pin_sleep', icon:'😴', price:0, locked:false, anim:'pin-anim-bounce' },
+    { id:'pin_unamused', icon:'😒', price:150, locked:true, anim:'pin-anim-shake' },
+    { id:'pin_angry', icon:'😡', price:200, locked:true, anim:'pin-anim-shake' },
+    { id:'pin_think', icon:'🤔', price:250, locked:true, anim:'pin-anim-spin' },
+    { id:'pin_win', icon:'🏆', price:500, locked:true, anim:'pin-anim-bounce' },
+    { id:'pin_check', icon:'♟️', price:300, locked:true, anim:'pin-anim-spin' },
+    { id:'pin_mate', icon:'👑', price:600, locked:true, anim:'pin-anim-bounce' },
+    // Exclusive Pins for Upgrades
+    { id:'ex_classic_1', icon:'🏰', price:0, locked:true, anim:'pin-anim-bounce' },
+    { id:'ex_classic_2', icon:'🛡️', price:0, locked:true, anim:'pin-anim-spin' },
+    { id:'ex_classic_legend', icon:'👑', price:0, locked:true, anim:'pin-anim-bounce' },
+    
+    { id:'ex_wood_1', icon:'🪓', price:0, locked:true, anim:'pin-anim-shake' },
+    { id:'ex_wood_2', icon:'🌲', price:0, locked:true, anim:'pin-anim-bounce' },
+    { id:'ex_wood_legend', icon:'🦉', price:0, locked:true, anim:'pin-anim-spin' },
+
+    { id:'ex_silver_1', icon:'🥄', price:0, locked:true, anim:'pin-anim-bounce' },
+    { id:'ex_silver_2', icon:'🔔', price:0, locked:true, anim:'pin-anim-spin' },
+    { id:'ex_silver_legend', icon:'🛡️', price:0, locked:true, anim:'pin-anim-shake' },
+
+    { id:'ex_gold_1', icon:'💍', price:0, locked:true, anim:'pin-anim-bounce' },
+    { id:'ex_gold_2', icon:'🏺', price:0, locked:true, anim:'pin-anim-spin' },
+    { id:'ex_gold_legend', icon:'🦅', price:0, locked:true, anim:'pin-anim-bounce' },
+
+    { id:'ex_diamond_1', icon:'💠', price:0, locked:true, anim:'pin-anim-spin' },
+    { id:'ex_diamond_2', icon:'❄️', price:0, locked:true, anim:'pin-anim-bounce' },
+    { id:'ex_diamond_legend', icon:'🔮', price:0, locked:true, anim:'pin-anim-spin' },
+
+    { id:'ex_carrots_1', icon:'🐰', price:0, locked:true, anim:'pin-anim-bounce' },
+    { id:'ex_carrots_2', icon:'🥗', price:0, locked:true, anim:'pin-anim-shake' },
+    { id:'ex_carrots_legend', icon:'🥕', price:0, locked:true, anim:'pin-anim-bounce' },
+];
+
+const BOTS = [
+    { id: 'molly', name: 'Molly', level: 1, image: 'Molly.png', pin: 'pin_molly', desc: 'Facile' },
+    { id: 'jack', name: 'Jack', level: 2, image: 'Jack.png', pin: 'pin_jack', desc: 'Normale' },
+    { id: 'zeta', name: 'Zeta', level: 3, image: 'Zeta.png', pin: 'pin_zeta', desc: 'Difficile' },
+    { id: 'rob', name: 'Rob', level: 4, image: 'Rob.png', pin: 'pin_rob', desc: 'Esperto' },
+    { id: 'sam', name: 'Sam', level: 5, image: 'Sam.png', pin: 'pin_sam', desc: 'Maestro' },
+    { id: 'leo', name: 'Leo', level: 6, image: 'Leo.png', pin: 'pin_leo', desc: 'Veterano' },
+    { id: 'mia', name: 'Mia', level: 7, image: 'Mia.png', pin: 'pin_mia', desc: 'Campione' },
+    { id: 'rex', name: 'Rex', level: 8, image: 'Rex.png', pin: 'pin_rex', desc: 'Leggenda' },
+    { id: 'nova', name: 'Nova', level: 9, image: 'Nova.png', pin: 'pin_nova', desc: 'Grandmaster' },
+    { id: 'orlando', name: 'Orlando', level: 10, image: 'Orlando.png', pin: 'pin_orlando', desc: 'Il Tutor Supremo' }
+];
+
+const LESSONS = [
+    { 
+        id: 1, 
+        title: "La Scacchiera", 
+        desc: "Impara come sono disposte le caselle.", 
+        icon: "🏁", 
+        setup: [
+            ['r','n','b','q','k','b','n','r'],
+            ['p','p','p','p','p','p','p','p'],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            ['P','P','P','P','P','P','P','P'],
+            ['R','N','B','Q','K','B','N','R']
+        ],
+        hint: "Le caselle chiare e scure si alternano. Il Re bianco sta su una casella chiara.",
+        solution: null // Just observation
+    },
+    { 
+        id: 2, 
+        title: "I Pedoni", 
+        desc: "Come si muovono i soldatini.", 
+        icon: "♟️", 
+        setup: [
+            [null,null,null,null,null,null,null,null],
+            [null,null,'P',null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null]
+        ],
+        hint: "Muovi il pedone in avanti di una o due caselle.",
+        solution: { from: {r:1, c:2}, to: {r:3, c:2} }
+    },
+    { 
+        id: 3, 
+        title: "La Torre", 
+        desc: "Si muove dritta come un treno.", 
+        icon: "♜", 
+        setup: [
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            ['R',null,null,null,null,null,null,null]
+        ],
+        hint: "Muovi la torre verso destra.",
+        solution: { from: {r:7, c:0}, to: {r:7, c:7} }
+    },
+    { 
+        id: 4, 
+        title: "Il Cavallo", 
+        desc: "L'unico pezzo che salta.", 
+        icon: "♞", 
+        setup: [
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            ['N',null,null,null,null,null,null,null]
+        ],
+        hint: "Muovi il cavallo a L (2 avanti, 1 lato).",
+        solution: { from: {r:7, c:0}, to: {r:5, c:1} }
+    },
+    { 
+        id: 5, 
+        title: "L'Alfiere", 
+        desc: "Viaggia solo in diagonale.", 
+        icon: "♝", 
+        setup: [
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,'B',null,null,null,null,null]
+        ],
+        hint: "Muovi l'alfiere in diagonale verso l'alto a destra.",
+        solution: { from: {r:7, c:2}, to: {r:0, c:7} }
+    },
+    { 
+        id: 6, 
+        title: "La Regina", 
+        desc: "Il pezzo più potente.", 
+        icon: "♛", 
+        setup: [
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,'Q',null,null,null,null]
+        ],
+        hint: "Muovi la Regina dove vuoi (dritto o diagonale).",
+        solution: { from: {r:7, c:3}, to: {r:0, c:0} }
+    },
+    { 
+        id: 7, 
+        title: "Il Re", 
+        desc: "Il pezzo da proteggere a tutti i costi.", 
+        icon: "♚", 
+        setup: [
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,'K',null,null,null,null]
+        ],
+        hint: "Muovi il Re di una casella.",
+        solution: { from: {r:7, c:3}, to: {r:6, c:3} }
+    },
+    { 
+        id: 8, 
+        title: "Scacco Matto", 
+        desc: "Come vincere la partita.", 
+        icon: "🏆", 
+        setup: [
+            [null,null,null,null,null,null,'k',null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,null,null],
+            [null,null,null,null,null,null,'Q',null]
+        ],
+        hint: "Usa la Regina per dare scacco matto al Re nero!",
+        solution: { from: {r:7, c:6}, to: {r:0, c:6} }
+    }
+];
+
+const DEFAULT_STATE = {
+    coins:1000, gems:50, tickets:0,
+    ownedDecks:['classic'], selectedDeck:'classic', deckLevels:{},
+    ownedPins:['pin_happy','pin_cry','pin_cool','pin_sleep'], selectedPin:'pin_happy',
+    wins:0, totalGames:0, totalPiecesTaken:0, level:1, trophies:0,
+    tutorialCompleted:false, passCredits:0,
+    lastLoginDate:null, dailyStreak:0, claimedStreakToday:false,
+    dailyShopDate:null, dailyShopOffers:[], dailyShopClaimed:[],
+    playerName:'', hasAskedName:false,
+    dailyWinsDate:null, dailyWinsCount:0, dailyWinsClaimed:[],
+    claimedTrophyMilestones: [],
+    defeatedBots: [],
+    completedLessons: []
+};
+
+let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+
+function saveState() {
+    if (typeof window._saveState === 'function') window._saveState();
+    else { try { localStorage.setItem('chessCityState_fallback', JSON.stringify(state)); } catch(e){} updateUI(); }
+}
+
+function getTodayStr() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function checkDailyReset() {
+    const today = getTodayStr();
+    if (state.lastLoginDate) {
+        const lastDate = new Date(state.lastLoginDate + 'T00:00:00');
+        const todayDate = new Date(today + 'T00:00:00');
+        const diffDays = Math.floor((todayDate - lastDate) / (1000 * 60 * 60 * 24));
+        if (diffDays > 1) { state.dailyStreak = 0; state.claimedStreakToday = false; }
+        else if (diffDays === 1) { state.claimedStreakToday = false; }
+    }
+    state.lastLoginDate = today;
+    if (state.dailyShopDate !== today) {
+        state.dailyShopDate = today;
+        state.dailyShopOffers = generateDailyOffers();
+        state.dailyShopClaimed = [];
+    }
+    if (state.dailyWinsDate !== today) {
+        state.dailyWinsDate = today;
+        state.dailyWinsCount = 0;
+        state.dailyWinsClaimed = [];
+    }
+    saveState();
+}
+
+function resetData() {
+    if (confirm("Sei sicuro? Questo cancellerà tutti i tuoi progressi.")) {
+        state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+        checkDailyReset();
+        saveState();
+        renderDecks(); renderShop(); renderPins(); updateArenaPreview();
+        alert('Progressi resettati!');
+    }
+}
+
+function updateUI() {
+    try {
+        const coinEl = document.getElementById('coin-display');
+        const gemEl = document.getElementById('gem-display');
+        const ticketEl = document.getElementById('ticket-display');
+        const trophyEl = document.getElementById('trophy-main-count');
+        if (coinEl) coinEl.innerText = state.coins;
+        if (gemEl) gemEl.innerText = state.gems;
+        if (ticketEl) ticketEl.innerText = state.tickets;
+        if (trophyEl) trophyEl.innerText = state.trophies;
+        
+        // Event locks
+        const blitzBtn = document.getElementById('btn-play-blitz');
+        const blitzMsg = document.getElementById('blitz-lock-msg');
+        const blitzCard = document.getElementById('event-blitz-card');
+        if (blitzBtn && blitzMsg && blitzCard) {
+            if (state.trophies >= 150) { blitzBtn.disabled = false; blitzMsg.innerText = "Disponibile!"; blitzCard.classList.remove('locked'); }
+            else { blitzBtn.disabled = true; blitzMsg.innerText = `Sblocca a 150 Trofei (${state.trophies}/150)`; blitzCard.classList.add('locked'); }
+        }
+    } catch(e) {}
+}
+
+function showPanel(id) {
+    const target = document.getElementById(`panel-${id}`);
+    if (!target) return;
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.menu-btn').forEach(b => b.classList.remove('active'));
+    target.classList.add('active');
+    document.querySelectorAll('.menu-btn').forEach(b => { if (b.dataset.panel === id) b.classList.add('active'); });
+    
+    const profileIconEl = document.getElementById('profile-icon-container');
+    if (profileIconEl) profileIconEl.style.display = (id === 'arena') ? 'block' : 'none';
+    
+    if (id === 'arena') { updateArenaPreview(); renderDailyWinsBar(); }
+    if (id === 'decks') switchDeckTab('decks');
+    if (id === 'shop') { renderShop(); renderDailyShop(); }
+    if (id === 'streak') renderStreak();
+    if (id === 'school') renderSchool();
+}
+
+function switchDeckTab(tab) {
+    const decksContainer = document.getElementById('decks-grid-container');
+    const pinsContainer = document.getElementById('pins-grid-container');
+    const tabs = document.querySelectorAll('.tab-btn');
+    if (tab === 'decks') { 
+        decksContainer.style.display = 'block'; pinsContainer.style.display = 'none'; 
+        tabs[0].classList.add('active'); tabs[1].classList.remove('active'); 
+        renderDecks(); 
+    } else { 
+        decksContainer.style.display = 'none'; pinsContainer.style.display = 'block'; 
+        tabs[0].classList.remove('active'); tabs[1].classList.add('active'); 
+        renderPins(); 
+    }
+}
+
+function updateArenaPreview() {
+    const d = DECKS.find(x => x.id === state.selectedDeck);
+    if (!d) return;
+    const level = state.deckLevels[state.selectedDeck] || 0;
+    const levelSuffix = level > 0 ? ` LVL${level}` : '';
+    const previewEl = document.getElementById('arena-deck-preview');
+    const nameEl = document.getElementById('arena-deck-name');
+    if (previewEl) { previewEl.innerText = d.icon; }
+    if (nameEl) nameEl.innerText = d.name + levelSuffix;
+}
+
+function filterDecks(searchQuery) {
+    const query = searchQuery.trim().toLowerCase();
+    const deckItems = document.querySelectorAll('#decks-grid .card-item');
+    const noResultsMsg = document.getElementById('no-results-decks');
+    const clearBtn = document.getElementById('deck-search-clear');
+    let visibleCount = 0;
+    clearBtn.classList.toggle('visible', query.length > 0);
+    deckItems.forEach(item => {
+        const name = (item.getAttribute('data-deck-name') || '').toLowerCase();
+        const hide = query !== '' && !name.includes(query);
+        item.classList.toggle('search-hidden', hide);
+        if (!hide) visibleCount++;
+    });
+    noResultsMsg.classList.toggle('visible', visibleCount === 0 && query !== '');
+}
+
+function clearDeckSearch() {
+    const input = document.getElementById('deck-search-input');
+    input.value = '';
+    filterDecks('');
+    input.focus();
+}
+
+function renderDecks() {
+    const grid = document.getElementById('decks-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    DECKS.forEach(d => {
+        const owned = state.ownedDecks.includes(d.id);
+        const selected = state.selectedDeck === d.id;
+        const level = state.deckLevels[d.id] || 0;
+        const canUpgrade = d.upgradable && level < 3;
+        
+        const el = document.createElement('div');
+        el.className = `card-item ${selected ? 'selected' : ''} ${!owned ? 'locked' : ''}`;
+        el.setAttribute('data-deck-id', d.id);
+        el.setAttribute('data-deck-name', d.name.toLowerCase());
+        el.onclick = () => selectDeck(d.id);
+        
+        let actionHtml = !owned ? `<div style="color:var(--danger);font-size:0.8rem;">🔒 Bloccato</div>` :
+            selected ? `<div style="color:var(--secondary);font-size:0.8rem;">IN USO</div>${canUpgrade ? `<button class="btn-action buy" style="margin-top:5px;font-size:0.8rem;" onclick="event.stopPropagation();upgradeDeck('${d.id}')">UPGRADE LVL${level+1} (${getUpgradeCost(level)} 🎟️)</button>` : level >= 3 ? `<div style="color:var(--gold);font-size:0.8rem;margin-top:5px;">⭐ MAX LVL</div>` : ''}` :
+            `<button class="btn-action" style="margin-top:5px;font-size:0.8rem;" onclick="event.stopPropagation();selectDeck('${d.id}')">SELEZIONA</button>`;
+            
+        el.innerHTML = `<div class="item-preview">${d.icon}</div><div style="font-weight:bold;font-size:0.9rem;color:white;">${d.name} ${level > 0 ? `<span style="color:var(--gold)">LVL${level}</span>` : ''}</div>${actionHtml}`;
+        grid.appendChild(el);
+    });
+}
+
+function getUpgradeCost(currentLevel) {
+    if (currentLevel === 0) return 1000;
+    if (currentLevel === 1) return 2500;
+    if (currentLevel === 2) return 5000;
+    return 0;
+}
+
+function selectDeck(id) {
+    if (state.ownedDecks.includes(id)) { 
+        state.selectedDeck = id; 
+        saveState(); 
+        renderDecks(); 
+        updateArenaPreview(); 
+    } else { 
+        alert("Acquista questa scacchiera nello Shop!"); 
+        showPanel('shop'); 
+    }
+}
+
+function upgradeDeck(id) {
+    const currentLevel = state.deckLevels[id] || 0;
+    if (currentLevel >= 3) return;
+    const cost = getUpgradeCost(currentLevel);
+    
+    if (state.tickets >= cost) {
+        state.tickets -= cost;
+        state.deckLevels[id] = currentLevel + 1;
+        const newLevel = currentLevel + 1;
+        
+        // Rewards Logic
+        if (newLevel === 1) {
+            // 2 Exclusive Pins
+            const pinMap = {
+                classic: ['ex_classic_1', 'ex_classic_2'],
+                wood: ['ex_wood_1', 'ex_wood_2'],
+                silver: ['ex_silver_1', 'ex_silver_2'],
+                gold: ['ex_gold_1', 'ex_gold_2'],
+                diamond: ['ex_diamond_1', 'ex_diamond_2'],
+                carrots: ['ex_carrots_1', 'ex_carrots_2']
+            };
+            const rewards = pinMap[id] || [];
+            rewards.forEach(pinId => { if (!state.ownedPins.includes(pinId)) state.ownedPins.push(pinId); });
+            alert(`🎉 Livello 1 raggiunto! Hai sbloccato 2 Pin Esclusivi!`);
+        } else if (newLevel === 2) {
+            // Colored Battle Background
+            alert(`✨ Livello 2 raggiunto! Sfondo di battaglia "${DECKS.find(d=>d.id===id).name}" sbloccato!`);
+        } else if (newLevel === 3) {
+            // Legendary Pin
+            const legendMap = {
+                classic: 'ex_classic_legend',
+                wood: 'ex_wood_legend',
+                silver: 'ex_silver_legend',
+                gold: 'ex_gold_legend',
+                diamond: 'ex_diamond_legend',
+                carrots: 'ex_carrots_legend'
+            };
+            const legendPin = legendMap[id];
+            if (legendPin && !state.ownedPins.includes(legendPin)) state.ownedPins.push(legendPin);
+            alert(`👑 LIVELLO MASSIMO! Hai ottenuto il Pin Leggendario!`);
+        }
+        
+        saveState(); renderDecks(); updateArenaPreview(); renderPins();
+    } else { 
+        alert(`Ti servono ${cost} Biglietti!`); 
+    }
+}
+
+function renderShop() {
+    const grid = document.getElementById('shop-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    DECKS.forEach(d => {
+        if (state.ownedDecks.includes(d.id)) return;
+        const el = document.createElement('div');
+        el.className = 'card-item';
+        el.innerHTML = `<div class="item-preview">${d.icon}</div><div style="font-weight:bold;font-size:0.9rem;color:white;">${d.name}</div><button class="btn-action buy" onclick="buyDeck('${d.id}',${d.price})">${d.price} 🪙</button>`;
+        grid.appendChild(el);
+    });
+    
+    const pinGrid = document.getElementById('shop-pins-full-grid');
+    if (!pinGrid) return;
+    pinGrid.innerHTML = '';
+    PINS.forEach(p => {
+        if (state.ownedPins.includes(p.id) || p.id.startsWith('ex_')) return;
+        const el = document.createElement('div');
+        el.className = 'pin-item';
+        el.innerHTML = `<div class="pin-icon">${p.icon}</div><div class="pin-price">${p.price} 🪙</div>`;
+        el.onclick = () => buyPin(p.id, p.price);
+        pinGrid.appendChild(el);
+    });
+}
+
+function buyDeck(id, price) {
+    if (state.coins >= price) { 
+        state.coins -= price; 
+        state.ownedDecks.push(id); 
+        saveState(); 
+        renderShop(); 
+        renderDecks(); 
+        alert('Scacchiera acquistata!'); 
+    } else alert('Monete insufficienti!');
+}
+
+function exchangeResources() {
+    if (state.gems >= 30) { 
+        state.gems -= 30; 
+        state.coins += 250; 
+        saveState(); 
+        alert('Scambio effettuato!'); 
+    } else alert('Non hai abbastanza gemme!');
+}
+
+function renderPins() {
+    const myGrid = document.getElementById('my-pins-grid');
+    const shopGrid = document.getElementById('shop-pins-grid');
+    if (!myGrid || !shopGrid) return;
+    myGrid.innerHTML = ''; shopGrid.innerHTML = '';
+    
+    PINS.forEach(p => {
+        const owned = state.ownedPins.includes(p.id);
+        const selected = state.selectedPin === p.id;
+        
+        const el = document.createElement('div');
+        el.className = `pin-item ${owned ? '' : 'locked'} ${selected ? 'selected' : ''}`;
+        let content = `<div class="pin-icon">${p.icon}</div>`;
+        if (owned && selected) content += `<div class="pin-owned-badge">USO</div>`;
+        else if (!owned && !p.id.startsWith('ex_')) content += `<div class="pin-price">${p.price} 🪙</div>`;
+        
+        el.innerHTML = content;
+        el.onclick = () => { if (owned) { state.selectedPin = p.id; saveState(); renderPins(); } else if (!p.id.startsWith('ex_')) buyPin(p.id, p.price); };
+        if (owned) myGrid.appendChild(el); else if (!p.id.startsWith('ex_')) shopGrid.appendChild(el);
+    });
+}
+
+function buyPin(id, price) {
+    if (state.coins >= price) { 
+        state.coins -= price; 
+        state.ownedPins.push(id); 
+        state.selectedPin = id; 
+        saveState(); 
+        renderPins(); 
+        renderShop(); 
+        alert('Pin acquistato!'); 
+    } else alert('Monete insufficienti!');
+}
+
+const DAILY_WIN_REWARDS = [
+    { slot:1, type:'box', icon:'📦', label:'Cassaforte' }, 
+    { slot:2, type:null, icon:'—', label:'' },
+    { slot:3, type:'box', icon:'📦', label:'Cassaforte' }, 
+    { slot:4, type:null, icon:'—', label:'' },
+    { slot:5, type:'bluebox', icon:'💎', label:'Cassaforte Blu' },
+];
+
+function checkDailyWinReward(wonGame) {
+    if (!wonGame) return;
+    const today = getTodayStr();
+    if (state.dailyWinsDate !== today) { state.dailyWinsDate = today; state.dailyWinsCount = 0; state.dailyWinsClaimed = []; }
+    state.dailyWinsCount++;
+    const rewardSlot = DAILY_WIN_REWARDS.find(r => r.slot === state.dailyWinsCount);
+    if (rewardSlot && rewardSlot.type && !state.dailyWinsClaimed.includes(state.dailyWinsCount)) {
+        state.dailyWinsClaimed.push(state.dailyWinsCount);
+        setTimeout(() => {
+            if (rewardSlot.type === 'box') { openChestAnimation('classic'); alert(`🎁 Premio vittoria #${state.dailyWinsCount}: Cassaforte!`); }
+            else if (rewardSlot.type === 'bluebox') { openChestAnimation('blue'); alert(`💎 Premio vittoria #${state.dailyWinsCount}: Cassaforte Blu!`); }
+            saveState(); renderDailyWinsBar();
+        }, 2000);
+    }
+    saveState(); renderDailyWinsBar();
+}
+
+function renderDailyWinsBar() {
+    const bar = document.getElementById('daily-wins-bar');
+    if (!bar) return;
+    bar.innerHTML = '<span style="font-size:0.75rem;opacity:0.7;margin-right:5px;">WIN:</span>';
+    const today = getTodayStr();
+    if (state.dailyWinsDate !== today) { state.dailyWinsCount = 0; state.dailyWinsClaimed = []; }
+    
+    DAILY_WIN_REWARDS.forEach(slot => {
+        const el = document.createElement('div');
+        const isClaimed = state.dailyWinsClaimed.includes(slot.slot);
+        el.className = `win-slot ${isClaimed ? 'claimed' : ''} ${slot.type ? 'reward' : 'empty'}`;
+        el.title = slot.type ? `Vittoria #${slot.slot}: ${slot.label}` : `Vittoria #${slot.slot}`;
+        el.innerHTML = isClaimed ? '✅' : (slot.type ? slot.icon : '·');
+        bar.appendChild(el);
+    });
+}
+
+function generateDailyOffers() {
+    const offers = [];
+    const lockedDecks = DECKS.filter(d => !state.ownedDecks.includes(d.id) && d.price > 0);
+    if (lockedDecks.length > 0) {
+        const deck = lockedDecks[Math.floor(Math.random() * lockedDecks.length)];
+        const discount = [20,25,30,40,50][Math.floor(Math.random()*5)];
+        offers.push({ type:'deck', id:deck.id, icon:deck.icon, name:deck.name, oldPrice:deck.price, newPrice:Math.max(1,Math.round(deck.price*(1-discount/100))), currency:'coins', discount, free:false });
+    } else { 
+        offers.push({ type:'coins', icon:'🪙', name:'200 Monete', amount:200, newPrice:60, currency:'coins', discount:70, free:false }); 
+    }
+    
+    const lockedPins = PINS.filter(p => !state.ownedPins.includes(p.id) && p.price > 0 && !p.id.startsWith('ex_'));
+    if (lockedPins.length > 0) {
+        const pin = lockedPins[Math.floor(Math.random()*lockedPins.length)];
+        const discount = [20,25,30,40,50][Math.floor(Math.random()*5)];
+        offers.push({ type:'pin', id:pin.id, icon:pin.icon, name:'Pin Esclusivo', oldPrice:pin.price, newPrice:Math.max(1,Math.round(pin.price*(1-discount/100))), currency:'coins', discount, free:false });
+    } else { 
+        offers.push({ type:'gems', icon:'💎', name:'5 Gemme', amount:5, newPrice:20, currency:'coins', discount:70, free:false }); 
+    }
+    
+    offers.push({ type:'tickets', icon:'🎟️', name:'150 Biglietti', amount:150, newPrice:100, currency:'coins', discount:50, free:false });
+    offers.push(generateFreeGift());
+    return offers;
+}
+
+function generateFreeGift() {
+    const rand = Math.random() * 100;
+    if (rand < 15) return { type:'bluebox', icon:'📦', name:'Cassaforte Blu', newPrice:0, free:true };
+    if (rand < 35) return { type:'box', icon:'🎁', name:'Cassaforte Classica', newPrice:0, free:true };
+    if (rand < 55) return { type:'coins', icon:'🪙', name:'250 Monete', amount:250, newPrice:0, free:true };
+    if (rand < 70) return { type:'gems', icon:'💎', name:'10 Gemme', amount:10, newPrice:0, free:true };
+    return { type:'tickets', icon:'🎟️', name:'300 Biglietti', amount:300, newPrice:0, free:true };
+}
+
+function claimDailyOffer(index) {
+    const offer = state.dailyShopOffers[index];
+    if (!offer) return;
+    if (state.dailyShopClaimed.includes(index)) { alert("Hai già riscattato questa offerta oggi!"); return; }
+    
+    if (offer.free) {
+        switch(offer.type) {
+            case 'box': openChestAnimation('classic'); break;
+            case 'bluebox': openChestAnimation('blue'); break;
+            case 'coins': state.coins += offer.amount || 250; alert(`+${offer.amount||250} 🪙`); break;
+            case 'gems': state.gems += offer.amount || 10; alert(`+${offer.amount||10} 💎`); break;
+            case 'tickets': state.tickets += offer.amount || 300; alert(`+${offer.amount||300} 🎟️`); break;
+        }
+    } else {
+        if (state.coins < offer.newPrice) { alert("Monete insufficienti!"); return; }
+        state.coins -= offer.newPrice;
+        if (offer.type === 'deck') { if (!state.ownedDecks.includes(offer.id)) state.ownedDecks.push(offer.id); alert(`Scacchiera "${offer.name}" acquistata!`); }
+        else if (offer.type === 'pin') { if (!state.ownedPins.includes(offer.id)) state.ownedPins.push(offer.id); alert('Pin acquistato!'); }
+        else if (offer.type === 'coins') { state.coins += offer.amount || 200; }
+        else if (offer.type === 'gems') { state.gems += offer.amount || 5; }
+        else if (offer.type === 'tickets') { state.tickets += offer.amount || 150; }
+    }
+    state.dailyShopClaimed.push(index);
+    saveState(); renderDailyShop(); renderShop(); renderDecks(); renderPins();
+}
+
+function renderDailyShop() {
+    const grid = document.getElementById('daily-offers-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    state.dailyShopOffers.forEach((offer, index) => {
+        const isClaimed = state.dailyShopClaimed.includes(index);
+        const card = document.createElement('div');
+        card.className = `card-item ${offer.free ? 'free-offer' : 'discount-offer'}`;
+        card.style.border = offer.free ? '2px solid var(--gold)' : '2px solid var(--danger)';
+        
+        let badgeHtml = offer.free ? '<div style="position:absolute;top:10px;right:10px;background:var(--gold);color:#1e293b;padding:4px 8px;border-radius:6px;font-size:0.7rem;font-weight:800;">GRATIS</div>' : `<div style="position:absolute;top:10px;right:10px;background:var(--danger);color:white;padding:4px 8px;border-radius:6px;font-size:0.7rem;font-weight:800;">-${offer.discount}%</div>`;
+        
+        let pricingHtml = offer.free ? '<div style="color:var(--secondary);font-weight:900;font-size:1.2rem;">GRATIS</div>' : `<div><span style="text-decoration:line-through;opacity:0.5;font-size:0.9rem;">${offer.oldPrice} 🪙</span> <span style="color:var(--gold);font-weight:900;">${offer.newPrice} 🪙</span></div>`;
+        
+        let btnHtml = isClaimed ? '<button class="btn-action claimed" disabled>✅ Riscosso</button>' : offer.free ? `<button class="btn-action buy" onclick="claimDailyOffer(${index})">Riscuoti GRATIS!</button>` : `<button class="btn-action buy" onclick="claimDailyOffer(${index})">Compra (${offer.newPrice} 🪙)</button>`;
+        
+        card.innerHTML = `${badgeHtml}<div class="item-preview" style="height:80px;font-size:3rem;">${offer.icon}</div><div style="font-weight:bold;font-size:0.9rem;color:white;">${offer.name}</div>${pricingHtml}${btnHtml}`;
+        grid.appendChild(card);
+    });
+}
+
+function getStreakReward(dayNum) {
+    const baseRewards = [
+        {icon:'💎',amount:5,label:'Gemme',type:'gems'},
+        {icon:'🪙',amount:100,label:'Monete',type:'coins'},
+        {icon:'🎟️',amount:200,label:'Biglietti',type:'tickets'},
+        {icon:'💎',amount:10,label:'Gemme',type:'gems'},
+        {icon:'🪙',amount:500,label:'Monete',type:'coins'},
+        {icon:'🎟️',amount:300,label:'Biglietti',type:'tickets'},
+        {icon:'📦',amount:1,label:'Cassaforte Blu',type:'bluebox'},
+        {icon:'💎',amount:20,label:'Gemme',type:'gems'},
+        {icon:'🪙',amount:1000,label:'Monete',type:'coins'},
+        {icon:'🎟️',amount:500,label:'Biglietti',type:'tickets'},
+        {icon:'💎',amount:30,label:'Gemme',type:'gems'},
+        {icon:'🪙',amount:2000,label:'Monete',type:'coins'},
+        {icon:'🎟️',amount:1000,label:'Biglietti',type:'tickets'},
+        {icon:'📦',amount:2,label:'Cassaforte Blu ×2',type:'bluebox',qty:2},
+        {icon:'💎',amount:50,label:'Gemme',type:'gems'},
+        {icon:'🪙',amount:3000,label:'Monete',type:'coins'},
+        {icon:'🎟️',amount:1500,label:'Biglietti',type:'tickets'},
+        {icon:'💎',amount:75,label:'Gemme',type:'gems'},
+        {icon:'🪙',amount:5000,label:'Monete',type:'coins'},
+        {icon:'🎁',amount:1,label:'Regalo Misterioso',type:'mystery'},
+        {icon:'💎',amount:100,label:'Gemme',type:'gems'},
+        {icon:'🪙',amount:7500,label:'Monete',type:'coins'},
+        {icon:'🎟️',amount:2000,label:'Biglietti',type:'tickets'},
+        {icon:'💎',amount:150,label:'Gemme',type:'gems'},
+        {icon:'📦',amount:3,label:'Cassaforte Blu ×3',type:'bluebox',qty:3},
+        {icon:'🪙',amount:10000,label:'Monete',type:'coins'},
+        {icon:'🎟️',amount:3000,label:'Biglietti',type:'tickets'},
+        {icon:'💎',amount:200,label:'Gemme',type:'gems'},
+        {icon:'🪙',amount:15000,label:'Monete',type:'coins'},
+        {icon:'🏆',amount:1,label:'Premio Supremo!',type:'supreme'}
+    ];
+    return baseRewards[(dayNum - 1) % baseRewards.length];
+}
+
+function claimStreakReward() { _doClaimStreak(); renderStreak(); }
+function claimStreakRewardFromProfile() { _doClaimStreak(); renderStreakInProfile(); }
+
+function _doClaimStreak() {
+    if (state.claimedStreakToday) { alert("Hai già riscosso il premio oggi!"); return; }
+    const reward = getStreakReward(state.dailyStreak + 1);
+    state.dailyStreak++; state.claimedStreakToday = true;
+    
+    switch(reward.type) {
+        case 'coins': state.coins += reward.amount; alert(`${reward.icon} +${reward.amount} Monete!`); break;
+        case 'gems': state.gems += reward.amount; alert(`${reward.icon} +${reward.amount} Gemme!`); break;
+        case 'tickets': state.tickets += reward.amount; alert(`${reward.icon} +${reward.amount} Biglietti!`); break;
+        case 'bluebox': for(let i=0;i<(reward.qty||1);i++) openChestAnimation('blue'); break;
+        case 'mystery': state.gems += 50; alert('🎁 50 Gemme!'); break;
+        case 'supreme': state.gems += 200; state.coins += 10000; alert('🏆 SUPREMO!'); break;
+    }
+    saveState();
+}
+
+function _buildStreakTrackHTML(containerEl, btnEl, countEl) {
+    if (!containerEl) return;
+    containerEl.innerHTML = '';
+    const currentDay = state.dailyStreak + 1;
+    const claimedToday = state.claimedStreakToday;
+    
+    for (let d = 0; d < 30; d++) {
+        const dayNum = d + 1;
+        const reward = getStreakReward(dayNum);
+        const isClaimed = dayNum <= state.dailyStreak;
+        const isCurrent = dayNum === currentDay && !claimedToday;
+        const isFuture = dayNum > currentDay;
+        
+        const dayNode = document.createElement('div');
+        dayNode.className = `streak-day ${isClaimed ? 'claimed' : ''} ${isCurrent ? 'current' : ''} ${isFuture ? 'locked' : ''}`;
+        
+        let amountText = reward.type === 'bluebox' ? `×${reward.qty||1}` : reward.type === 'mystery' ? '???' : reward.type === 'supreme' ? 'MAX' : `${reward.amount}`;
+        let statusHtml = isClaimed ? '<span class="streak-day-status done">✅</span>' : isCurrent ? '<span class="streak-day-status now">Oggi</span>' : '<span class="streak-day-status future">—</span>';
+        
+        dayNode.innerHTML = `<div class="streak-day-num">Giorno ${dayNum}</div><div class="streak-day-reward">${reward.icon}</div><div class="streak-day-info"><div class="streak-day-amount">${amountText} ${reward.label}</div></div>${statusHtml}`;
+        containerEl.appendChild(dayNode);
+    }
+    
+    if (countEl) countEl.innerText = state.dailyStreak;
+    if (btnEl) {
+        if (claimedToday) { btnEl.disabled = true; btnEl.innerText = '✅ Riscosso Oggi'; }
+        else { const reward = getStreakReward(currentDay); btnEl.innerText = `🔥 Riscuoti Giorno ${currentDay}: ${reward.icon} ${reward.label}`; btnEl.disabled = false; }
+    }
+}
+
+function renderStreak() { _buildStreakTrackHTML(document.getElementById('streak-track'), document.getElementById('streak-claim-btn'), document.getElementById('streak-count-display')); updateStreakTimer(); }
+function renderStreakInProfile() { _buildStreakTrackHTML(document.getElementById('sfp-streak-track'), document.getElementById('sfp-claim-btn'), document.getElementById('sfp-streak-count')); }
+
+function openStreakFromProfile() { closeProfile(); document.getElementById('streak-from-profile-modal').classList.add('show'); renderStreakInProfile(); }
+function closeStreakFromProfile() { document.getElementById('streak-from-profile-modal').classList.remove('show'); openProfile(); }
+
+function updateStreakTimer() {
+    const now = new Date(); const tomorrow = new Date(now); tomorrow.setDate(tomorrow.getDate()+1); tomorrow.setHours(0,0,0,0);
+    const diff = tomorrow - now;
+    const h = Math.floor(diff/(1000*60*60)), m = Math.floor((diff%(1000*60*60))/(1000*60)), s = Math.floor((diff%(1000*60))/1000);
+    const timeStr = `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    const timerEl = document.getElementById('streak-timer');
+    if (timerEl) timerEl.innerHTML = state.claimedStreakToday ? `Prossimo premio tra: <span>${timeStr}</span>` : `Premio disponibile! <span>Riscuoti ora!</span>`;
+    const shopTimerEl = document.getElementById('daily-shop-timer');
+    if (shopTimerEl) shopTimerEl.innerText = `Resetta tra: ${timeStr}`;
+}
+
+const TROPHY_REWARDS = [
+    { threshold: 50, reward: { type: 'coins', amount: 100, icon: '🪙' } },
+    { threshold: 100, reward: { type: 'gems', amount: 10, icon: '💎' } },
+    { threshold: 150, reward: { type: 'deck', id: 'wood', icon: '🪵' } },
+    { threshold: 200, reward: { type: 'tickets', amount: 100, icon: '🎟️' } },
+    { threshold: 300, reward: { type: 'box', icon: '📦' } },
+    { threshold: 500, reward: { type: 'gems', amount: 30, icon: '💎' } },
+    { threshold: 750, reward: { type: 'deck', id: 'silver', icon: '🥈' } },
+    { threshold: 1000, reward: { type: 'bluebox', icon: '💎' } },
+    { threshold: 1500, reward: { type: 'coins', amount: 1000, icon: '🪙' } },
+    { threshold: 2000, reward: { type: 'tickets', amount: 500, icon: '🎟️' } },
+    { threshold: 3000, reward: { type: 'deck', id: 'gold', icon: '👑' } },
+    { threshold: 5000, reward: { type: 'bluebox', qty: 3, icon: '💎' } },
+    { threshold: 10000, reward: { type: 'gems', amount: 100, icon: '💎' } },
+];
+
+function checkTrophyRewards() {
+    let newClaim = false;
+    TROPHY_REWARDS.forEach(r => {
+        if (state.trophies >= r.threshold && !state.claimedTrophyMilestones.includes(r.threshold)) {
+            state.claimedTrophyMilestones.push(r.threshold);
+            newClaim = true;
+            if (r.reward.type === 'coins') state.coins += r.reward.amount;
+            else if (r.reward.type === 'gems') state.gems += r.reward.amount;
+            else if (r.reward.type === 'tickets') state.tickets += r.reward.amount;
+            else if (r.reward.type === 'deck' && !state.ownedDecks.includes(r.reward.id)) {
+                state.ownedDecks.push(r.reward.id);
+            } else if (r.reward.type === 'box') {
+                state.coins += 200;
+            } else if (r.reward.type === 'bluebox') {
+                state.gems += 20;
+            }
+            showNotify(`Soglia ${r.threshold} Trofei: +${r.reward.icon}!`);
+        }
+    });
+    if (newClaim) saveState();
+}
+
+function renderTrophyRoad() {
+    const track = document.getElementById('trophy-track');
+    if (!track) return;
+    track.innerHTML = '<div class="trophy-line"></div>';
+    
+    let thresholds = []; let cur = 0; let step = 15;
+    while (cur < 5000) { cur += step; thresholds.push(cur); if(cur<500)step=20;else if(cur<1000)step=50;else if(cur<2000)step=100;else step=200; }
+    
+    const nextIdx = thresholds.findIndex(t => t > state.trophies);
+    
+    thresholds.forEach((threshold, index) => {
+        const node = document.createElement('div');
+        node.className = `trophy-node ${state.trophies >= threshold ? 'unlocked' : ''} ${index === nextIdx ? 'current-target' : ''}`;
+        const reward = TROPHY_REWARDS.find(r => r.threshold === threshold);
+        const icon = reward ? reward.reward.icon : '🏆';
+        node.innerHTML = state.trophies >= threshold ? '<span>✅</span>' : `<span>${threshold}</span><span class="node-reward">${icon}</span>`;
+        track.appendChild(node);
+    });
+}
+
+function openProfile() {
+    document.getElementById('profile-stat-scopas').innerText = state.wins;
+    document.getElementById('profile-stat-cards').innerText = state.totalPiecesTaken;
+    document.getElementById('profile-stat-wins').innerText = state.wins;
+    document.getElementById('profile-stat-level').innerText = state.level;
+    document.getElementById('profile-streak-count').innerText = state.dailyStreak;
+    document.getElementById('profile-streak-dot').innerText = state.claimedStreakToday ? '✅' : '🔥';
+    document.getElementById('profile-name-input').value = state.playerName || '';
+    document.getElementById('profile-modal').classList.add('show');
+}
+function closeProfile() { document.getElementById('profile-modal').classList.remove('show'); }
+function updateProfileName(name) { state.playerName = name.trim(); state.hasAskedName = true; saveState(); }
+
+function buyAndOpenChest(type) {
+    const cost = type === 'classic' ? 29 : 49;
+    if (state.gems >= cost) { state.gems -= cost; saveState(); openChestAnimation(type); }
+    else alert('Gemme insufficienti!');
+}
+
+function openChestAnimation(type) {
+    const overlay = document.getElementById('reveal-overlay');
+    const cardEl = document.getElementById('reveal-card-content');
+    const textEl = document.getElementById('reveal-text');
+    
+    overlay.style.display = 'flex';
+    cardEl.classList.remove('show'); textEl.classList.remove('show');
+    cardEl.innerText = '?'; 
+    cardEl.style.background = type === 'blue' ? '#1b238a' : '#334159'; 
+    cardEl.style.borderColor = type === 'blue' ? '#60a5fa' : '#94a3b8';
+    
+    setTimeout(() => {
+        const rand = Math.random();
+        let rewardText = "", rewardIcon = "", rewardColor = "#fff";
+        
+        if (type === 'blue') {
+            if (rand < 0.5) {
+                const locked = DECKS.filter(d => !state.ownedDecks.includes(d.id) && d.price >= 1000);
+                if (locked.length > 0) { const nd = locked[Math.floor(Math.random()*locked.length)]; state.ownedDecks.push(nd.id); rewardText = `Scacchiera: ${nd.name}`; rewardIcon = nd.icon; rewardColor = '#ef4444'; }
+                else { state.coins += 1000; rewardText = `1000 🪙`; rewardIcon = '🪙'; rewardColor = '#f59e0b'; }
+            } else if (rand < 0.8) { state.gems += Math.floor(Math.random()*30)+20; rewardText = `Gemme!`; rewardIcon = '💎'; rewardColor = '#8b5cf6'; }
+            else { state.tickets += Math.floor(Math.random()*500)+200; rewardText = `Biglietti!`; rewardIcon = '🎟️'; rewardColor = '#3b82f6'; }
+        } else {
+            if (rand < 0.4) { const amt = Math.floor(Math.random()*200)+50; state.coins += amt; rewardText = `${amt} 🪙`; rewardIcon = '🪙'; rewardColor = '#f59e0b'; }
+            else if (rand < 0.6) { const gems = Math.floor(Math.random()*10)+5; state.gems += gems; rewardText = `${gems} 💎`; rewardIcon = '💎'; rewardColor = '#3b82f6'; }
+            else if (rand < 0.8) { const t = Math.floor(Math.random()*100)+100; state.tickets += t; rewardText = `${t} 🎟️`; rewardIcon = '🎟️'; rewardColor = '#3b82f6'; }
+            else {
+                const locked = DECKS.filter(d => !state.ownedDecks.includes(d.id));
+                if (locked.length > 0) { const nd = locked[Math.floor(Math.random()*locked.length)]; state.ownedDecks.push(nd.id); rewardText = `Scacchiera: ${nd.name}`; rewardIcon = nd.icon; rewardColor = '#ef4444'; }
+                else { state.coins += 500; rewardText = `500 🪙`; rewardIcon = '🪙'; rewardColor = '#f59e0b'; }
+            }
+        }
+        
+        saveState();
+        cardEl.innerText = rewardIcon; cardEl.style.background = rewardColor; cardEl.classList.add('show');
+        setTimeout(() => { textEl.innerText = rewardText; textEl.classList.add('show'); setTimeout(() => { overlay.style.display = 'none'; renderDecks(); renderShop(); renderPins(); renderDailyShop(); }, 2000); }, 800);
+    }, 500);
+}
+
+// CHESS GAME LOGIC
+const PIECES = {
+    k: '♔', q: '♕', r: '♖', b: '♗', n: '♘', p: '♙',
+    K: '♚', Q: '♛', R: '♜', B: '♝', N: '♞', P: '♟'
+};
+
+const INITIAL_BOARD = [
+    ['r','n','b','q','k','b','n','r'],
+    ['p','p','p','p','p','p','p','p'],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    [null,null,null,null,null,null,null,null],
+    ['P','P','P','P','P','P','P','P'],
+    ['R','N','B','Q','K','B','N','R']
+];
+
+let board = [];
+let selectedSquare = null;
+let validMoves = [];
+let gameActive = false;
+let turn = 'white'; // white is player
+let moveCount = 0;
+let capturedWhite = 0;
+let capturedBlack = 0;
+let gameMode = 'classic';
+let currentBot = null;
+let schoolLesson = null;
+
+function showBotSelection() {
+    showPanel('bots');
+    renderBots();
+}
+
+function renderBots() {
+    const grid = document.getElementById('bot-grid');
+    if (!grid) return;
+    grid.innerHTML = '';
+    
+    BOTS.forEach(bot => {
+        const defeated = state.defeatedBots.includes(bot.id);
+        const el = document.createElement('div');
+        el.className = `card-item ${defeated ? 'selected' : ''}`;
+        el.style.borderColor = defeated ? 'var(--secondary)' : '';
+        
+        let btnText = defeated ? 'Sfidato ✅' : 'Sfida';
+        let btnClass = defeated ? 'btn-action claimed' : 'btn-action';
+        
+        el.innerHTML = `
+            <div class="item-preview" style="background: url('${bot.image}') center/cover no-repeat; background-color: #334155;">
+                ${defeated ? '<div style="position:absolute;top:5px;right:5px;background:var(--secondary);color:white;padding:2px 6px;border-radius:4px;font-size:0.7rem;">VINTO</div>' : ''}
+            </div>
+            <div style="font-weight:bold;font-size:1.1rem;color:white;">${bot.name}</div>
+            <div style="font-size:0.8rem;color:#94a3b8;margin-bottom:10px;">Livello ${bot.level} - ${bot.desc}</div>
+            <div style="font-size:0.8rem;color:var(--gold);margin-bottom:10px;">Premio: Pin Esclusivo</div>
+            <button class="${btnClass}" onclick="startGameWithBot('${bot.id}')">${btnText}</button>
+        `;
+        grid.appendChild(el);
+    });
+}
+
+function startGameWithBot(botId) {
+    currentBot = BOTS.find(b => b.id === botId);
+    startGame('classic');
+}
+
+function startGame(mode) {
+    if (mode === 'blitz' && state.trophies < 150) { alert("Devi raggiungere 150 Trofei!"); return; }
+    
+    gameMode = mode;
+    const overlay = document.getElementById('game-overlay');
+    overlay.classList.add('active');
+    
+    // Apply Level 2 Background
+    const boardId = state.selectedDeck;
+    const level = state.deckLevels[boardId] || 0;
+    if (level >= 2) {
+        overlay.className = `active bg-${boardId}`;
+    } else {
+        overlay.className = 'active';
+    }
+    
+    initGame();
+}
+
+function startSchoolLesson(lessonId) {
+    schoolLesson = LESSONS.find(l => l.id === lessonId);
+    if (!schoolLesson) return;
+    
+    gameMode = 'school';
+    const overlay = document.getElementById('game-overlay');
+    overlay.classList.add('active');
+    overlay.className = 'active'; // Reset background
+    
+    // Setup board for lesson
+    board = schoolLesson.setup.map(row => [...row]);
+    selectedSquare = null;
+    validMoves = [];
+    gameActive = true;
+    turn = 'white';
+    moveCount = 0;
+    capturedWhite = 0;
+    capturedBlack = 0;
+    
+    // Show hint
+    showNotify(schoolLesson.hint);
+    
+    renderBoard();
+    updateGameHeader();
+}
+
+function quitGame() {
+    document.getElementById('result-modal').classList.remove('show');
+    const overlay = document.getElementById('game-overlay');
+    overlay.classList.remove('active');
+    document.getElementById('cpu-emote').style.display = 'none';
+    document.getElementById('player-emote').style.display = 'none';
+    schoolLesson = null;
+    saveState();
+}
+
+function initGame() {
+    // Deep copy initial board
+    board = INITIAL_BOARD.map(row => [...row]);
+    selectedSquare = null;
+    validMoves = [];
+    gameActive = true;
+    turn = 'white';
+    moveCount = 0;
+    capturedWhite = 0;
+    capturedBlack = 0;
+    
+    renderBoard();
+    updateGameHeader();
+}
+
+function renderBoard() {
+    const container = document.getElementById('chess-board');
+    container.innerHTML = '';
+    
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+            const square = document.createElement('div');
+            const isLight = (r + c) % 2 === 0;
+            square.className = `chess-square ${isLight ? 'light' : 'dark'}`;
+            square.dataset.r = r;
+            square.dataset.c = c;
+            
+            // Apply specific board styles
+            const boardId = state.selectedDeck;
+            if (boardId === 'wood') {
+                if (isLight) square.style.backgroundColor = '#deb887'; // Burlywood
+                else square.style.backgroundColor = '#8b4513'; // SaddleBrown
+            } else if (boardId === 'silver') {
+                if (isLight) square.style.backgroundColor = '#e0e0e0';
+                else square.style.backgroundColor = '#757575';
+            } else if (boardId === 'gold') {
+                if (isLight) square.style.backgroundColor = '#fffacd'; // LemonChiffon
+                else square.style.backgroundColor = '#daa520'; // GoldenRod
+            } else if (boardId === 'diamond') {
+                if (isLight) square.style.backgroundColor = '#e0ffff'; // LightCyan
+                else square.style.backgroundColor = '#00ced1'; // DarkTurquoise
+            } else if (boardId === 'carrots') {
+                // Joke board: Orange and Green
+                if (isLight) square.style.backgroundColor = '#ff8c00'; // DarkOrange
+                else square.style.backgroundColor = '#228b22'; // ForestGreen
+            }
+            
+            const piece = board[r][c];
+            if (piece) {
+                square.innerText = PIECES[piece];
+                // Style based on color
+                if (piece === piece.toUpperCase()) {
+                    // White pieces (Player)
+                    square.style.color = '#1e293b'; // Dark text for light squares, but we need contrast
+                    if (!isLight) square.style.color = '#f8fafc';
+                } else {
+                    // Black pieces (CPU)
+                    square.style.color = '#1e293b';
+                }
+            }
+            
+            // Highlight selected
+            if (selectedSquare && selectedSquare.r === r && selectedSquare.c === c) {
+                square.classList.add('selected');
+            }
+            
+            // Highlight valid moves
+            if (validMoves.some(m => m.r === r && m.c === c)) {
+                if (board[r][c]) square.classList.add('capture-move');
+                else square.classList.add('valid-move');
+            }
+            
+            square.onclick = () => handleSquareClick(r, c);
+            container.appendChild(square);
+        }
+    }
+}
+
+function handleSquareClick(r, c) {
+    if (!gameActive || turn !== 'white') return;
+    
+    const clickedPiece = board[r][c];
+    const isWhitePiece = clickedPiece && clickedPiece === clickedPiece.toUpperCase();
+    
+    // If clicking a valid move for selected piece
+    if (selectedSquare && validMoves.some(m => m.r === r && m.c === c)) {
+        executeMove(selectedSquare.r, selectedSquare.c, r, c);
+        return;
+    }
+    
+    // If clicking own piece, select it
+    if (isWhitePiece) {
+        selectedSquare = { r, c };
+        validMoves = getValidMoves(r, c, board[r][c]);
+        renderBoard();
+    } else {
+        // Deselect
+        selectedSquare = null;
+        validMoves = [];
+        renderBoard();
+    }
+}
+
+function getValidMoves(r, c, piece) {
+    const moves = [];
+    const isWhite = piece === piece.toUpperCase();
+    const type = piece.toLowerCase();
+    
+    const addIfValid = (nr, nc) => {
+        if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
+            const target = board[nr][nc];
+            if (!target || (isWhite && target === target.toLowerCase()) || (!isWhite && target === target.toUpperCase())) {
+                moves.push({ r: nr, c: nc });
+                return !!target; // Return true if capture (to stop sliding)
+            }
+        }
+        return true; // Stop sliding if blocked by own piece or out of bounds
+    };
+    
+    const slide = (dr, dc) => {
+        let nr = r + dr, nc = c + dc;
+        while (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
+            const target = board[nr][nc];
+            if (!target) {
+                moves.push({ r: nr, c: nc });
+            } else {
+                if ((isWhite && target === target.toLowerCase()) || (!isWhite && target === target.toUpperCase())) {
+                    moves.push({ r: nr, c: nc });
+                }
+                break;
+            }
+            nr += dr; nc += dc;
+        }
+    };
+    
+    if (type === 'p') { // Pawn
+        const dir = isWhite ? -1 : 1;
+        const startRow = isWhite ? 6 : 1;
+        // Move forward
+        if (!board[r + dir]?.[c]) {
+            moves.push({ r: r + dir, c: c });
+            // Double move from start
+            if (r === startRow && !board[r + dir * 2]?.[c]) {
+                moves.push({ r: r + dir * 2, c: c });
+            }
+        }
+        // Capture
+        [[dir, -1], [dir, 1]].forEach(([dr, dc]) => {
+            const nr = r + dr, nc = c + dc;
+            if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
+                const target = board[nr][nc];
+                if (target && ((isWhite && target === target.toLowerCase()) || (!isWhite && target === target.toUpperCase()))) {
+                    moves.push({ r: nr, c: nc });
+                }
+            }
+        });
+    } else if (type === 'n') { // Knight
+        [[-2,-1],[-2,1],[-1,-2],[-1,2],[1,-2],[1,2],[2,-1],[2,1]].forEach(([dr, dc]) => {
+            addIfValid(r + dr, c + dc);
+        });
+    } else if (type === 'b') { // Bishop
+        [[-1,-1],[-1,1],[1,-1],[1,1]].forEach(([dr, dc]) => slide(dr, dc));
+    } else if (type === 'r') { // Rook
+        [[-1,0],[1,0],[0,-1],[0,1]].forEach(([dr, dc]) => slide(dr, dc));
+    } else if (type === 'q') { // Queen
+        [[-1,-1],[-1,1],[1,-1],[1,1],[-1,0],[1,0],[0,-1],[0,1]].forEach(([dr, dc]) => slide(dr, dc));
+    } else if (type === 'k') { // King
+        [[-1,-1],[-1,0],[-1,1],[0,-1],[0,1],[1,-1],[1,0],[1,1]].forEach(([dr, dc]) => {
+            addIfValid(r + dr, c + dc);
+        });
+    }
+    
+    return moves;
+}
+
+function executeMove(fromR, fromC, toR, toC) {
+    const piece = board[fromR][fromC];
+    const target = board[toR][toC];
+    
+    // Capture logic
+    if (target) {
+        if (target === target.toUpperCase()) capturedWhite++;
+        else capturedBlack++;
+    }
+    
+    // Move piece
+    board[toR][toC] = piece;
+    board[fromR][fromC] = null;
+    
+    // Pawn promotion (simple: auto-queen)
+    if (piece.toLowerCase() === 'p' && (toR === 0 || toR === 7)) {
+        board[toR][toC] = piece === 'P' ? 'Q' : 'q';
+    }
+    
+    moveCount++;
+    selectedSquare = null;
+    validMoves = [];
+    
+    renderBoard();
+    updateGameHeader();
+    
+    // Check win condition (King capture - simplified)
+    if (target && target.toLowerCase() === 'k') {
+        endGame(piece === 'P' ? 'white' : 'black');
+        return;
+    }
+    
+    // Check School Lesson Solution
+    if (gameMode === 'school' && schoolLesson && schoolLesson.solution) {
+        const sol = schoolLesson.solution;
+        if (fromR === sol.from.r && fromC === sol.from.c && toR === sol.to.r && toC === sol.to.c) {
+            completeLesson(schoolLesson.id);
+            return;
+        }
+    }
+    
+    // Switch turn
+    turn = turn === 'white' ? 'black' : 'white';
+    updateGameHeader();
+    
+    if (turn === 'black' && gameActive) {
+        setTimeout(cpuMove, 1000);
+    }
+}
+
+function completeLesson(lessonId) {
+    gameActive = false;
+    if (!state.completedLessons.includes(lessonId)) {
+        state.completedLessons.push(lessonId);
+        state.tickets += 100; // Reward
+        saveState();
+        alert(`🎉 Lezione completata! Hai guadagnato 100 🎟️`);
+    }
+    setTimeout(quitGame, 2000);
+}
+
+function cpuMove() {
+    if (!gameActive) return;
+    
+    // Find all black pieces
+    const blackPieces = [];
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+            if (board[r][c] && board[r][c] === board[r][c].toLowerCase()) {
+                blackPieces.push({ r, c, piece: board[r][c] });
+            }
+        }
+    }
+    
+    // Get all valid moves for black pieces
+    const allMoves = [];
+    blackPieces.forEach(p => {
+        const moves = getValidMoves(p.r, p.c, p.piece);
+        moves.forEach(m => {
+            allMoves.push({ fromR: p.r, fromC: p.c, toR: m.r, toC: m.c, target: board[m.r][m.c] });
+        });
+    });
+    
+    if (allMoves.length === 0) {
+        // No moves? Stalemate or win for white. Let's say win for white for simplicity.
+        endGame('white');
+        return;
+    }
+    
+    // Prioritize captures
+    const captures = allMoves.filter(m => m.target);
+    const move = captures.length > 0 ? captures[Math.floor(Math.random() * captures.length)] : allMoves[Math.floor(Math.random() * allMoves.length)];
+    
+    executeMove(move.fromR, move.fromC, move.toR, move.toC);
+    
+    if (Math.random() > 0.7) cpuSendEmote();
+}
+
+function updateGameHeader() {
+    document.getElementById('cpu-score').innerText = capturedWhite;
+    document.getElementById('player-score').innerText = capturedBlack;
+    document.getElementById('turn-indicator').innerText = turn === 'white' ? 'TU' : 'CPU';
+    document.getElementById('turn-indicator').style.color = turn === 'white' ? 'var(--secondary)' : 'var(--danger)';
+}
+
+function endGame(winner) {
+    gameActive = false;
+    const playerWon = winner === 'white';
+    
+    let trophyChange = playerWon ? 8 : (winner === 'black' ? -3 : 0);
+    if (gameMode === 'blitz') trophyChange *= 2;
+    
+    if (playerWon) { state.wins++; state.coins += 50; }
+    state.totalGames++;
+    state.totalPiecesTaken += capturedBlack;
+    state.trophies += trophyChange;
+    if (state.trophies < 0) state.trophies = 0;
+    
+    // Check Bot Defeat
+    if (currentBot && playerWon && !state.defeatedBots.includes(currentBot.id)) {
+        state.defeatedBots.push(currentBot.id);
+        if (!state.ownedPins.includes(currentBot.pin)) {
+            state.ownedPins.push(currentBot.pin);
+            alert(`🎉 Hai sconfitto ${currentBot.name}! Hai ottenuto il Pin Esclusivo: ${currentBot.pin}!`);
+        }
+    }
+    
+    checkDailyWinReward(playerWon);
+    checkTrophyRewards();
+    saveState();
+    
+    document.getElementById('res-final-score').innerText = `${capturedBlack} - ${capturedWhite}`;
+    document.getElementById('res-cards').innerText = `${capturedBlack} presi`;
+    document.getElementById('res-material').innerText = playerWon ? '+Vantaggio' : '-Svantaggio';
+    document.getElementById('res-moves').innerText = moveCount;
+    
+    const title = playerWon ? "VITTORIA!" : (winner === 'black' ? "SCONFITTA" : "PATTA");
+    document.getElementById('res-title').innerText = title;
+    document.getElementById('res-title').style.color = playerWon ? 'var(--secondary)' : (winner === 'black' ? 'var(--danger)' : 'var(--dark)');
+    
+    setTimeout(() => { document.getElementById('result-modal').classList.add('show'); }, 1000);
+}
+
+function showNotify(text) {
+    const el = document.getElementById('notify');
+    el.innerText = text;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 1500);
+}
+
+function toggleEmoteWheel() { document.getElementById('emote-wheel').classList.toggle('active'); }
+
+function sendEmote(emote) {
+    if (!gameActive || turn !== 'white') return;
+    const playerEmoteEl = document.getElementById('player-emote');
+    const currentPinData = PINS.find(p => p.id === state.selectedPin) || PINS[0];
+    playerEmoteEl.innerHTML = currentPinData.icon;
+    playerEmoteEl.className = currentPinData.anim || 'pin-anim-bounce';
+    playerEmoteEl.style.display = 'block';
+    playerEmoteEl.style.animation = 'none'; playerEmoteEl.offsetHeight; playerEmoteEl.style.animation = null;
+    document.getElementById('emote-wheel').classList.remove('active');
+    setTimeout(() => { playerEmoteEl.style.display = 'none'; }, 3000);
+}
+
+function cpuSendEmote() {
+    const e = document.getElementById('cpu-emote');
+    e.innerText = ['😡', '', '😴', ''][Math.floor(Math.random() * 4)];
+    e.style.display = 'block';
+    setTimeout(() => { e.style.display = 'none'; }, 3000);
+}
+
+// SCHOOL LOGIC
+function renderSchool() {
+    const container = document.getElementById('school-list');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    LESSONS.forEach((lesson, index) => {
+        const isCompleted = state.completedLessons.includes(lesson.id);
+        const isLocked = index > 0 && !state.completedLessons.includes(LESSONS[index-1].id);
+        
+        const el = document.createElement('div');
+        el.className = `lesson-card ${isCompleted ? 'completed' : ''} ${isLocked ? 'locked' : ''}`;
+        
+        let statusIcon = isCompleted ? '✅' : (isLocked ? '🔒' : '▶️');
+        
+        el.innerHTML = `
+            <div class="lesson-icon">${lesson.icon}</div>
+            <div class="lesson-info">
+                <div class="lesson-title">Lezione ${lesson.id}: ${lesson.title}</div>
+                <div class="lesson-desc">${lesson.desc}</div>
+            </div>
+            <div class="lesson-status">${statusIcon}</div>
+        `;
+        
+        if (!isLocked) {
+            el.onclick = () => startSchoolLesson(lesson.id);
+        }
+        
+        container.appendChild(el);
+    });
+}
+
+let tutorialStep = 0;
+const TUTOR_STEPS = [
+    { text: "Ciao! Sono Orlando, la tua guida a Chess City!", panel: 'arena' },
+    { text: "Come ti chiami?", panel: 'arena', isNameStep: true },
+    { text: "Piacere [NAME]! Qui vedi la tua scacchiera. Cambiala in 'Scacchiere'.", panel: 'arena' },
+    { text: "Premi 'Gioca' per scegliere un avversario!", panel: 'arena' },
+    { text: "Clicca un tuo pezzo (bianco) per selezionarlo.", panel: 'arena' },
+    { text: "I punti verdi mostrano le mosse valide. Clicca per muovere!", panel: 'arena' },
+    { text: "Cattura il Re avversario per vincere!", panel: 'arena' },
+    { text: "Buona fortuna! Puoi chiudere il tutorial.", panel: 'arena' },
+];
+
+function startTutorial() {
+    const tutor = document.getElementById('tutor-overlay');
+    // Simplified: just alert for now as tutor overlay was removed for brevity, but logic remains
+    if (state.playerName) {
+        state.tutorialCompleted = true;
+        state.hasAskedName = true;
+        saveState();
+    }
+}
+
+function nextTutorialStep() {
+    if (TUTOR_STEPS[tutorialStep].isNameStep) {
+        // Handled by prompt in init if needed
+        tutorialStep++;
+    }
+    tutorialStep++;
+    if (tutorialStep >= TUTOR_STEPS.length) finishTutorial();
+}
+
+function submitTutorialName() {
+    // Simplified
+    tutorialStep++;
+    if (tutorialStep >= TUTOR_STEPS.length) finishTutorial();
+}
+
+function finishTutorial() {
+    state.tutorialCompleted = true;
+    state.hasAskedName = true;
+    saveState();
+}
+
+function init() {
+    renderDecks(); renderShop(); renderPins(); updateArenaPreview();
+    renderTrophyRoad(); renderDailyShop(); renderStreak(); renderDailyWinsBar(); updateStreakTimer();
+    setInterval(updateStreakTimer, 1000);
+    if (!state.hasAskedName) startTutorial();
+    
+    const profileIconEl = document.getElementById('profile-icon-container');
+    if (profileIconEl) profileIconEl.style.display = 'block';
+    updateUI();
+}
+
+// Global exports
+window.showPanel = showPanel; window.switchDeckTab = switchDeckTab; window.selectDeck = selectDeck; window.upgradeDeck = upgradeDeck;
+window.buyDeck = buyDeck; window.buyPin = buyPin; window.exchangeResources = exchangeResources;
+window.buyAndOpenChest = buyAndOpenChest; window.startGame = startGame; window.quitGame = quitGame;
+window.toggleEmoteWheel = toggleEmoteWheel; window.sendEmote = sendEmote;
+window.openProfile = openProfile; window.closeProfile = closeProfile; window.updateProfileName = updateProfileName;
+window.openStreakFromProfile = openStreakFromProfile; window.closeStreakFromProfile = closeStreakFromProfile;
+window.claimStreakReward = claimStreakReward; window.claimStreakRewardFromProfile = claimStreakRewardFromProfile;
+window.claimDailyOffer = claimDailyOffer; window.resetData = resetData;
+window.filterDecks = filterDecks; window.clearDeckSearch = clearDeckSearch;
+window.nextTutorialStep = nextTutorialStep; window.submitTutorialName = submitTutorialName;
+window.init = init; window.state_getter = () => state; window.DECKS = DECKS; window.PINS = PINS;
+window.showBotSelection = showBotSelection; window.startGameWithBot = startGameWithBot;
+</script>
+</body>
+</html>
+
