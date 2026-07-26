@@ -1,5 +1,5 @@
 // ═══ SUPER SCOPA ROYALE - SERVICE WORKER ═══
-const CACHE_NAME = 'scopa-royale-v1';
+const CACHE_NAME = 'scopa-royale-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
