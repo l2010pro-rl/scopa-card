@@ -4,6 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Super Scopa Royale: Ultimate Edition</title>
+<!-- ═══ PWA META TAGS ═══ -->
+<meta name="theme-color" content="#1488cc">
+<meta name="description" content="Super Scopa Royale - Il gioco di carte italiano definitivo!">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Super Scopa">
+<meta name="mobile-web-app-capable" content="yes">
+
+<!-- Manifest -->
+<link rel="manifest" href="manifest.json">
+
+<!-- Icone PWA (devi creare questi file, vedi sotto) -->
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png">
 <style>
 :root {
 --primary: #3498db;
@@ -2167,6 +2181,39 @@ window.claimDailyOffer=claimDailyOffer; window.resetData=resetData;
 window.filterDecks=filterDecks; window.clearDeckSearch=clearDeckSearch;
 window.nextTutorialStep=nextTutorialStep; window.submitTutorialName=submitTutorialName;
 window.init=init; window.state_getter=()=>state; window.DECKS=DECKS; window.PINS=PINS;
+</script>
+<!-- ═══ PWA SERVICE WORKER REGISTRATION ═══ -->
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js')
+      .then(reg => console.log('✅ SW registrato:', reg.scope))
+      .catch(err => console.warn('❌ SW fallito:', err));
+  });
+}
+
+// Prompt "Installa App"
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  // Mostra un tuo bottone personalizzato se vuoi
+  showInstallButton();
+});
+
+function showInstallButton() {
+  // Esempio: crea un bottone in alto a destra
+  const btn = document.createElement('button');
+  btn.innerText = '📲 Installa App';
+  btn.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:9999;padding:12px 20px;background:#f1c40f;color:#000;border:none;border-radius:30px;font-weight:bold;box-shadow:0 4px 15px rgba(0,0,0,0.4);cursor:pointer;';
+  btn.onclick = async () => {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') btn.remove();
+    deferredPrompt = null;
+  };
+  document.body.appendChild(btn);
+}
 </script>
 </body>
 </html>
