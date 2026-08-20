@@ -8,8 +8,8 @@ const ASSETS_TO_CACHE = [
   './blubox.png',
   './Tutor.png',
   './icon/profile.png',
-  './icons/icon-192.png',
-  './icons/icon-512.png'
+  './icons/icon-192-v2.png',
+  './icons/icon-512-v2.png'
 ];
 
 // INSTALL - cached assets base
