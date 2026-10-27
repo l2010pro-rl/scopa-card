@@ -1245,6 +1245,199 @@ RESPONSIVE
         padding: 10px;
     }
 }
+/* ═══════════════════════════════════════════════════
+EVENTO HALLOWEEN - DRAKE IL VAMPIRO
+═══════════════════════════════════════════════════ */
+#game-overlay.halloween-theme {
+    background: radial-gradient(circle at center, #2c0000, #0a0000);
+}
+#game-overlay.halloween-theme .table-zone {
+    border-color: rgba(255, 69, 0, 0.6);
+    box-shadow: inset 0 0 60px rgba(255, 69, 0, 0.3), 0 0 20px rgba(255, 69, 0, 0.2);
+    background: rgba(0, 0, 0, 0.4);
+}
+#game-overlay.halloween-theme .game-header {
+    background: rgba(20, 0, 0, 0.9);
+    border-bottom: 2px solid #ff4500;
+    box-shadow: 0 2px 20px rgba(255, 69, 0, 0.3);
+}
+#game-overlay.halloween-theme .hand-zone {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 69, 0, 0.3);
+}
+
+/* Overlay Drake */
+.drake-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.85); z-index: 3000;
+    display: none; justify-content: center; align-items: center; flex-direction: column;
+    pointer-events: none; backdrop-filter: blur(3px);
+}
+.drake-overlay.active { display: flex; animation: fadeIn 0.3s forwards; }
+.drake-character-img {
+    width: 220px; height: auto;
+    filter: drop-shadow(0 0 40px rgba(255, 0, 0, 0.8));
+    animation: drakeFloat 2.5s ease-in-out infinite;
+    transform-origin: bottom center;
+}
+.drake-text {
+    color: #ff4500; font-size: 2.2rem; font-weight: 900; text-transform: uppercase;
+    margin-top: 20px; text-shadow: 0 0 15px #ff0000, 2px 2px 0 #000;
+    animation: pulseText 1s infinite alternate; letter-spacing: 2px;
+}
+.drake-subtext {
+    font-size: 1.1rem; color: #fff; margin-top: 10px; opacity: 0.9;
+    text-shadow: 0 2px 4px black; font-weight: bold;
+}
+
+@keyframes drakeFloat {
+    0%, 100% { transform: translateY(0) scale(1) rotate(-2deg); }
+    50% { transform: translateY(-25px) scale(1.05) rotate(2deg); }
+}
+@keyframes pulseText {
+    from { transform: scale(1); opacity: 0.9; }
+    to { transform: scale(1.08); opacity: 1; text-shadow: 0 0 25px #ff0000; }
+}
+/* ═══════════════════════════════════════════════════
+VAMPIRE BOX HERO SECTION
+═══════════════════════════════════════════════════ */
+.vampire-hero-container {
+    width: 100%;
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.busta-card.vampire-hero {
+    width: 100%;
+    max-width: 900px; /* Larghezza simile a 3 box normali */
+    border-color: #8e0000;
+    background: linear-gradient(135deg, rgba(40, 0, 0, 0.95), rgba(20, 0, 0, 0.98));
+    box-shadow: 0 0 40px rgba(142, 0, 0, 0.5), inset 0 0 50px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: row; /* Layout orizzontale per la hero */
+    align-items: center;
+    padding: 30px;
+    gap: 30px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 25px;
+}
+
+/* Effetto sfondo animato per la Vampire Hero */
+.busta-card.vampire-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,0,0,0.1) 0%, transparent 60%);
+    animation: vampirePulse 4s infinite ease-in-out;
+    pointer-events: none;
+}
+
+@keyframes vampirePulse {
+    0%, 100% { transform: scale(1); opacity: 0.5; }
+    50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.busta-card.vampire-hero:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 60px rgba(255, 0, 0, 0.7);
+}
+
+/* Contenitore immagine più grande */
+.vampire-hero .busta-icon-wrapper {
+    flex: 0 0 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.vampire-hero .busta-icon {
+    width: 220px;
+    height: 220px;
+    filter: drop-shadow(0 10px 30px rgba(0,0,0,0.8));
+    animation: float 3s ease-in-out infinite;
+}
+
+/* Contenuto testuale a destra */
+.vampire-hero .busta-content {
+    flex: 1;
+    text-align: left;
+    z-index: 2;
+    color: white;
+}
+
+.vampire-hero h3 {
+    font-size: 2.5rem;
+    margin: 0 0 10px 0;
+    color: #ff4d4d;
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(255,0,0,0.5);
+    font-weight: 900;
+}
+
+.vampire-hero .busta-price {
+    font-size: 2rem;
+    color: var(--gold);
+    margin: 10px 0;
+    font-weight: bold;
+}
+
+.vampire-hero .btn-action.buy {
+    background: linear-gradient(135deg, #ff0000, #8b0000);
+    box-shadow: 0 5px 0 #5a0000;
+    font-size: 1.2rem;
+    padding: 12px 40px;
+    max-width: 250px;
+    margin: 15px 0;
+}
+
+.vampire-hero .busta-contents {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-top: 15px;
+    background: rgba(0,0,0,0.3);
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,0,0,0.2);
+}
+
+/* Badge Aglio sulla Hero */
+.garlic-badge-hero {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    background: #fff;
+    color: #d35400;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    border: 4px solid #d35400;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    z-index: 10;
+    animation: pulseNode 2s infinite;
+}
+
+/* Responsive per mobile */
+@media (max-width: 768px) {
+    .busta-card.vampire-hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 20px;
+    }
+    .vampire-hero .busta-content { text-align: center; }
+    .vampire-hero .busta-contents { grid-template-columns: 1fr; }
+    .vampire-hero h3 { font-size: 1.8rem; }
+}
 </style>
 </head>
 
@@ -1481,14 +1674,43 @@ SHOP - NUOVO LAYOUT CON TAB
 
 <!-- TAB 2: BUSTE -->
 <div class="shop-tab-content" id="shoptab-buste">
-    <div style="text-align:center;margin-bottom:20px;">
-        <h2 style="margin:0 0 8px 0;font-size:1.6rem;">📦 Acquista Buste</h2>
-        <p style="margin:0;opacity:0.7;">Apri buste per vincere mazzi, gemme, ticket e molto altro!</p>
-    </div>
     
-    <!-- Griglia unica contenente tutte le box -->
+    <!-- VAMPIRE BOX HERO SECTION (IN CIMA) -->
+    <div class="vampire-hero-container">
+        <div class="busta-card vampire-hero">
+            <div class="garlic-badge-hero">🧄</div>
+            
+            <!-- Immagine Grande a Sinistra -->
+            <div class="busta-icon-wrapper">
+                <img src="vampirebox.png" class="busta-icon" alt="Vampire Box" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIj48Y2lyY2xlIGN4PSI1MCIgY3k9IjUwIiByPSI0NSIgZmlsbD0iIzhlMDAwMCIvPjx0ZXh0IHg9IjUwIiB5PSI2NSIgZm9udC1zaXplPSI0MCIgdGV4dC1hbmNob3I9Im1pZGRsZSI+8J+nqzwvdGV4dD48L3N2Zz4='">
+            </div>
+
+            <!-- Contenuto a Destra -->
+            <div class="busta-content">
+                <h3>Vampire Box</h3>
+                <p style="opacity:0.8; margin-bottom:10px;">La cassa leggendaria per i cacciatori di vampiri!</p>
+                
+                <div class="busta-price">149 💎</div>
+                
+                <button class="btn-action buy" onclick="buyAndOpenChest('vampire')">APRI ORA</button>
+                
+                <div class="busta-contents">
+                    <div>🪙 Monete (2000-2500)</div>
+                    <div>💎 Gemme (30-60)</div>
+                    <div>🎟️ Biglietti (4000-5500)</div>
+                    <div> Mazzi & Pin Rari</div>
+                    <div style="grid-column: span 2; color:#ff9999; font-weight:bold;">🧄 Aglio (10-25) - Anti-Drake!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- GRIGLIA STANDARD SOTTO -->
+    <div style="text-align:center;margin-bottom:20px;">
+        <h2 style="margin:0 0 8px 0;font-size:1.6rem;opacity:0.8;">Altre Buste</h2>
+    </div>
+
     <div class="buste-grid">
-        
         <!-- Busta Classica -->
         <div class="busta-card classic">
             <div style="position:absolute;top:12px;right:12px;background:var(--gold);color:#333;padding:4px 10px;border-radius:10px;font-size:0.7rem;font-weight:900;text-transform:uppercase;">Classic box</div>
@@ -1498,12 +1720,12 @@ SHOP - NUOVO LAYOUT CON TAB
             <div class="busta-contents">
                 <strong>Cosa contiene:</strong><br>
                 🪙 Monete (50-250)<br>
-                💎 Gemme (5-15)<br>
+                 Gemme (5-15)<br>
                 🎟️ Biglietti (100-200)<br>
                 🃏 Mazzi Base
             </div>
         </div>
-
+        
         <!-- Busta Blue -->
         <div class="busta-card blue">
             <div style="position:absolute;top:12px;right:12px;background:#3498db;color:white;padding:4px 10px;border-radius:10px;font-size:0.7rem;font-weight:900;text-transform:uppercase;">blue box</div>
@@ -1518,10 +1740,9 @@ SHOP - NUOVO LAYOUT CON TAB
             </div>
         </div>
 
-        <!-- Busta Verde (NUOVA) -->
+        <!-- Busta Verde -->
         <div class="busta-card green" style="border-color: #2ecc71; background: linear-gradient(135deg, rgba(46, 204, 113, 0.1), rgba(46, 204, 113, 0.05));">
             <div style="position:absolute;top:12px;right:12px;background:#2ecc71;color:white;padding:4px 10px;border-radius:10px;font-size:0.7rem;font-weight:900;text-transform:uppercase;">green box</div>
-            <!-- Assicurati di avere un'immagine chiamata greenbox.png o cambia il src -->
             <img src="greenbox.png" class="busta-icon" onclick="buyAndOpenChest('green')" alt="Green Box">
             <div class="busta-price">79 💎</div>
             <button class="btn-action buy" onclick="buyAndOpenChest('green')" style="max-width:200px;margin:10px auto 0;background:linear-gradient(135deg,#2ecc71,#27ae60);box-shadow:0 4px 0 #219150;">APRI ORA</button>
@@ -1532,8 +1753,7 @@ SHOP - NUOVO LAYOUT CON TAB
                 🎟️ Biglietti (1000-1500)<br>
             </div>
         </div>
-
-    </div> <!-- Chiusura buste-grid corretta qui -->
+    </div>
 </div>
 
 
@@ -1666,13 +1886,15 @@ SHOP - NUOVO LAYOUT CON TAB
   
   <!-- TAB 3: EVENTI SPECIALI (sblocca a 100 coppe) -->
   <div class="events-tab-content" id="eventtab-speciali">
-    <div class="grid-container">
-      <div style="grid-column: span 2; text-align: center; padding: 40px; opacity: 0.6;">
-        <div style="font-size: 4rem; margin-bottom: 15px;">🔜</div>
-        <h3>Prossimamente...</h3>
-        <p>Gli eventi speciali saranno disponibili presto!</p>
-      </div>
+<!-- Dentro <div class="events-tab-content" id="eventtab-speciali"> -->
+<div class="grid-container">
+    <div class="card-item" style="border-color: #ff4500; background: rgba(50, 0, 0, 0.6); box-shadow: 0 0 20px rgba(255, 69, 0, 0.3);">
+        <div class="item-preview" style="font-size: 4rem;">🦇</div>
+        <h3 style="color: #ff9999;">Scopa & Drake</h3>
+        <p style="opacity: 0.8;">Attento al vampiro! Ruba carte a caso ogni turno.</p>
+        <button class="btn-action" onclick="startGame('halloween_special')" style="background: linear-gradient(135deg, #ff4500, #8b0000); box-shadow: 0 4px 0 #5a0000;">Gioca Ora</button>
     </div>
+</div>
   </div>
 </div>
 
@@ -1830,7 +2052,7 @@ SHOP - NUOVO LAYOUT CON TAB
 <!-- TUTOR -->
 <div id="tutor-overlay" class="tutor-container">
 <div class="tutor-bubble" id="tutor-text">Ciao! Sono la tua guida.<button class="tutor-next-btn">Avanti</button></div>
-<img src="Tutor.png" class="tutor-img" alt="Tutor">
+<img src="drake.png" class="tutor-img" alt="Tutor">
 </div>
 
 <!-- REVEAL OVERLAY -->
@@ -2473,6 +2695,14 @@ const PINS = [
 { id:'pin_ufo', icon:'<img src="pin/Emoji_043.png" style="width:100%;height:100%;object-fit:contain;">', price:300, locked:false, anim:'pin-anim-shake' },
 { id:'pin_flag', icon:'<img src="pin/Emoji_044.png" style="width:100%;height:100%;object-fit:contain;">', price:300, locked:false, anim:'pin-anim-shake' },
 { id:'pin_sturagabinetto', icon:'<img src="pin/Emoji_045.png" style="width:100%;height:100%;object-fit:contain;">', price:250, locked:false, anim:'pin-anim-shake' },
+{ id:'pin_drake', icon:'<img src="pin/Emoji_046.png" style="width:100%;height:100%;object-fit:contain;">', price:250, locked:false, anim:'pin-anim-shake' },
+{ id:'pin_zucca', icon:'<img src="pin/Emoji_047.png" style="width:100%;height:100%;object-fit:contain;">', price:200, locked:false, anim:'pin-anim-bounce' },
+{ id:'pin_bat', icon:'<img src="pin/Emoji_048.png" style="width:100%;height:100%;object-fit:contain;">', price:200, locked:false, anim:'pin-anim-spin' },
+{ id:'pin_ghost', icon:'<img src="pin/Emoji_049.png" style="width:100%;height:100%;object-fit:contain;">', price:200, locked:false, anim:'pin-anim-shake' },
+{ id:'pin_vampire', icon:'<img src="pin/Emoji_050.png" style="width:100%;height:100%;object-fit:contain;">', price:200, locked:false, anim:'pin-anim-bounce' },
+{ id:'pin_zombie', icon:'<img src="pin/Emoji_051.png" style="width:100%;height:100%;object-fit:contain;">', price:200, locked:false, anim:'pin-anim-spin' },
+{ id:'pin_blackcat', icon:'<img src="pin/Emoji_052.png" style="width:100%;height:100%;object-fit:contain;">', price:200, locked:false, anim:'pin-anim-bounce' },
+{ id:'pin_candy', icon:'<img src="pin/Emoji_053.png" style="width:100%;height:100%;object-fit:contain;">', price:200, locked:false, anim:'pin-anim-bounce' },
 
 { id:'ex_classic_1', icon:'<img src="pin/Emoji_es_001.png" style="width:100%;height:100%;object-fit:contain;">', price:0, locked:true, anim:'pin-anim-bounce' },
 { id:'ex_classic_2', icon:'<img src="pin/Emoji_es_002.png" style="width:100%;height:100%;object-fit:contain;">', price:0, locked:true, anim:'pin-anim-spin' },
@@ -2530,8 +2760,9 @@ const PINS = [
 
 ];
 const DEFAULT_STATE = {
-coins:1000, gems:50, tickets:0,
-ownedDecks:['classic'], selectedDeck:'classic', deckLevels:{},
+    coins:1000, gems:50, tickets:0,
+    garlic: 0, //  NUOVO: Spicchi d'aglio per sconfiggere Drake
+    ownedDecks:['classic'], selectedDeck:'classic', deckLevels:{},
 ownedPins:['pin_happy','pin_cry','pin_cool','pin_sleep'], selectedPin:'pin_happy',
 wins:0, totalScopas:0, totalCards:0, level:1, trophies:0,
 tutorialCompleted:false, passCredits:0,
@@ -2958,11 +3189,11 @@ function buyPin(id, price) {
 
 // ─── DAILY WINS ─────────────────────────────────────
 const DAILY_WIN_REWARDS_EVENT = [
-  { slot:1, type:'key', icon:'🗝️', label:'Chiave' },
-  { slot:2, type:null, icon:'—', label:'' },
-  { slot:3, type:'key', icon:'🗝️', label:'Chiave' },
-  { slot:4, type:null, icon:'—', label:'' },
-  { slot:5, type:'key', icon:'🗝️', label:'Chiave' },
+  { slot:1, type:'vampirebox', icon:'🦇', label:'Vampire' },
+  { slot:2, type:'box', icon:'📦', label:'Box' },
+  { slot:3, type:'vampirebox', icon:'🦇', label:'Vampire' },
+  { slot:4, type:'box', icon:'📦', label:'Box' },
+  { slot:5, type:'vampirebox', icon:'🦇', label:'Vampire' },
 ];
 
 const DAILY_WIN_REWARDS_NORMAL = [
@@ -3193,21 +3424,20 @@ function updateProfileName(name) { state.playerName = name.trim(); state.hasAske
 // ─── CHEST LOGIC CORRETTA ──────────────────────────
 
 function buyAndOpenChest(type) {
-    // Definizione costi
     const costs = {
         'classic': 29,
         'blue': 49,
-        'green': 79 // Prezzo Green Box
+        'green': 79,
+        'vampire': 149 // Prezzo Vampire Box
     };
-    
     const cost = costs[type] || 0;
     
-    if (state.gems >= cost) { 
-        state.gems -= cost; 
-        saveState(); 
-        openChestAnimation(type); 
-    } else { 
-        alert('Gemme insufficienti!'); 
+    if (state.gems >= cost) {
+        state.gems -= cost;
+        saveState();
+        openChestAnimation(type);
+    } else {
+        alert('Gemme insufficienti!');
     }
 }
 
@@ -3215,139 +3445,191 @@ function openChestAnimation(type) {
     const overlay = document.getElementById('reveal-overlay');
     const cardEl = document.getElementById('reveal-card-content');
     const textEl = document.getElementById('reveal-text');
-    
     overlay.style.display = 'flex';
-    cardEl.classList.remove('show'); 
+    cardEl.classList.remove('show');
     textEl.classList.remove('show');
-    cardEl.innerText = '?'; 
-    
+    cardEl.innerText = '?';
+
     // Colori di sfondo in base al tipo
-    if (type === 'blue') cardEl.style.background = '#3498db';
-    else if (type === 'green') cardEl.style.background = '#2ecc71'; // Verde per Green Box
-    else cardEl.style.background = 'var(--gold)'; // Classic
-    
-    cardEl.style.color = 'white';
+    if (type === 'vampire') {
+        cardEl.style.background = 'linear-gradient(135deg, #8e0000, #4a0000)';
+        cardEl.style.color = '#ffcccc';
+    } else if (type === 'blue') {
+        cardEl.style.background = '#3498db';
+        cardEl.style.color = 'white';
+    } else if (type === 'green') {
+        cardEl.style.background = '#2ecc71';
+        cardEl.style.color = 'white';
+    } else {
+        cardEl.style.background = 'var(--gold)';
+        cardEl.style.color = 'white';
+    }
 
     setTimeout(() => {
         const rand = Math.random();
         let rewardText = "", rewardIcon = "", rewardColor = "#fff";
 
-        // --- LOGICA GREEN BOX (Migliore) ---
-        if (type === 'green') {
-            if (rand < 0.6) { 
-                // 60% Mazzi Epici/Rari
-                const locked = DECKS.filter(d => !state.ownedDecks.includes(d.id) && !d.isPassExclusive && d.price >= 1500);
-                if (locked.length > 0) { 
-                    const nd = locked[Math.floor(Math.random()*locked.length)]; 
-                    state.ownedDecks.push(nd.id); 
-                    rewardText = `Mazzo Epico: ${nd.name}`; 
-                    rewardIcon = nd.icon; 
-                    rewardColor = '#2ecc71'; 
-                } else { 
-                    state.coins += 2000; 
-                    rewardText = `2000 🪙`; 
-                    rewardIcon = '🪙'; 
-                    rewardColor = '#f1c40f'; 
+        // ═══════════════════════════════════════════════════
+        // LOGICA VAMPIRE BOX
+        // ═══════════════════════════════════════════════════
+        if (type === 'vampire') {
+            if (rand < 0.3) {
+                // 30% AGLO (Ricompensa Speciale)
+                const garlicAmount = Math.floor(Math.random() * 16) + 10; // 10-25
+                state.garlic = (state.garlic || 0) + garlicAmount;
+                rewardText = `${garlicAmount} Spicchi d'Aglio!`;
+                rewardIcon = '🧄';
+                rewardColor = '#f39c12';
+            } else if (rand < 0.55) {
+                // 25% Tanti Ticket
+                const t = Math.floor(Math.random() * 1500) + 4000;
+                state.tickets += t;
+                rewardText = `${t} Biglietti!`;
+                rewardIcon = '🎟️';
+                rewardColor = '#3498db';
+            } else if (rand < 0.75) {
+                // 20% Tante Gemme
+                const g = Math.floor(Math.random() * 31) + 30;
+                state.gems += g;
+                rewardText = `${g} Gemme!`;
+                rewardIcon = '💎';
+                rewardColor = '#9b59b6';
+            } else if (rand < 0.9) {
+                // 15% Tante Monete
+                const c = Math.floor(Math.random() * 500) + 2000;
+                state.coins += c;
+                rewardText = `${c} Monete!`;
+                rewardIcon = '🪙';
+                rewardColor = '#f1c40f';
+            } else {
+                // 10% Mazzi/Pin Rari
+                const lockedDecks = DECKS.filter(d => !state.ownedDecks.includes(d.id) && !d.isPassExclusive && d.price >= 1800);
+                if (lockedDecks.length > 0) {
+                    const nd = lockedDecks[Math.floor(Math.random() * lockedDecks.length)];
+                    state.ownedDecks.push(nd.id);
+                    rewardText = `Mazzo Epico: ${nd.name}`;
+                    rewardIcon = nd.icon;
+                    rewardColor = '#8e0000';
+                } else {
+                    // Fallback se non ci sono mazzi
+                    const c = 2500;
+                    state.coins += c;
+                    rewardText = `${c} Monete!`;
+                    rewardIcon = '🪙';
+                    rewardColor = '#f1c40f';
                 }
-            } else if (rand < 0.85) { 
-                // 25% Tante Gemme
-                state.gems += Math.floor(Math.random()*30)+40; 
-                rewardText = `Tante Gemme!`; 
-                rewardIcon = '💎'; 
-                rewardColor = '#9b59b6'; 
-            } else { 
-                // 15% Tanti Ticket
-                state.tickets += Math.floor(Math.random()*500)+1000; 
-                rewardText = `Tanti Biglietti!`; 
-                rewardIcon = '🎟️'; 
-                rewardColor = '#3498db'; 
             }
-        } 
-        // --- LOGICA BLUE BOX ---
+        }
+        // ... RESTO DEL CODICE ESISTENTE PER BLUE/GREEN/CLASSIC ...
+        else if (type === 'green') {
+             // [Mantieni qui il codice esistente per green box]
+             if (rand < 0.6) {
+                const locked = DECKS.filter(d => !state.ownedDecks.includes(d.id) && !d.isPassExclusive && d.price >= 1500);
+                if (locked.length > 0) {
+                    const nd = locked[Math.floor(Math.random()*locked.length)];
+                    state.ownedDecks.push(nd.id);
+                    rewardText = `Mazzo Epico: ${nd.name}`;
+                    rewardIcon = nd.icon;
+                    rewardColor = '#2ecc71';
+                } else {
+                    state.coins += 2000;
+                    rewardText = `2000 🪙`;
+                    rewardIcon = '🪙';
+                    rewardColor = '#f1c40f';
+                }
+            } else if (rand < 0.85) {
+                state.gems += Math.floor(Math.random()*30)+40;
+                rewardText = `Tante Gemme!`;
+                rewardIcon = '💎';
+                rewardColor = '#9b59b6';
+            } else {
+                state.tickets += Math.floor(Math.random()*500)+1000;
+                rewardText = `Tanti Biglietti!`;
+                rewardIcon = '🎟️';
+                rewardColor = '#3498db';
+            }
+        }
         else if (type === 'blue') {
+            // [Mantieni qui il codice esistente per blue box]
             if (rand < 0.5) {
                 const locked = DECKS.filter(d => !state.ownedDecks.includes(d.id) && !d.isPassExclusive && d.price >= 1000);
-                if (locked.length > 0) { 
-                    const nd = locked[Math.floor(Math.random()*locked.length)]; 
-                    state.ownedDecks.push(nd.id); 
-                    rewardText = `Mazzo: ${nd.name}`; 
-                    rewardIcon = nd.icon; 
-                    rewardColor = '#e74c3c'; 
-                } else { 
-                    state.coins += 1000; 
-                    rewardText = `1000 🪙`; 
-                    rewardIcon = '🪙'; 
-                    rewardColor = '#f1c40f'; 
+                if (locked.length > 0) {
+                    const nd = locked[Math.floor(Math.random()*locked.length)];
+                    state.ownedDecks.push(nd.id);
+                    rewardText = `Mazzo: ${nd.name}`;
+                    rewardIcon = nd.icon;
+                    rewardColor = '#e74c3c';
+                } else {
+                    state.coins += 1000;
+                    rewardText = `1000 `;
+                    rewardIcon = '';
+                    rewardColor = '#f1c40f';
                 }
-            } else if (rand < 0.8) { 
-                state.gems += Math.floor(Math.random()*30)+20; 
-                rewardText = `Gemme!`; 
-                rewardIcon = '💎'; 
-                rewardColor = '#9b59b6'; 
-            } else { 
-                state.tickets += Math.floor(Math.random()*500)+200; 
-                rewardText = `Biglietti!`; 
-                rewardIcon = '🎟️'; 
-                rewardColor = '#3498db'; 
+            } else if (rand < 0.8) {
+                state.gems += Math.floor(Math.random()*30)+20;
+                rewardText = `Gemme!`;
+                rewardIcon = '';
+                rewardColor = '#9b59b6';
+            } else {
+                state.tickets += Math.floor(Math.random()*500)+200;
+                rewardText = `Biglietti!`;
+                rewardIcon = '🎟️';
+                rewardColor = '#3498db';
             }
-        } 
-        // --- LOGICA CLASSIC BOX ---
+        }
         else {
-            if (rand < 0.4) { 
-                const amt = Math.floor(Math.random()*200)+50; 
-                state.coins += amt; 
-                rewardText = `${amt} 🪙`; 
-                rewardIcon = '🪙'; 
-                rewardColor = '#f1c40f'; 
-            } else if (rand < 0.6) { 
-                const gems = Math.floor(Math.random()*10)+5; 
-                state.gems += gems; 
-                rewardText = `${gems} 💎`; 
-                rewardIcon = '💎'; 
-                rewardColor = '#3498db'; 
-            } else if (rand < 0.8) { 
-                const t = Math.floor(Math.random()*100)+100; 
-                state.tickets += t; 
-                rewardText = `${t} 🎟️`; 
-                rewardIcon = '🎟️'; 
-                rewardColor = '#3498db'; 
+            // [Mantieni qui il codice esistente per classic box]
+            if (rand < 0.4) {
+                const amt = Math.floor(Math.random()*200)+50;
+                state.coins += amt;
+                rewardText = `${amt} 🪙`;
+                rewardIcon = '';
+                rewardColor = '#f1c40f';
+            } else if (rand < 0.6) {
+                const gems = Math.floor(Math.random()*10)+5;
+                state.gems += gems;
+                rewardText = `${gems} 💎`;
+                rewardIcon = '💎';
+                rewardColor = '#3498db';
+            } else if (rand < 0.8) {
+                const t = Math.floor(Math.random()*100)+100;
+                state.tickets += t;
+                rewardText = `${t} ️`;
+                rewardIcon = '️';
+                rewardColor = '#3498db';
             } else {
                 const locked = DECKS.filter(d => !state.ownedDecks.includes(d.id) && !d.isPassExclusive);
-                if (locked.length > 0) { 
-                    const nd = locked[Math.floor(Math.random()*locked.length)]; 
-                    state.ownedDecks.push(nd.id); 
-                    rewardText = `Mazzo: ${nd.name}`; 
-                    rewardIcon = nd.icon; 
-                    rewardColor = '#e74c3c'; 
-                } else { 
-                    state.coins += 500; 
-                    rewardText = `500 🪙`; 
-                    rewardIcon = '🪙'; 
-                    rewardColor = '#f1c40f'; 
+                if (locked.length > 0) {
+                    const nd = locked[Math.floor(Math.random()*locked.length)];
+                    state.ownedDecks.push(nd.id);
+                    rewardText = `Mazzo: ${nd.name}`;
+                    rewardIcon = nd.icon;
+                    rewardColor = '#e74c3c';
+                } else {
+                    state.coins += 500;
+                    rewardText = `500 🪙`;
+                    rewardIcon = '';
+                    rewardColor = '#f1c40f';
                 }
             }
         }
 
         saveState();
-        
         // Mostra risultato
-        cardEl.innerText = rewardIcon; 
-        cardEl.style.background = rewardColor; 
+        cardEl.innerText = rewardIcon;
+        cardEl.style.background = rewardColor;
         cardEl.classList.add('show');
-        
-        setTimeout(() => { 
-            textEl.innerText = rewardText; 
-            textEl.classList.add('show'); 
-            
-            setTimeout(() => { 
-                overlay.style.display = 'none'; 
-                renderDecks(); 
-                renderShop(); 
-                renderPins(); 
-                renderDailyShop(); 
-            }, 2000); 
+        setTimeout(() => {
+            textEl.innerText = rewardText;
+            textEl.classList.add('show');
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                renderDecks();
+                renderShop();
+                renderPins();
+                renderDailyShop();
+            }, 2000);
         }, 800);
-        
     }, 500);
 }
 
@@ -3379,33 +3661,37 @@ if (state.connectionBlocker === false && navigator.onLine === false) {
 updateUI();
 }
 function startGame(mode) {
-  // Controlli trofei per modalità normali
-  if (mode === 'scopa_ace' && state.trophies < 150) { 
-    alert("Devi raggiungere 150 Trofei!"); 
-    return; 
-  }
-  
-  // Modalità sicure non hanno limiti di trofei
-  const isSafeMode = mode.includes('_safe');
-  
-  gameMode = mode;
-  const overlay = document.getElementById('game-overlay');
-  overlay.classList.add('active'); 
-  overlay.className = 'active';
-  
-  const deckId = state.selectedDeck; 
-  const level = state.deckLevels[deckId] || 0;
-  
-  if (!isSafeMode && level >= 2) {
-    if (deckId === 'diamond') overlay.classList.add('deck-diamond-board');
-    else if (deckId === 'gold') overlay.classList.add('deck-gold-board');
-    else if (deckId === 'silver') overlay.classList.add('deck-silver-board');
-    else if (deckId === 'radioactive') overlay.classList.add('deck-nuclear-border');
-    else if (deckId === 'pixel') overlay.classList.add('deck-pixel-border');
-  }
-  
-  document.getElementById('play-matta-cpu-btn').style.display = 'none';
-  initGame(isSafeMode);
+    // Controlli trofei per modalità normali
+    if (mode === 'scopa_ace' && state.trophies < 150) {
+        alert("Devi raggiungere 150 Trofei!");
+        return;
+    }
+    
+    const isSafeMode = mode.includes('_safe');
+    gameMode = mode;
+    
+    const overlay = document.getElementById('game-overlay');
+    overlay.classList.add('active');
+    overlay.className = 'active'; // Reset classi
+    
+    //  ATTIVAZIONE TEMA HALLOWEEN PER MODALITÀ SPECIALI
+    if (mode === 'halloween_special') {
+        overlay.classList.add('halloween-theme');
+    }
+
+    const deckId = state.selectedDeck;
+    const level = state.deckLevels[deckId] || 0;
+    
+    if (!isSafeMode && level >= 2) {
+        if (deckId === 'diamond') overlay.classList.add('deck-diamond-board');
+        else if (deckId === 'gold') overlay.classList.add('deck-gold-board');
+        else if (deckId === 'silver') overlay.classList.add('deck-silver-board');
+        else if (deckId === 'radioactive') overlay.classList.add('deck-nuclear-border');
+        else if (deckId === 'pixel') overlay.classList.add('deck-pixel-border');
+    }
+    
+    document.getElementById('play-matta-cpu-btn').style.display = 'none';
+    initGame(isSafeMode);
 }
 function quitGame() {
 document.getElementById('result-modal').classList.remove('show');
@@ -3480,11 +3766,58 @@ if (isPlayer) pHand.splice(pHand.indexOf(card),1); else cHand.splice(cHand.index
 if (table.length===0 && gameDeck.length>0) { if(isPlayer)pScopas++;else cScopas++; showNotify("SCOPA!"); if(!isPlayer)cpuSendEmote(); }
 }
 function endTurn() {
-if (!gameActive) return;
-if (pHand.length===0 && cHand.length===0) { if(gameDeck.length>0) setTimeout(dealRound,1000); else setTimeout(endGame,1000); }
-else if (gameMode==='scopa_matta') { turn='player'; renderGame(); }
-else if (turn==='player') { turn='cpu'; renderGame(); setTimeout(cpuTurn,1500); }
-else { turn='player'; renderGame(); }
+    if (!gameActive) return;
+    
+    // 🦇 LOGICA DRAKE IL VAMPIRO (Solo per modalità Halloween)
+    if (gameMode === 'halloween_special') {
+        const drakeChance = Math.floor(Math.random() * 5); // 1 su 5 possibilità
+        if (drakeChance === 0) { 
+            triggerDrakeEvent();
+            return; // Interrompe il flusso normale, Drake gestirà il cambio turno
+        }
+    }
+
+    // ✅ REGOLA DELLA SCOPA: BILANCIAMENTO MANI
+    // Se un giocatore ha più carte dell'altro, DEVE giocare ancora finché non pareggiano
+    // Questo evita che il tavolo si riempia di carte inutilizzabili
+    if (pHand.length > cHand.length && turn === 'cpu') {
+        turn = 'player';
+        renderGame();
+        return; 
+    }
+    
+    if (cHand.length > pHand.length && turn === 'player') {
+        turn = 'cpu';
+        renderGame();
+        setTimeout(cpuTurn, 1500);
+        return; 
+    }
+
+    // ✅ GESTIONE FINE MANO / RIDISTRIBUZIONE
+    // Se entrambi hanno finito le carte, bisogna pescare dal mazzo
+    if (pHand.length === 0 && cHand.length === 0) { 
+        if (gameDeck.length > 0) {
+            setTimeout(dealRound, 1000); 
+        } else {
+            setTimeout(endGame, 1000); 
+        }
+        return; // Importante: esce qui per non cambiare turno erroneamente
+    }
+
+    // Se le mani sono bilanciate e non vuote, cambia turno normalmente
+    if (gameMode === 'scopa_matta') { 
+        turn = 'player'; 
+        renderGame(); 
+    }
+    else if (turn === 'player') { 
+        turn = 'cpu'; 
+        renderGame(); 
+        setTimeout(cpuTurn, 1500); 
+    }
+    else { 
+        turn = 'player'; 
+        renderGame(); 
+    }
 }
 function cpuTurn() {
 if (!gameActive) return;
@@ -4271,6 +4604,80 @@ window.retryConnection=retryConnection;
 window.loadSettingsToggles=loadSettingsToggles;
 window.renderEventDecks=renderEventDecks;
 window.redeemEventDeck=redeemEventDeck;
+// ═══════════════════════════════════════════════════
+// DRAKE THE VAMPIRO - LOGICA DEFINITIVA E CORRETTA
+// ═══════════════════════════════════════════════════
+
+function triggerDrakeEvent() {
+    // Sicurezza: Se il mazzo è vuoto e le mani sono vuote, evita l'evento
+    if (gameDeck.length === 0 && pHand.length === 0 && cHand.length === 0) {
+        endTurn(); 
+        return;
+    }
+
+    const drakeOverlay = document.getElementById('drake-overlay');
+    drakeOverlay.classList.add('active');
+    
+    setTimeout(() => {
+        // Drake ruba ad entrambi i giocatori/tavolo
+        stealCardForDrake();
+        
+        // Dopo l'animazione, IL GIOCO PROSEGUE NORMALMENTE
+        setTimeout(() => {
+            drakeOverlay.classList.remove('active');
+            
+            // Controllo sicurezza: se dopo il furto le mani sono entrambe vuote
+            if (pHand.length === 0 && cHand.length === 0) {
+                if (gameDeck.length > 0) setTimeout(dealRound, 1000);
+                else setTimeout(endGame, 1000);
+                return;
+            }
+
+            // ✅ QUI STA LA SOLUZIONE: Non invertiamo il turno manualmente!
+            // Chiamiamo semplicemente endTurn() che gestirà il passaggio corretto:
+            // - Se era il turno del Player -> Ora tocca alla CPU
+            // - Se era il turno della CPU -> Ora tocca al Player
+            endTurn();
+            
+        }, 2500); // Durata animazione Drake
+    }, 1000); // Tempo apparizione
+}
+
+function stealCardForDrake() {
+    let stolenFromPlayer = false;
+    let stolenFromCpu = false;
+    let stolenFromTable = false;
+
+    // 1. Tenta di rubare al Giocatore
+    if (pHand.length > 0) {
+        const randomIdx = Math.floor(Math.random() * pHand.length);
+        pHand.splice(randomIdx, 1);
+        stolenFromPlayer = true;
+    }
+    
+    // 2. Tenta di rubare alla CPU
+    if (cHand.length > 0) {
+        const randomIdx = Math.floor(Math.random() * cHand.length);
+        cHand.splice(randomIdx, 1);
+        stolenFromCpu = true;
+    }
+
+    // 3. Se nessuno aveva carte in mano, ruba dal tavolo
+    if (!stolenFromPlayer && !stolenFromCpu && table.length > 0) {
+        const randomIdx = Math.floor(Math.random() * table.length);
+        table.splice(randomIdx, 1);
+        stolenFromTable = true;
+    }
+
+    // Notifica visiva
+    let msg = "🦇 Drake ha rubato!";
+    if (stolenFromPlayer && stolenFromCpu) msg = "🦇 Drake ha rubato ad entrambi!";
+    else if (stolenFromPlayer) msg = "🦇 Drake ha rubato dalla tua mano!";
+    else if (stolenFromCpu) msg = "🦇 Drake ha rubato dalla mano della CPU!";
+    else if (stolenFromTable) msg = "🦇 Drake ha rubato dal tavolo!";
+    
+    showNotify(msg);
+}
 </script>
 
 <!-- ═══ PWA SERVICE WORKER REGISTRATION ═══ -->
@@ -4330,5 +4737,16 @@ enterFullscreen();
 document.body.removeEventListener('click', firstClick);
 }, { once: true });
 </script>
+<!-- ═══════════════════════════════════════════════════
+DRAKE OVERLAY (HALLOWEEN EVENT)
+═══════════════════════════════════════════════════ -->
+<!-- ═══════════════════════════════════════════════════
+DRAKE OVERLAY (SCOPA & DRAKE EVENT)
+═══════════════════════════════════════════════════ -->
+<div id="drake-overlay" class="drake-overlay">
+    <img src="drake.png" alt="Drake il Vampiro" class="drake-character-img">
+    <div class="drake-text">Drake ha rubato una carta!</div>
+    <div class="drake-subtext">Il turno passa all'avversario... 🦇</div>
+</div>
 </body>
 </html>
